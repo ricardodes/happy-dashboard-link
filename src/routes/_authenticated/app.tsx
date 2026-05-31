@@ -59,11 +59,11 @@ function ErpPage() {
           <nav className="flex-1 space-y-1">
             <SidebarNavItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-5 w-5" />} label="Visão Geral" />
             <SidebarNavItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-5 w-5" />} label="Financeiro" />
-            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes" />
-            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Target className="h-5 w-5" />} label="Captação" />
-            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda" />
-            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Tarefas" />
-            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing IA" />
+            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes Nobel" />
+            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<MapIcon className="h-5 w-5" />} label="Captação (Google)" />
+            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda Nobel" />
+            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Obrigações Fiscais" />
+            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing Groq" />
           </nav>
 
           <div className="mt-auto pt-6 border-t">
