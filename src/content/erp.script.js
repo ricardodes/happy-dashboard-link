@@ -267,6 +267,8 @@ window.genMarketing = async function(type) {
       tone: 'premium, sofisticado, persuasivo'
     });
 
+    if (result) {
+
       const isVertical = type === 'story' || type === 'reels';
       const width = isVertical ? 720 : 1080;
       const height = isVertical ? 1280 : 1080;
