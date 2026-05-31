@@ -878,7 +878,7 @@ window.genMarketing = async function(type) {
       const fallbackImg = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1080&auto=format&fit=crop";
       
       let html = '';
-      if (type === 'story') {
+      if (type === 'story' || type === 'reels') {
         html = `
           <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
             <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.8">
@@ -887,6 +887,10 @@ window.genMarketing = async function(type) {
               <div style="font-size:1rem;line-height:1.4;margin-bottom:2rem;background:rgba(0,0,0,0.4);padding:1rem;border-radius:12px">${result.content}</div>
               <div style="background:white;color:black;padding:0.8rem;border-radius:100px;font-weight:800;text-align:center">${result.cta || 'SAIBA MAIS'}</div>
             </div>
+          </div>
+          <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
+            <button class="nav-cta" style="background:#E1306C;flex:1;gap:0.5rem" onclick="handleSocialPost('instagram', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="instagram"></i> Instagram</button>
+            <button class="nav-cta" style="background:#25D366;flex:1;gap:0.5rem" onclick="handleSocialPost('whatsapp', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="message-circle"></i> WhatsApp</button>
           </div>`;
       } else {
         html = `
@@ -907,6 +911,10 @@ window.genMarketing = async function(type) {
                 <div style="font-weight:700;color:var(--primary)">${result.cta || 'SAIBA MAIS'}</div>
               </div>
             </div>
+          </div>
+          <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
+            <button class="nav-cta" style="background:#E1306C;flex:1;gap:0.5rem" onclick="handleSocialPost('instagram', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="instagram"></i> Instagram</button>
+            <button class="nav-cta" style="background:#25D366;flex:1;gap:0.5rem" onclick="handleSocialPost('whatsapp', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="message-circle"></i> WhatsApp</button>
           </div>`;
       }
       content.innerHTML = html;
