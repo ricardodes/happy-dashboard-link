@@ -38,6 +38,7 @@
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
+  width: 100% !important;
 }
 .nav-container {
   max-width:1400px; margin:0 auto;
