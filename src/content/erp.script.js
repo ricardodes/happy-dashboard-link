@@ -589,25 +589,100 @@ window.quickAction = function(type) {
   }
 }
 
-window.genMarketing = function(type) {
+window.genMarketing = async function(type) {
   const preview = document.getElementById('marketing-preview');
   const content = document.getElementById('marketing-content');
   if (!preview || !content) return;
   preview.style.display = 'block';
-  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo com IA...</span></div>';
+  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo premium com IA Nobel...</span></div>';
 
-  const results = {
-    'post': '<div style="max-width:400px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem"><div style="font-weight:700;margin-bottom:0.75rem">📊 Contabilidade Nobel</div><div style="line-height:1.6;color:var(--text)">Você sabia que 68% das empresas pagam mais impostos do que deveriam? 🚨<br><br>Com nosso planejamento tributário inteligente, já economizamos R$ 2.4M para nossos clientes este ano. 💰<br><br>👉 Agende seu diagnóstico gratuito e descubra quanto sua empresa pode economizar!</div><div style="margin-top:1rem;color:var(--accent);font-weight:600">#ContabilidadeNobel #PlanejamentoTributário #Economia</div></div>',
-    'story': '<div style="max-width:300px;margin:0 auto;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);padding:2rem;color:white;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">💚</div><div style="font-weight:800;font-size:1.25rem;margin-bottom:0.5rem">NOBEL AI</div><div style="font-size:0.9rem;opacity:0.9">Inteligência Artificial aplicada à contabilidade do seu negócio</div><div style="margin-top:1.5rem;font-size:0.8rem;opacity:0.7">Deslize up para saber mais →</div></div>',
-    'reels': '<div style="max-width:300px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden"><div style="height:200px;background:linear-gradient(135deg,#0f5e3e,#00d084);display:flex;align-items:center;justify-content:center;color:white;font-size:4rem">🎬</div><div style="padding:1rem"><div style="font-weight:700">Como reduzir 30% dos seus impostos</div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem">Dicas práticas de planejamento tributário</div></div></div>',
-    'banner': '<div style="max-width:600px;margin:0 auto;height:200px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:white;padding:2rem"><div style="text-align:center"><div style="font-size:2.5rem;font-weight:800;margin-bottom:0.5rem">CONTABILIDADE NOBEL</div><div style="font-size:1.1rem;opacity:0.9">Mais que contabilidade. Inteligência para o crescimento.</div></div></div>',
-    'artigo': '<div style="max-width:600px;margin:0 auto;line-height:1.8;color:var(--text)"><h2 style="color:var(--accent);margin-bottom:1rem">Reforma Tributária: Impactos para o Simples Nacional</h2><p>A nova reforma tributária traz mudanças significativas para empresas do Simples Nacional. Neste artigo, analisamos...</p><p style="margin-top:1rem"><strong>1. O IBS e sua aplicação</strong><br>O Imposto sobre Bens e Serviços (IBS) unificará PIS, COFINS, ICMS e ISS...</p></div>',
-    'email': '<div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:2rem"><div style="color:var(--accent);font-weight:700;margin-bottom:1rem">CONTABILIDADE NOBEL</div><div style="font-size:1.25rem;font-weight:700;margin-bottom:1rem">Seu diagnóstico tributário está pronto! 🎉</div><div style="line-height:1.6;color:var(--text-secondary);margin-bottom:1.5rem">Prezado cliente,<br><br>Concluímos a análise da saúde fiscal da sua empresa. Identificamos <strong style="color:var(--accent)">oportunidades de economia</strong> que podem reduzir sua carga tributária em até 22%.</div><button style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;border:none;padding:0.875rem 1.5rem;border-radius:100px;font-weight:700;cursor:pointer">Ver Relatório Completo</button></div>'
-  };
+  try {
+    // Definir tópicos baseados no tipo
+    const topics = {
+      'post': 'Redução de impostos para empresas de tecnologia',
+      'story': 'Dica rápida: Planejamento tributário inteligente',
+      'reels': 'Por que sua empresa paga mais impostos do que deveria?',
+      'banner': 'Contabilidade Nobel: Inteligência para seu crescimento',
+      'artigo': 'Os impactos da Reforma Tributária no Simples Nacional em 2024',
+      'email': 'Seu diagnóstico tributário gratuito está pronto'
+    };
 
-  setTimeout(() => {
-    content.innerHTML = results[type] || 'Conteúdo gerado com sucesso!';
-  }, 2000);
+    const channels = {
+      'post': 'instagram',
+      'story': 'instagram',
+      'reels': 'instagram',
+      'banner': 'linkedin',
+      'artigo': 'linkedin',
+      'email': 'whatsapp'
+    };
+
+    // Chamar a função de servidor do Lovable AI Gateway
+    const { generateMarketingCopy } = await import('@/lib/erp-ai.functions');
+    const result = await generateMarketingCopy({
+      topic: topics[type] || 'Contabilidade e Inteligência Artificial',
+      channel: channels[type] || 'instagram',
+      tone: 'premium, profissional, moderno e direto'
+    });
+
+    if (result) {
+      let html = '';
+      const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(result.image_prompt)}?width=800&height=800&seed=${Math.floor(Math.random()*1000)}`;
+      
+      if (type === 'story' || type === 'reels') {
+        html = `
+          <div style="max-width:350px;margin:0 auto;background:linear-gradient(135deg,#0f5e3e,#00d084);border-radius:var(--radius);overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg)">
+            <img src="${imageUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.6">
+            <div style="position:relative;z-index:1;padding:2rem;display:flex;flex-direction:column;height:100%;justify-content:center;text-align:center">
+              <div style="font-weight:900;font-size:1.5rem;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,0.3)">${result.title}</div>
+              <div style="font-size:1.1rem;line-height:1.4;margin-bottom:2rem">${result.content.substring(0, 150)}...</div>
+              <div style="background:white;color:#0f5e3e;padding:0.75rem 1.5rem;border-radius:100px;font-weight:800;align-self:center;box-shadow:0 4px 12px rgba(0,0,0,0.2)">SAIBA MAIS</div>
+            </div>
+          </div>`;
+      } else if (type === 'artigo') {
+        html = `
+          <div style="max-width:800px;margin:0 auto;background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+            <img src="${imageUrl}" style="width:100%;height:300px;object-fit:cover">
+            <div style="padding:2.5rem">
+              <h2 style="color:var(--primary);margin-bottom:1.5rem;font-size:1.75rem">${result.title}</h2>
+              <div style="line-height:1.8;color:var(--text);font-size:1.1rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap">
+                ${result.hashtags.map(h => `<span style="color:var(--accent);font-weight:600">#${h}</span>`).join(' ')}
+              </div>
+            </div>
+          </div>`;
+      } else {
+        html = `
+          <div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+            <div style="padding:1rem;display:flex;align-items:center;gap:0.75rem">
+              <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900">N</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem">Contabilidade Nobel</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Inteligência Contábil</div>
+              </div>
+            </div>
+            <img src="${imageUrl}" style="width:100%;aspect-ratio:1;object-fit:cover">
+            <div style="padding:1.5rem">
+              <div style="font-weight:700;margin-bottom:0.75rem;font-size:1.1rem">${result.title}</div>
+              <div style="line-height:1.6;color:var(--text);margin-bottom:1rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="color:var(--accent);font-weight:600">
+                ${result.hashtags.map(h => `#${h}`).join(' ')}
+              </div>
+            </div>
+          </div>`;
+      }
+      content.innerHTML = html;
+    } else {
+      content.innerHTML = 'Erro ao gerar conteúdo. Tente novamente.';
+    }
+  } catch (err) {
+    console.error('Marketing IA Error:', err);
+    content.innerHTML = `<div style="text-align:center;color:var(--danger)">
+      <i data-lucide="alert-circle" style="width:48px;height:48px;margin-bottom:1rem"></i>
+      <div>Erro na IA: ${err.message}</div>
+      <button onclick="window.genMarketing('${type}')" style="margin-top:1rem;padding:0.5rem 1rem;background:var(--primary);color:white;border:none;border-radius:100px;cursor:pointer">Tentar Novamente</button>
+    </div>`;
+    if (window.lucide) window.lucide.createIcons();
+  }
 }
 
 // CSS spinner
