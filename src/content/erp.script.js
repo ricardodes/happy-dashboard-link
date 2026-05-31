@@ -90,7 +90,7 @@ window.showView = function(viewId, target = null) {
     'contabil': 'Setor Contábil',
     'fiscal': 'Setor Fiscal',
     'trabalhista': 'Setor de RH/DP',
-    'informativos': 'Central de Informativos',
+    'informativos': 'Quem Somos & Informativos',
     'equipe': 'Gestão de Equipe',
     'agenda': 'Agenda Nobel & Fiscal',
     'admin': 'Painel Administrativo'
@@ -878,7 +878,7 @@ window.genMarketing = async function(type) {
       const fallbackImg = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1080&auto=format&fit=crop";
       
       let html = '';
-      if (type === 'story') {
+      if (type === 'story' || type === 'reels') {
         html = `
           <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
             <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.8">
@@ -887,6 +887,10 @@ window.genMarketing = async function(type) {
               <div style="font-size:1rem;line-height:1.4;margin-bottom:2rem;background:rgba(0,0,0,0.4);padding:1rem;border-radius:12px">${result.content}</div>
               <div style="background:white;color:black;padding:0.8rem;border-radius:100px;font-weight:800;text-align:center">${result.cta || 'SAIBA MAIS'}</div>
             </div>
+          </div>
+          <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
+            <button class="nav-cta" style="background:#E1306C;flex:1;gap:0.5rem" onclick="handleSocialPost('instagram', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="instagram"></i> Instagram</button>
+            <button class="nav-cta" style="background:#25D366;flex:1;gap:0.5rem" onclick="handleSocialPost('whatsapp', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="message-circle"></i> WhatsApp</button>
           </div>`;
       } else {
         html = `
@@ -907,6 +911,10 @@ window.genMarketing = async function(type) {
                 <div style="font-weight:700;color:var(--primary)">${result.cta || 'SAIBA MAIS'}</div>
               </div>
             </div>
+          </div>
+          <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
+            <button class="nav-cta" style="background:#E1306C;flex:1;gap:0.5rem" onclick="handleSocialPost('instagram', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="instagram"></i> Instagram</button>
+            <button class="nav-cta" style="background:#25D366;flex:1;gap:0.5rem" onclick="handleSocialPost('whatsapp', '${type}', '${encodeURIComponent(imageUrl)}')"><i data-lucide="message-circle"></i> WhatsApp</button>
           </div>`;
       }
       content.innerHTML = html;
@@ -1457,4 +1465,27 @@ window.openNewFiscalModal = function() {
       closeModal();
     }
   });
+};
+
+window.handleSocialPost = (platform, type, imgUrl) => {
+  const url = decodeURIComponent(imgUrl);
+  const text = encodeURIComponent("Confira o novo material da Contabilidade Nobel! #Contabilidade #NobelERP");
+  
+  if (platform === 'whatsapp') {
+    window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(url)}`, '_blank');
+  } else if (platform === 'instagram') {
+    // Instagram doesn't support direct API posting from web easily without auth, 
+    // so we provide instructions/fallback
+    openModal({
+      title: "Postar no Instagram",
+      body: `<div style="text-align:center">
+               <img src="${url}" style="width:200px;border-radius:12px;margin-bottom:1rem">
+               <p>O Instagram não permite postagens diretas via navegador. </p>
+               <p style="font-weight:700">Salve a imagem e poste manualmente no seu perfil!</p>
+               <a href="${url}" download="nobel-marketing.png" class="nav-cta" style="display:inline-block;margin-top:1rem">Baixar Imagem</a>
+             </div>`,
+      confirmText: "Entendido",
+      onConfirm: () => closeModal()
+    });
+  }
 };
