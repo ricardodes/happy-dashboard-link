@@ -369,25 +369,70 @@ window.genMarketing = async function(type) {
     if (window.lucide) window.lucide.createIcons();
   }
 };
-};
 
-// Prospecção Data
+// Prospecção Data - Banco de Dados Expandido (Norte de Minas)
 const empresasProspeccao = [
-  {"nome": "Clínica Médica Montes Claros", "cat": "Clínicas médicas", "cidade": "Montes Claros", "endereco": "Av. Deputado Esteves Rodrigues, 1000", "tel": "(38) 3221-1000", "score": 96, "regime": "Simples Nacional", "oportunidade": "alta"},
+  // Montes Claros
+  {"nome": "Clínica Médica Montes Claros", "cat": "Clínicas médicas", "cidade": "Montes Claros", "endereco": "Av. Deputado Esteves Rodrigues, 1000", "tel": "(38) 3221-1000", "score": 96, "regime": "Lucro Presumido", "oportunidade": "alta"},
   {"nome": "Hospital do Norte de Minas", "cat": "Hospitais", "cidade": "Montes Claros", "endereco": "Rua Santa Maria, 500", "tel": "(38) 3222-2000", "score": 98, "regime": "Lucro Real", "oportunidade": "alta"},
+  {"nome": "BioLab Laboratórios", "cat": "Laboratórios", "cidade": "Montes Claros", "endereco": "Rua Justino Câmara, 45", "tel": "(38) 3215-4400", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
+  {"nome": "TechSolutions Norte", "cat": "Software e TI", "cidade": "Montes Claros", "endereco": "Av. Donato Quintino, 90", "tel": "(38) 3224-1500", "score": 92, "regime": "Simples Nacional", "oportunidade": "alta"},
+  {"nome": "Moc Construtora", "cat": "Construtoras", "cidade": "Montes Claros", "endereco": "Av. Mestra Fininha, 1200", "tel": "(38) 3212-3300", "score": 90, "regime": "Lucro Real", "oportunidade": "alta"},
+  {"nome": "GastroCenter MOC", "cat": "Clínicas médicas", "cidade": "Montes Claros", "endereco": "Rua Dr. Santos, 120", "tel": "(38) 3221-8899", "score": 95, "regime": "Lucro Presumido", "oportunidade": "alta"},
+  
+  // Janaúba
   {"nome": "Agropecuária Janaúba", "cat": "Agronegócio", "cidade": "Janaúba", "endereco": "Av. do Comércio, 200", "tel": "(38) 3821-3000", "score": 92, "regime": "Simples Nacional", "oportunidade": "alta"},
+  {"nome": "Frigorífico Norte Minas", "cat": "Indústrias alimentícias", "cidade": "Janaúba", "endereco": "Distrito Industrial", "tel": "(38) 3821-4500", "score": 94, "regime": "Lucro Real", "oportunidade": "alta"},
+  {"nome": "Cooperativa Gorutuba", "cat": "Agronegócio", "cidade": "Janaúba", "endereco": "Rodovia MG-122", "tel": "(38) 3821-2200", "score": 91, "regime": "Lucro Real", "oportunidade": "alta"},
+
+  // Januária
   {"nome": "Frigorífico Januária", "cat": "Indústrias alimentícias", "cidade": "Januária", "endereco": "Rodovia BR-135, KM 10", "tel": "(38) 3621-4000", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
+  {"nome": "Cachaçaria Artesanal", "cat": "Bebidas", "cidade": "Januária", "endereco": "Zona Rural", "tel": "(38) 3621-1122", "score": 88, "regime": "Simples Nacional", "oportunidade": "media"},
+
+  // Salinas
   {"nome": "Comércio de Salinas", "cat": "Varejo", "cidade": "Salinas", "endereco": "Av. Principal, 300", "tel": "(38) 3841-5000", "score": 88, "regime": "Simples Nacional", "oportunidade": "media"},
+  {"nome": "Cachaça Havana", "cat": "Indústrias alimentícias", "cidade": "Salinas", "endereco": "Fazenda Havana", "tel": "(38) 3841-1234", "score": 96, "regime": "Lucro Real", "oportunidade": "alta"},
+
+  // Pirapora
   {"nome": "Hotel Pirapora", "cat": "Turismo e Hotelaria", "cidade": "Pirapora", "endereco": "Rua da Orla, 100", "tel": "(38) 3741-6000", "score": 90, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  {"nome": "Laticínios Bocaiúva", "cat": "Indústrias alimentícias", "cidade": "Bocaiúva", "endereco": "Av. JK, 800", "tel": "(38) 3251-7000", "score": 89, "regime": "Lucro Presumido", "oportunidade": "alta"}
+  {"nome": "Têxtil Pirapora", "cat": "Indústrias têxteis", "cidade": "Pirapora", "endereco": "Av. Industrial, 500", "tel": "(38) 3741-9988", "score": 93, "regime": "Lucro Real", "oportunidade": "alta"},
+
+  // Bocaiúva
+  {"nome": "Laticínios Bocaiúva", "cat": "Indústrias alimentícias", "cidade": "Bocaiúva", "endereco": "Av. JK, 800", "tel": "(38) 3251-7000", "score": 89, "regime": "Lucro Presumido", "oportunidade": "alta"},
+  {"nome": "Carbonífera Norte", "cat": "Mineração", "cidade": "Bocaiúva", "endereco": "Zona Industrial", "tel": "(38) 3251-1234", "score": 91, "regime": "Lucro Real", "oportunidade": "alta"},
+
+  // Francisco Sá
+  {"nome": "AgroSá", "cat": "Agronegócio", "cidade": "Francisco Sá", "endereco": "Fazenda Santa Cruz", "tel": "(38) 3233-1000", "score": 87, "regime": "Simples Nacional", "oportunidade": "media"},
+  {"nome": "Posto Parada Real", "cat": "Postos de combustível", "cidade": "Francisco Sá", "endereco": "BR-251, KM 40", "tel": "(38) 3233-4455", "score": 92, "regime": "Lucro Real", "oportunidade": "alta"},
+
+  // Jaíba
+  {"nome": "Frutas Jaíba", "cat": "Exportação", "cidade": "Jaíba", "endereco": "Projeto Jaíba - Gleba C", "tel": "(38) 3833-2200", "score": 97, "regime": "Lucro Real", "oportunidade": "alta"},
+  {"nome": "Jaíba Irrigação", "cat": "Equipamentos", "cidade": "Jaíba", "endereco": "Av. Principal, 100", "tel": "(38) 3833-1100", "score": 89, "regime": "Simples Nacional", "oportunidade": "alta"},
+
+  // Brasília de Minas
+  {"nome": "Hospital Santa Rita", "cat": "Hospitais", "cidade": "Brasília de Minas", "endereco": "Rua Central, 200", "tel": "(38) 3231-1000", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
+  
+  // Coração de Jesus
+  {"nome": "Laticínio Coração", "cat": "Indústrias alimentícias", "cidade": "Coração de Jesus", "endereco": "Zona Rural", "tel": "(38) 3228-1000", "score": 86, "regime": "Simples Nacional", "oportunidade": "media"},
+  
+  // Porteirinha
+  {"nome": "Porteirinha Alimentos", "cat": "Indústrias alimentícias", "cidade": "Porteirinha", "endereco": "Rua do Comércio", "tel": "(38) 3831-2000", "score": 88, "regime": "Simples Nacional", "oportunidade": "alta"},
+
+  // Adicionando empresas de vizinhança imediata de MOC
+  {"nome": "Pousada Juramento", "cat": "Turismo e Hotelaria", "cidade": "Juramento", "endereco": "Beira da Represa", "tel": "(38) 99912-3456", "score": 85, "regime": "Simples Nacional", "oportunidade": "media"},
+  {"nome": "Fazenda Glaucilândia", "cat": "Agronegócio", "cidade": "Glaucilândia", "endereco": "Acesso MG-308", "tel": "(38) 98877-6655", "score": 89, "regime": "Simples Nacional", "oportunidade": "alta"},
+  {"nome": "Calcário Mirabela", "cat": "Indústria", "cidade": "Mirabela", "endereco": "BR-135, KM 50", "tel": "(38) 3239-1000", "score": 92, "regime": "Lucro Real", "oportunidade": "alta"}
 ];
 
 window.filterProspeccao = function() {
   const search = document.getElementById('prop-search')?.value?.toLowerCase() || '';
   const cidade = document.getElementById('prop-cidade')?.value || '';
+  const categoria = document.getElementById('prop-cat')?.value || '';
+  
   const filtradas = empresasProspeccao.filter(emp => 
-    (!search || emp.nome.toLowerCase().includes(search)) && 
-    (!cidade || emp.cidade === cidade)
+    (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
+    (!cidade || emp.cidade === cidade) &&
+    (!categoria || emp.cat === categoria)
   );
   window.renderEmpresas(filtradas);
 };
