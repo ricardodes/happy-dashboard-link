@@ -1360,11 +1360,16 @@
           <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="hard-hat" style="width:12px"></i> Módulo Trabalhista Interno</div>
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Equipe Contabilidade Nobel</h2>
         </div>
-        <div class="view-toggle" id="trab-toggle">
-          <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha Interna</button>
-          <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Colaboradores</button>
-          <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
-          <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div class="view-toggle" id="trab-toggle">
+            <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha Interna</button>
+            <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Colaboradores</button>
+            <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
+            <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
+          </div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar novo colaborador ou evento DP...')">
+            <i data-lucide="plus" style="width:14px"></i> Cadastrar
+          </button>
         </div>
       </div>
       
@@ -1762,12 +1767,17 @@
           <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="users-2" style="width:12px"></i> Gestão de Pessoas</div>
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Equipe Nobel</h2>
         </div>
-        <div class="view-toggle" id="equipe-toggle">
-          <button class="active" onclick="toggleEquipeTab(this,'todos')">Todos</button>
-          <button onclick="toggleEquipeTab(this,'comercial')">Comercial</button>
-          <button onclick="toggleEquipeTab(this,'contabil')">Contábil</button>
-          <button onclick="toggleEquipeTab(this,'financeiro')">Financeiro</button>
-          <button onclick="toggleEquipeTab(this,'atendimento')">Atendimento</button>
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div class="view-toggle" id="equipe-toggle">
+            <button class="active" onclick="toggleEquipeTab(this,'todos')">Todos</button>
+            <button onclick="toggleEquipeTab(this,'comercial')">Comercial</button>
+            <button onclick="toggleEquipeTab(this,'contabil')">Contábil</button>
+            <button onclick="toggleEquipeTab(this,'financeiro')">Financeiro</button>
+            <button onclick="toggleEquipeTab(this,'atendimento')">Atendimento</button>
+          </div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Adicionar novo membro à equipe...')">
+            <i data-lucide="plus" style="width:14px"></i> Novo Membro
+          </button>
         </div>
       </div>
       <div class="grid-4">
