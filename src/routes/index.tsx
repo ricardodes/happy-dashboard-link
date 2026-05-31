@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   return (
-    <div id="landing-root" style={{ background: 'white', minHeight: '100vh', position: 'relative', zIndex: 1, display: 'block' }}>
+    <div className="landing-root" style={{ background: 'white', minHeight: '100vh', position: 'relative', zIndex: 1, display: 'block' }}>
 
       <InjectHtml
         html={landingHtml}
