@@ -1466,3 +1466,26 @@ window.openNewFiscalModal = function() {
     }
   });
 };
+
+window.handleSocialPost = (platform, type, imgUrl) => {
+  const url = decodeURIComponent(imgUrl);
+  const text = encodeURIComponent("Confira o novo material da Contabilidade Nobel! #Contabilidade #NobelERP");
+  
+  if (platform === 'whatsapp') {
+    window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(url)}`, '_blank');
+  } else if (platform === 'instagram') {
+    // Instagram doesn't support direct API posting from web easily without auth, 
+    // so we provide instructions/fallback
+    openModal({
+      title: "Postar no Instagram",
+      body: `<div style="text-align:center">
+               <img src="${url}" style="width:200px;border-radius:12px;margin-bottom:1rem">
+               <p>O Instagram não permite postagens diretas via navegador. </p>
+               <p style="font-weight:700">Salve a imagem e poste manualmente no seu perfil!</p>
+               <a href="${url}" download="nobel-marketing.png" class="nav-cta" style="display:inline-block;margin-top:1rem">Baixar Imagem</a>
+             </div>`,
+      confirmText: "Entendido",
+      onConfirm: () => closeModal()
+    });
+  }
+};
