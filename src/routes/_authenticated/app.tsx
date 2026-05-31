@@ -908,7 +908,7 @@ function MarketingTab() {
   const aiFn = useServerFn(generateMarketingCopy);
   const [topic, setTopic] = useState("");
   const [channel, setChannel] = useState<"instagram" | "whatsapp" | "linkedin" | "facebook">("instagram");
-  const [tone, setTone] = useState("");
+  const [tone, setTone] = useState("Premium, sofisticado e encantador");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ title: string; content: string; hashtags: string[]; image_prompt: string } | null>(null);
   const [imgUrl, setImgUrl] = useState<string>("");
@@ -923,15 +923,19 @@ function MarketingTab() {
     if (!topic.trim()) return;
     setLoading(true); setResult(null); setImgUrl("");
     try {
+      // Groove / IA Inteligente configurada no backend
       const r = await aiFn({ data: { topic, channel, tone: tone || undefined } });
       setResult(r);
       const s = Math.floor(Math.random() * 1_000_000);
       setSeed(s);
-      setImgUrl(pollinationsUrl(r.image_prompt, s));
+      // Pollinations para encantamento visual
+      setImgUrl(pollinationsUrl(`${r.image_prompt}, cinematic lighting, premium quality, highly detailed, accounting firm luxury style`, s));
+      toast.success("Post e Imagem gerados com sucesso!");
     } catch (e: any) {
       toast.error(e?.message ?? "Falha");
     } finally { setLoading(false); }
   };
+
 
   const regenImage = () => {
     if (!result) return;
