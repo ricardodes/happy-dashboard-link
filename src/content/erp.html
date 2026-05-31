@@ -892,7 +892,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem">
           <div>
             <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem">OpenAI API Key</label>
-            <input type="password" value="sk-••••••••••••••••••••••••" style="width:100%;padding:0.75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text)">
+            <input type="password" id="api-key-openai" placeholder="sk-..." style="width:100%;padding:0.75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text)">
           </div>
           <div>
             <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem">Claude API Key</label>
@@ -908,7 +908,7 @@
           </div>
           <div>
             <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem">Groq API Key</label>
-            <input type="password" value="gsk_••••••••••••••••••••" style="width:100%;padding:0.75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text)">
+            <input type="password" id="api-key-groq" placeholder="gsk_..." style="width:100%;padding:0.75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text)">
           </div>
           <div>
             <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem">Limite de Tokens/Mês</label>
@@ -916,8 +916,7 @@
           </div>
         </div>
         <div style="margin-top:1.5rem;display:flex;gap:1rem">
-          <button class="nav-cta" style="padding:0.6rem 1.5rem;border-radius:100px;font-size:0.85rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer">Salvar Configurações</button>
-          <button style="padding:0.6rem 1.5rem;border-radius:100px;font-size:0.85rem;font-weight:600;background:transparent;color:var(--text-secondary);border:1px solid var(--border);cursor:pointer">Testar Conexões</button>
+          <button class="nav-cta" onclick="saveApiKeys()" style="padding:0.6rem 1.5rem;border-radius:100px;font-size:0.85rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer">Salvar Chaves Localmente</button>
         </div>
       </div>
     </div>
