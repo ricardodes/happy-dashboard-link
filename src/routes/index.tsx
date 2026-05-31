@@ -42,7 +42,7 @@ function LandingPage() {
           "https://unpkg.com/lucide@latest",
         ]}
         cssUrl={landingCssUrl}
-        interceptLinkSelector='a[href="app.html"], a[href$="/app"]'
+        interceptLinkSelector='a[href="app.html"], a[href$="/app"], .nav-cta, .btn-portal'
         interceptTo="/app"
       />
     </div>
