@@ -6,13 +6,6 @@ import { InjectHtml } from "@/lib/InjectHtml";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async () => {
-    // Se o usuário já estiver logado, manda direto para o app para evitar o flash da landing
-    const { data } = await supabase.auth.getUser();
-    if (data.user) {
-      throw redirect({ to: "/app" });
-    }
-  },
   head: () => ({
     meta: [
       {

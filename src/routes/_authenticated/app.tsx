@@ -39,12 +39,8 @@ function ErpPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Redirecionamento de segurança extra para evitar flashes de outros sites
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) navigate({ to: "/login" });
-    });
-  }, [navigate]);
+  // Autenticação removida temporariamente conforme solicitado
+
 
   return (
     <div className="flex min-h-screen bg-slate-50">
