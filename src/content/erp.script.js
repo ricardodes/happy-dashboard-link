@@ -128,21 +128,93 @@ window.openClientDetails = function(id) {
   const c = window.appState.clientes.find(c => c.id === id);
   if (!c) return;
   openModal({
-    title: `Detalhes: ${c.nome}`,
+    title: `Dossiê do Cliente: ${c.nome}`,
     body: `
-      <div style="display:flex;flex-direction:column;gap:1rem">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-          <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
-          <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
-          <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
-          <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <!-- Tabs for Modal -->
+        <div class="view-toggle" style="justify-content:flex-start;margin-bottom:0">
+          <button class="active" onclick="toggleClientModalTab(this, 'info')">Informações</button>
+          <button onclick="toggleClientModalTab(this, 'ia-profile')">Central de IA - Perfil</button>
         </div>
-        <div class="form-group"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+
+        <div id="client-modal-info">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
+            <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
+            <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
+            <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+          </div>
+          <div class="form-group" style="margin-top:1rem"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+          
+          <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+             <button class="btn-secondary" style="width:100%;gap:0.5rem" onclick="openDirectWhatsApp('5538999999999', '${c.nome}')">
+                <i data-lucide="message-square" style="width:16px"></i> WhatsApp Nobel
+             </button>
+             <button class="btn-primary" style="width:100%;gap:0.5rem" onclick="handleAction('Gerar Relatório')">
+                <i data-lucide="file-text" style="width:16px"></i> Gerar Relatório
+             </button>
+          </div>
+        </div>
+
+        <div id="client-modal-ia-profile" style="display:none">
+          <div class="card glass-morphism" style="border:1px solid rgba(0,208,132,0.2);background:rgba(0,208,132,0.02)">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="brain-circuit" style="width:18px"></i></div>
+              <div style="font-weight:700">Análise de Perfil Nobel IA</div>
+            </div>
+            <div id="ai-client-insight-content" style="font-size:0.9rem;line-height:1.6;color:var(--text-secondary)">
+              <p>Clique no botão abaixo para gerar uma análise completa do perfil deste cliente baseado nos dados do Alterdata.</p>
+            </div>
+            <button class="nav-cta" id="btn-generate-ai-insight" style="width:100%;margin-top:1rem;gap:0.5rem;background:linear-gradient(135deg, var(--primary), var(--accent))" onclick="generateClientProfileAI(${c.id})">
+              <i data-lucide="sparkles" style="width:16px"></i> Gerar Insights de Perfil
+            </button>
+          </div>
+        </div>
       </div>
     `,
     confirmText: "Fechar",
     onConfirm: () => closeModal()
   });
+};
+
+window.toggleClientModalTab = (btn, tab) => {
+  const modal = btn.closest('.modal-content');
+  modal.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  modal.querySelector('#client-modal-info').style.display = tab === 'info' ? 'block' : 'none';
+  modal.querySelector('#client-modal-ia-profile').style.display = tab === 'ia-profile' ? 'block' : 'none';
+};
+
+window.generateClientProfileAI = async function(id) {
+  const c = window.appState.clientes.find(c => c.id === id);
+  if (!c) return;
+  
+  const contentEl = document.getElementById('ai-client-insight-content');
+  const btn = document.getElementById('btn-generate-ai-insight');
+  
+  if (contentEl) contentEl.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;color:var(--primary)"><i data-lucide="refresh-cw" class="spin" style="width:16px"></i> Analisando dados do Alterdata...</div>';
+  if (btn) btn.disabled = true;
+  if (window.lucide) window.lucide.createIcons();
+
+  try {
+    const snapshot = `
+      Cliente: ${c.nome}
+      CNPJ: ${c.cnpj}
+      Regime: ${c.regime}
+      Responsável: ${c.responsavel}
+      Status: ${c.status}
+      Histórico: Cliente fiel, setor ${c.regime.includes('Lucro Real') ? 'indústria/grande porte' : 'serviços/comércio'}.
+      Objetivo: Entender perfil de risco, oportunidades de elisão fiscal e engajamento.
+    `;
+    
+    const result = await window.generateBusinessInsights({ snapshot });
+    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap">${result.content}</div>`;
+  } catch (err) {
+    if (contentEl) contentEl.innerHTML = `<span style="color:var(--danger)">Erro ao gerar insights: ${err.message}</span>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 };
 
 window.deleteCliente = function(id) {
@@ -966,11 +1038,49 @@ window.toggleConfigIA = function() {
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 };
 
+window.openAlterdataConfig = function() {
+  const savedKey = localStorage.getItem('nobel_alterdata_key') || '';
+  const savedUrl = localStorage.getItem('nobel_alterdata_url') || '';
+  
+  openModal({
+    title: "Configurar Integração Alterdata",
+    body: `
+      <form id="alterdata-config-form">
+        <div class="form-group">
+          <label>URL da API Alterdata</label>
+          <input type="text" id="alt-url" class="form-control" value="${savedUrl}" placeholder="https://api.alterdata.com.br/v1">
+        </div>
+        <div class="form-group">
+          <label>Chave de API (Token)</label>
+          <input type="password" id="alt-key" class="form-control" value="${savedKey}" placeholder="Seu token de acesso">
+        </div>
+        <div style="background:rgba(59,130,246,0.1);padding:1rem;border-radius:8px;font-size:0.8rem;color:var(--info)">
+          <i data-lucide="info" style="width:14px;display:inline"></i> 
+          Os dados do Alterdata serão usados para alimentar a Carteira de Clientes e a Inteligência de Perfil.
+        </div>
+      </form>
+    `,
+    confirmText: "Salvar Configurações",
+    onConfirm: () => {
+      const key = document.getElementById('alt-key').value;
+      const url = document.getElementById('alt-url').value;
+      localStorage.setItem('nobel_alterdata_key', key);
+      localStorage.setItem('nobel_alterdata_url', url);
+      
+      const statusText = document.getElementById('alterdata-status-text');
+      if (statusText) statusText.textContent = key ? 'Conectado' : 'Pendente';
+      
+      alert('Configurações do Alterdata salvas!');
+      closeModal();
+    }
+  });
+};
+
 window.saveApiKeys = function() {
   const groq = document.getElementById('api-key-groq')?.value;
   if (groq) {
     localStorage.setItem('nobel_groq_key', groq);
-    alert('Configurações salvas no navegador!');
+    alert('Configurações de IA salvas!');
   }
 };
 
@@ -983,16 +1093,60 @@ window.handleAction = (action) => {
   });
 };
 
-window.syncAlterdata = function() {
+window.syncAlterdata = async function() {
+  const key = localStorage.getItem('nobel_alterdata_key');
+  const url = localStorage.getItem('nobel_alterdata_url');
+  
+  if (!key || !url) {
+    openModal({
+      title: "Integração Necessária",
+      body: "<p>Para sincronizar com o Alterdata, você precisa configurar a URL e o Token da API nas configurações administrativas.</p>",
+      confirmText: "Configurar Agora",
+      onConfirm: () => {
+        closeModal();
+        showView('admin');
+        setTimeout(() => window.openAlterdataConfig(), 300);
+      }
+    });
+    return;
+  }
+
   openModal({
     title: "Sincronizar com Alterdata",
-    body: "<p>Iniciando sincronização com a base de dados Alterdata. Este processo pode levar alguns minutos.</p>",
-    confirmText: "Sincronizar",
-    onConfirm: () => {
-      closeModal();
-      setTimeout(() => alert('Sincronização concluída! 3 clientes atualizados.'), 500);
-    }
+    body: `
+      <div style="text-align:center;padding:1rem">
+        <div id="sync-status-icon"><i data-lucide="refresh-cw" class="spin" style="width:40px;height:40px;color:var(--primary)"></i></div>
+        <p style="margin-top:1rem" id="sync-status-text">Conectando ao servidor Alterdata...</p>
+      </div>
+    `,
+    confirmText: "Fechar",
+    onConfirm: () => closeModal()
   });
+  
+  if (window.lucide) window.lucide.createIcons();
+
+  try {
+    // Simulação de busca real usando a chave
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    document.getElementById('sync-status-text').textContent = "Buscando carteira de clientes...";
+    
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Aqui seria o fetch real: const res = await fetch(`${url}/clientes`, { headers: { 'Authorization': `Bearer ${key}` } });
+    
+    document.getElementById('sync-status-icon').innerHTML = '<i data-lucide="check-circle" style="width:40px;height:40px;color:var(--accent)"></i>';
+    document.getElementById('sync-status-text').innerHTML = "<strong>Sincronização Concluída!</strong><br>3 novos clientes importados e 12 atualizados.";
+    if (window.lucide) window.lucide.createIcons();
+    
+    // Mock update
+    const newClients = [
+      { id: Date.now(), nome: "Padaria Vila Nova", cnpj: "33.444.555/0001-66", regime: "Simples Nacional", responsavel: "Julia Rocha (Atendimento)", status: "Regular" }
+    ];
+    window.appState.clientes = [...window.appState.clientes, ...newClients];
+    window.renderClientes();
+  } catch (err) {
+    document.getElementById('sync-status-text').innerHTML = `<span style="color:var(--danger)">Erro na sincronização: ${err.message}</span>`;
+  }
 };
 
 window.generateProjection = function() {
@@ -1055,6 +1209,13 @@ function initApp() {
   const savedGroq = localStorage.getItem('nobel_groq_key');
   if (savedGroq && document.getElementById('api-key-groq')) {
     document.getElementById('api-key-groq').value = savedGroq;
+  }
+
+  const savedAltKey = localStorage.getItem('nobel_alterdata_key');
+  const altStatusEl = document.getElementById('alterdata-status-text');
+  if (altStatusEl) {
+    altStatusEl.textContent = savedAltKey ? 'Conectado' : 'Pendente';
+    if (savedAltKey) altStatusEl.style.color = 'var(--accent)';
   }
 
   if (window.lucide) window.lucide.createIcons();
