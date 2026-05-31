@@ -63,6 +63,8 @@ export type Database = {
       }
       clients: {
         Row: {
+          additional_info: Json | null
+          alterdata_id: string | null
           created_at: string
           document: string | null
           email: string | null
@@ -76,6 +78,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          additional_info?: Json | null
+          alterdata_id?: string | null
           created_at?: string
           document?: string | null
           email?: string | null
@@ -89,6 +93,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          additional_info?: Json | null
+          alterdata_id?: string | null
           created_at?: string
           document?: string | null
           email?: string | null
@@ -100,6 +106,75 @@ export type Database = {
           segment?: string | null
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      external_leads: {
+        Row: {
+          address: string | null
+          captured_at: string
+          category: string | null
+          city: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          phone: string | null
+          rating: number | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          captured_at?: string
+          category?: string | null
+          city?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          captured_at?: string
+          category?: string | null
+          city?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      fiscal_dates: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          due_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          due_at: string
+          id?: string
+          title: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          due_at?: string
+          id?: string
+          title?: string
         }
         Relationships: []
       }
