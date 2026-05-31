@@ -267,48 +267,97 @@ window.genMarketing = async function(type) {
       tone: 'premium, sofisticado, persuasivo'
     });
 
-    if (result) {
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(result.image_prompt)}?width=1080&height=1080&nologo=true&model=flux&seed=${Math.floor(Math.random()*1000)}`;
+      const isVertical = type === 'story' || type === 'reels';
+      const width = isVertical ? 720 : 1080;
+      const height = isVertical ? 1280 : 1080;
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(result.image_prompt)}?width=${width}&height=${height}&nologo=true&model=flux&seed=${Math.floor(Math.random()*1000)}`;
+      
+      const fallbackImg = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1080&auto=format&fit=crop";
       
       let html = '';
-      if (type === 'story' || type === 'reels') {
+      if (type === 'story') {
         html = `
-          <div style="max-width:350px;margin:0 auto;background:linear-gradient(135deg,#0f5e3e,#00d084);border-radius:var(--radius);overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg)">
-            <img src="${imageUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.6">
-            <div style="position:relative;z-index:1;padding:2rem;display:flex;flex-direction:column;height:100%;justify-content:center;text-align:center">
-              <div style="font-weight:900;font-size:1.5rem;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,0.3)">${result.title}</div>
-              <div style="font-size:1.1rem;line-height:1.4;margin-bottom:2rem">${result.content.substring(0, 150)}...</div>
-              <div style="background:white;color:#0f5e3e;padding:0.75rem 1.5rem;border-radius:100px;font-weight:800;align-self:center;box-shadow:0 4px 12px rgba(0,0,0,0.2)">SAIBA MAIS</div>
+          <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
+            <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.8">
+            <div style="position:absolute;top:0;left:0;right:0;height:100px;background:linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);padding:1.5rem;display:flex;align-items:center;gap:0.75rem;z-index:2">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.7rem;border:2px solid white">N</div>
+              <div style="font-weight:700;font-size:0.85rem;text-shadow:0 1px 2px rgba(0,0,0,0.5)">Contabilidade Nobel</div>
+            </div>
+            <div style="position:relative;z-index:1;padding:2rem;display:flex;flex-direction:column;height:100%;justify-content:flex-end;padding-bottom:5rem">
+              <div style="font-weight:900;font-size:1.8rem;margin-bottom:1rem;line-height:1.1;text-shadow:0 2px 10px rgba(0,0,0,0.8)">${result.title}</div>
+              <div style="font-size:1rem;line-height:1.4;margin-bottom:2rem;background:rgba(0,0,0,0.4);padding:1rem;border-radius:12px;backdrop-filter:blur(4px)">${result.content}</div>
+              <div style="background:white;color:black;padding:0.8rem;border-radius:100px;font-weight:800;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);letter-spacing:1px;font-size:0.8rem">${result.cta || 'SAIBA MAIS'}</div>
+            </div>
+          </div>`;
+      } else if (type === 'reels') {
+        html = `
+          <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
+            <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.7">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;opacity:0.6">
+              <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center">
+                <div style="width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 15px solid white; margin-left: 5px"></div>
+              </div>
+            </div>
+            <div style="position:relative;z-index:1;padding:1.5rem;display:flex;flex-direction:column;height:100%;justify-content:flex-end;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent 40%)">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.7rem;border:1px solid white">N</div>
+                <div style="font-weight:700;font-size:0.9rem">Contabilidade Nobel • Seguir</div>
+              </div>
+              <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem">${result.title}</div>
+              <div style="font-size:0.9rem;line-height:1.4;margin-bottom:1rem;color:rgba(255,255,255,0.9)">${result.content}</div>
+              <div style="display:flex;gap:0.5rem;overflow:hidden;white-space:nowrap">
+                 ${result.hashtags.map(h => `<span style="font-size:0.75rem;opacity:0.8">#${h}</span>`).join(' ')}
+              </div>
             </div>
           </div>`;
       } else if (type === 'artigo') {
         html = `
-          <div style="max-width:800px;margin:0 auto;background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-            <img src="${imageUrl}" style="width:100%;height:350px;object-fit:cover">
-            <div style="padding:2.5rem">
-              <h2 style="color:var(--primary);margin-bottom:1.5rem;font-size:1.75rem">${result.title}</h2>
-              <div style="line-height:1.8;color:var(--text);font-size:1.1rem">${result.content.replace(/\n/g, '<br>')}</div>
-              <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap">
-                ${result.hashtags.map(h => `<span style="color:var(--accent);font-weight:600">#${h}</span>`).join(' ')}
+          <div style="max-width:850px;margin:0 auto;background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--border)">
+            <div style="position:relative">
+              <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="width:100%;height:450px;object-fit:cover">
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:3rem;background:linear-gradient(to top, var(--bg-elevated), transparent)">
+                <div style="display:flex;gap:1rem;margin-bottom:1rem">
+                  <span style="background:var(--accent);color:white;padding:0.25rem 0.75rem;border-radius:100px;font-size:0.75rem;font-weight:700;text-transform:uppercase">Insights Nobel</span>
+                  <span style="color:rgba(255,255,255,0.8);font-size:0.8rem">Leitura de 5 min</span>
+                </div>
+                <h1 style="color:var(--text);margin:0;font-size:2.5rem;font-weight:800;line-height:1.2">${result.title}</h1>
+              </div>
+            </div>
+            <div style="padding:4rem;max-width:700px;margin:0 auto">
+              <div style="line-height:2;color:var(--text);font-size:1.2rem;letter-spacing:-0.01em">
+                ${result.content.split('\n').map(p => p.trim() ? `<p style="margin-bottom:2rem">${p}</p>` : '').join('')}
+              </div>
+              <div style="margin-top:4rem;padding-top:2rem;border-top:2px solid var(--border);display:flex;flex-direction:column;gap:2rem">
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+                  ${result.hashtags.map(h => `<span style="background:var(--bg-hover);color:var(--accent);padding:0.5rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem">#${h}</span>`).join('')}
+                </div>
+                <div style="background:var(--primary);color:white;padding:2.5rem;border-radius:var(--radius);text-align:center">
+                  <h3 style="margin-bottom:1rem;font-size:1.5rem">${result.cta || 'Transforme sua Gestão'}</h3>
+                  <p style="opacity:0.9;margin-bottom:2rem">Agende uma consultoria estratégica com o time da Nobel.</p>
+                  <button style="background:white;color:var(--primary);border:none;padding:1rem 2rem;border-radius:100px;font-weight:800;cursor:pointer">Falar com Especialista</button>
+                </div>
               </div>
             </div>
           </div>`;
       } else {
         html = `
-          <div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-            <div style="padding:1rem;display:flex;align-items:center;gap:0.75rem">
-              <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900">N</div>
+          <div style="max-width:550px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg)">
+            <div style="padding:1.25rem;display:flex;align-items:center;gap:1rem">
+              <div style="width:45px;height:45px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem">N</div>
               <div>
-                <div style="font-weight:700;font-size:0.9rem">Contabilidade Nobel</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">Inteligência Contábil</div>
+                <div style="font-weight:800;font-size:1rem">Contabilidade Nobel</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">Estratégia & Inteligência Fiscal</div>
               </div>
             </div>
-            <img src="${imageUrl}" style="width:100%;aspect-ratio:1;object-fit:cover">
-            <div style="padding:1.5rem">
-              <div style="font-weight:700;margin-bottom:0.75rem;font-size:1.1rem">${result.title}</div>
-              <div style="line-height:1.6;color:var(--text);margin-bottom:1rem">${result.content.replace(/\n/g, '<br>')}</div>
-              <div style="color:var(--accent);font-weight:600">
+            <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="width:100%;aspect-ratio:1;object-fit:cover">
+            <div style="padding:2rem">
+              <div style="font-weight:800;margin-bottom:1rem;font-size:1.4rem;color:var(--primary)">${result.title}</div>
+              <div style="line-height:1.7;color:var(--text);margin-bottom:1.5rem;font-size:1.05rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="color:var(--accent);font-weight:700;margin-bottom:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap">
                 ${result.hashtags.map(h => `#${h}`).join(' ')}
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:1.5rem">
+                <div style="font-weight:700;color:var(--primary);font-size:0.9rem;letter-spacing:1px">${result.cta || 'SAIBA MAIS'}</div>
               </div>
             </div>
           </div>`;
@@ -316,8 +365,10 @@ window.genMarketing = async function(type) {
       content.innerHTML = html;
     }
   } catch (err) {
-    content.innerHTML = `<div style="color:var(--danger)">Erro: ${err.message}</div>`;
+    content.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--danger)"><i data-lucide="alert-circle" style="width:48px;height:48px;margin-bottom:1rem"></i><br>Erro ao gerar conteúdo: ${err.message}</div>`;
+    if (window.lucide) window.lucide.createIcons();
   }
+};
 };
 
 // Prospecção Data
