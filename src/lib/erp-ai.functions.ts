@@ -55,7 +55,6 @@ export const generateBusinessInsights = createServerFn({ method: "POST" })
 
 /** Gera copy de post para redes sociais / WhatsApp + prompt de imagem casado. */
 export const generateMarketingCopy = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) =>
     z
       .object({
