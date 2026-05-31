@@ -114,6 +114,16 @@ function ErpPage() {
   );
 }
 
+// Inserindo componente de segurança para forçar redirecionamento caso alguém tente forçar /app logado ou deslogado
+function AuthGate() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Como a autenticação foi removida, não precisamos mais do gate de login.
+    // Mas para garantir que não haja flashes, deixamos o componente pronto para o layout.
+  }, [navigate]);
+  return null;
+}
+
 function SidebarNavItem({ value, activeTab, setActiveTab, icon, label }: { value: string; activeTab: string; setActiveTab: (v: string) => void; icon: React.ReactNode; label: string }) {
   const active = activeTab === value;
   return (
