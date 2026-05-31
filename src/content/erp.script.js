@@ -1211,6 +1211,13 @@ function initApp() {
     document.getElementById('api-key-groq').value = savedGroq;
   }
 
+  const savedAltKey = localStorage.getItem('nobel_alterdata_key');
+  const altStatusEl = document.getElementById('alterdata-status-text');
+  if (altStatusEl) {
+    altStatusEl.textContent = savedAltKey ? 'Conectado' : 'Pendente';
+    if (savedAltKey) altStatusEl.style.color = 'var(--accent)';
+  }
+
   if (window.lucide) window.lucide.createIcons();
 }
 
