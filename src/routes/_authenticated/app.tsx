@@ -43,7 +43,7 @@ function ErpPage() {
 
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <div style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex' }}>
 
       {/* Sidebar Navigation */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
