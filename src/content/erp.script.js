@@ -428,42 +428,68 @@ const empresasProspeccao = [
 ];
 
 window.filterProspeccao = async function() {
-  const search = document.getElementById('prop-search')?.value?.toLowerCase() || '';
+  const searchInput = document.getElementById('prop-search');
+  const search = searchInput?.value?.trim() || '';
   const cidade = document.getElementById('prop-cidade')?.value || '';
   const categoria = document.getElementById('prop-cat')?.value || '';
   
   const grid = document.getElementById('prospeccao-grid');
-  if (grid) grid.innerHTML = '<div style="padding:2rem;text-align:center;grid-column:1/-1">Buscando empresas com IA...</div>';
+  if (grid) {
+    grid.innerHTML = `
+      <div style="padding:4rem;text-align:center;grid-column:1/-1">
+        <div class="spinner-mini" style="margin:0 auto 1rem;border-top-color:var(--primary);width:30px;height:30px;border-width:3px"></div>
+        <div style="font-weight:700;font-size:1.1rem">IA Nobel buscando no Google Maps...</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:0.5rem">Localizando empresas em ${cidade || 'Norte de Minas'}</div>
+      </div>
+    `;
+  }
 
   try {
+    const apiKey = localStorage.getItem('nobel_groq_key');
     const aiResults = await window.searchProspectsAI({ 
       query: search, 
-      city: cidade || 'Montes Claros e região', 
-      category: categoria || 'Empresas diversas' 
+      city: cidade || 'Montes Claros e região Norte de Minas', 
+      category: categoria || 'Empresas diversas',
+      apiKey: apiKey || undefined
     });
     
-    // Mesclar estáticos com IA e remover duplicados por nome
-    const all = [...aiResults, ...empresasProspeccao].filter((emp, index, self) =>
-      index === self.findIndex((t) => t.nome === emp.nome)
+    // Mesclar estáticos com IA e remover duplicados por nome (case insensitive)
+    const all = [...(aiResults || []), ...empresasProspeccao];
+    const unique = all.filter((emp, index, self) =>
+      index === self.findIndex((t) => t.nome.toLowerCase() === emp.nome.toLowerCase())
     );
 
-    const filtradas = all.filter(emp => 
-      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
-      (!cidade || emp.cidade === cidade) &&
-      (!categoria || emp.cat === categoria)
-    );
+    // Se houver busca ou filtro, aplicar. Se não, mostrar os melhores resultados da IA.
+    let filtradas = unique.filter(emp => {
+      const s = search.toLowerCase();
+      const matchSearch = !s || emp.nome.toLowerCase().includes(s) || emp.cat.toLowerCase().includes(s);
+      const matchCidade = !cidade || emp.cidade === cidade;
+      const matchCategoria = !categoria || emp.cat.toLowerCase().includes(categoria.toLowerCase());
+      return matchSearch && matchCidade && matchCategoria;
+    });
+
+    // Se o filtro removeu tudo da IA que era relevante, prioriza o que a IA trouxe
+    if (filtradas.length === 0 && aiResults && aiResults.length > 0) {
+      filtradas = aiResults;
+    }
+
     window.renderEmpresas(filtradas);
+    
+    // Atualiza o mapa se tiver cidade
+    if (cidade) {
+       const iframe = document.getElementById('google-map-frame');
+       if (iframe) iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(categoria + ' em ' + cidade + ' MG')}&output=embed`;
+    }
   } catch (err) {
     console.error('Erro na busca IA:', err);
-    // Fallback para estáticos se a IA falhar
     const filtradas = empresasProspeccao.filter(emp => 
-      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
-      (!cidade || emp.cidade === cidade) &&
-      (!categoria || emp.cat === categoria)
+      (!search || emp.nome.toLowerCase().includes(search.toLowerCase())) && 
+      (!cidade || emp.cidade === cidade)
     );
     window.renderEmpresas(filtradas);
   }
 };
+
 
 window.renderEmpresas = function(lista) {
   const grid = document.getElementById('prospeccao-grid');
