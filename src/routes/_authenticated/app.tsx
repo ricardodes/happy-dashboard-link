@@ -37,12 +37,14 @@ const BRL = (n: number) =>
 
 function ErpPage() {
   const navigate = useNavigate();
+  const marketingFn = useServerFn(generateMarketingCopy);
+  const insightsFn = useServerFn(generateBusinessInsights);
 
   // Expose marketing functions globally
   useEffect(() => {
-    (window as any).generateMarketingCopy = generateMarketingCopy;
-    (window as any).generateBusinessInsights = generateBusinessInsights;
-  }, []);
+    (window as any).generateMarketingCopy = marketingFn;
+    (window as any).generateBusinessInsights = insightsFn;
+  }, [marketingFn, insightsFn]);
 
   return (
     <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', width: '100%' }}>
