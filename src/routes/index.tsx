@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import landingHtml from "@/content/landing.html?raw";
 import landingScript from "@/content/landing.script.js?raw";
 import landingCssUrl from "@/styles/landing.css?url";
 import { InjectHtml } from "@/lib/InjectHtml";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
