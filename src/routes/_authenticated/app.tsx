@@ -528,7 +528,13 @@ function ClientsTab() {
   };
 
 
+  const del = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from("clients").delete().eq("id", id); if (error) throw error; },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["clients"] }),
+  });
+
   return (
+
     <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
       <Card>
         <CardHeader><CardTitle>Novo cliente</CardTitle></CardHeader>
