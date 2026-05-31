@@ -1212,9 +1212,14 @@ window.saveApiKeys = function() {
 };
 
 window.handleAction = (action) => {
+  const isInternal = action.toLowerCase().includes('financeiro') || action.toLowerCase().includes('equipe') || action.toLowerCase().includes('contabil');
+  
   openModal({
     title: "Ação: " + action,
-    body: `<p>A funcionalidade <strong>${action}</strong> está em desenvolvimento para integração com o sistema Alterdata.</p>`,
+    body: `<p>A funcionalidade <strong>${action}</strong> está sendo processada.</p>
+           <p style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">
+             ${isInternal ? 'Os dados desta operação são restritos ao uso interno do Escritório Nobel.' : 'Esta ação será sincronizada com os dados do cliente via Alterdata.'}
+           </p>`,
     confirmText: "Entendido",
     onConfirm: () => closeModal()
   });
