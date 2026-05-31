@@ -637,7 +637,7 @@ window.genMarketing = async function(type) {
     const result = await generateMarketingCopy({
       topic: topics[type] || 'Contabilidade e Inteligência Artificial',
       channel: channels[type] || 'instagram',
-      tone: 'premium, profissional, moderno e direto'
+      tone: 'premium, sofisticado, moderno, persuasivo e educativo'
     });
 
     if (result) {
