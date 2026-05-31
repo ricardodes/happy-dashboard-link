@@ -307,7 +307,11 @@ function OverviewTab() {
             <CardTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-emerald-600" />Insights de IA</CardTitle>
             <CardDescription>Análise automática de gargalos e ações para aumentar a receita.</CardDescription>
           </div>
-          <Button onClick={runInsights} disabled={loadingAI}>
+          <Button 
+            onClick={runInsights} 
+            disabled={loadingAI}
+            className="bg-emerald-700 hover:bg-emerald-800 shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
             {loadingAI ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
             Analisar com IA
           </Button>
