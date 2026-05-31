@@ -32,10 +32,7 @@ function ErpPage() {
       <InjectHtml
         html={erpHtml}
         inlineScript={erpScript}
-        externalScripts={[
-          "https://cdn.jsdelivr.net/npm/chart.js",
-          "https://unpkg.com/lucide@latest",
-        ]}
+        externalScripts={[]}
         cssUrl={erpCssUrl}
       />
     </div>

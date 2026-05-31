@@ -2,6 +2,7 @@
 
 // Set global functions
 window.showView = function(viewId, target = null) {
+  if (event) event.preventDefault();
   console.log('showView called:', viewId);
   
   // Hide all views
@@ -267,6 +268,8 @@ window.genMarketing = async function(type) {
       tone: 'premium, sofisticado, persuasivo'
     });
 
+    if (result) {
+
       const isVertical = type === 'story' || type === 'reels';
       const width = isVertical ? 720 : 1080;
       const height = isVertical ? 1280 : 1080;
@@ -474,9 +477,9 @@ window.toggleEquipeTab = (btn) => {
 // Initialize
 function initApp() {
   console.log('App initialization started');
-  window.initCharts();
-  window.initFiscalCalendar();
-  window.initAgendaCalendar();
+  if (typeof window.initCharts === 'function') window.initCharts();
+  if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+  if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
   if (window.lucide) window.lucide.createIcons();
 }
 
