@@ -25,8 +25,13 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme="dark"] {
+  /* Variables are same as default root */
+}
+
 [data-theme="light"] {
   --primary: #0f5e3e;
+  --primary-light: #1a8a5c;
   --bg: #f8fafc;
   --bg-elevated: #ffffff;
   --bg-card: #ffffff;
@@ -39,6 +44,7 @@
   --shadow: 0 4px 24px rgba(0,0,0,0.08);
   --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
   --glass: rgba(255,255,255,0.85);
+  --glass-dark: rgba(15,23,42,0.05);
 }
 
 .erp-root {
