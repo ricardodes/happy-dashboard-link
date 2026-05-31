@@ -185,10 +185,12 @@
 .search-box {
   position:relative;
   width:320px;
+  display: flex;
+  align-items: center;
 }
 .search-box input {
   width:100%;
-  padding:0.6rem 0.75rem 0.6rem 2.5rem;
+  padding:0.6rem 0.75rem 0.6rem 2.8rem;
   border-radius:100px;
   border:1px solid var(--border);
   background:var(--bg-hover);
@@ -203,11 +205,10 @@
 }
 .search-box i {
   position:absolute;
-  left:0.75rem;
-  top:50%;
-  transform:translateY(-50%);
+  left:1rem;
   color:var(--text-muted);
-  width:16px; height:16px;
+  width:18px; height:18px;
+  pointer-events: none;
 }
 .header-actions {
   display:flex;
