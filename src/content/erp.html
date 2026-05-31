@@ -1082,25 +1082,83 @@
           <div class="kpi-change positive">Crescimento estimado</div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i data-lucide="list"></i> Contas a Pagar - Junho/2024</div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer">
-            <i data-lucide="plus" style="width:14px"></i> Nova Conta
-          </button>
+      <div id="fin-content-pagar">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Pagar - Junho/2024</div>
+            <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer">
+              <i data-lucide="plus" style="width:14px"></i> Nova Conta
+            </button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Fornecedor</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-weight:600">Escritório de Software</td><td>Licenças anuais</td><td>10/06/2024</td><td style="font-weight:700">R$ 18.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Imobiliária Centro</td><td>Aluguel sede</td><td>15/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Energia Elétrica</td><td>Conta de luz</td><td>20/06/2024</td><td style="font-weight:700">R$ 3.450,00</td><td><span class="status status-info"><span class="status-dot"></span> Agendado</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Fornecedor XYZ</td><td>Material de escritório</td><td>25/06/2024</td><td style="font-weight:700">R$ 2.180,00</td><td><span class="status status-success"><span class="status-dot"></span> Pago</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Consultoria Jurídica</td><td>Assessoria mensal</td><td>30/06/2024</td><td style="font-weight:700">R$ 8.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr><th>Fornecedor</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
-          </thead>
-          <tbody>
-            <tr><td style="font-weight:600">Escritório de Software</td><td>Licenças anuais</td><td>10/06/2024</td><td style="font-weight:700">R$ 18.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Imobiliária Centro</td><td>Aluguel sede</td><td>15/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Energia Elétrica</td><td>Conta de luz</td><td>20/06/2024</td><td style="font-weight:700">R$ 3.450,00</td><td><span class="status status-info"><span class="status-dot"></span> Agendado</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Fornecedor XYZ</td><td>Material de escritório</td><td>25/06/2024</td><td style="font-weight:700">R$ 2.180,00</td><td><span class="status status-success"><span class="status-dot"></span> Pago</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Consultoria Jurídica</td><td>Assessoria mensal</td><td>30/06/2024</td><td style="font-weight:700">R$ 8.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-          </tbody>
-        </table>
+      </div>
+
+      <div id="fin-content-receber" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
+            <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer">
+              <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
+            </button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Cliente</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-weight:600">Hospital Santa Maria</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 25.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>Consultoria Especial</td><td>10/06/2024</td><td style="font-weight:700">R$ 5.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Construtora Horizonte</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="fin-content-fluxo" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="activity"></i> Fluxo de Caixa Projetado</div>
+          </div>
+          <div style="height:300px;padding:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;height:200px;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+              <div style="flex:1;background:var(--accent);height:60%;border-radius:4px 4px 0 0;position:relative" title="Semana 1"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 42K</span></div>
+              <div style="flex:1;background:var(--accent);height:85%;border-radius:4px 4px 0 0;position:relative" title="Semana 2"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 58K</span></div>
+              <div style="flex:1;background:var(--danger);height:40%;border-radius:4px 4px 0 0;position:relative" title="Semana 3"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 28K</span></div>
+              <div style="flex:1;background:var(--accent);height:75%;border-radius:4px 4px 0 0;position:relative" title="Semana 4"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 51K</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted)">
+              <span>Semana 1</span><span>Semana 2</span><span>Semana 3</span><span>Semana 4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="fin-content-dre" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="pie-chart"></i> DRE Gerencial Nobel</div>
+          </div>
+          <div style="padding:1rem">
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Faturamento Bruto</span><span style="font-weight:700;color:var(--accent)">R$ 487.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Custos Variáveis</span><span style="font-weight:700;color:var(--danger)">R$ 42.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Margem de Contribuição</span><span style="font-weight:700">R$ 445.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;background:var(--bg-hover);border-radius:8px"><span style="font-weight:800">Resultado Líquido</span><span style="font-weight:800;color:var(--accent)">R$ 218.348</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
