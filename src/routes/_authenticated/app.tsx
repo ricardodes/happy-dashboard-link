@@ -584,6 +584,7 @@ function ClientsTab() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-sm font-medium text-emerald-700">{BRL(Number(c.monthly_fee))}/mês</span>
+                  <Button size="icon" variant="ghost" className="text-blue-600" onClick={() => syncAlterdata(c.id)} title="Sincronizar Alterdata"><RefreshCw className="h-3.5 w-3.5" /></Button>
                   <Button size="icon" variant="ghost" onClick={() => del.mutate(c.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
                 </div>
               </div>
