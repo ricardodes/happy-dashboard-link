@@ -37,54 +37,129 @@ const BRL = (n: number) =>
 
 function ErpPage() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Redirecionamento de segurança extra para evitar flashes de outros sites
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) navigate({ to: "/login" });
+    });
+  }, [navigate]);
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-emerald-700 to-emerald-500 font-bold text-white">
+    <div className="flex min-h-screen bg-slate-50">
+      {/* Sidebar Navigation */}
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
+        <div className="flex h-full flex-col p-6">
+          <div className="mb-10 flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-800 to-emerald-600 font-bold text-white shadow-lg shadow-emerald-200">
               N
             </div>
             <div>
-              <h1 className="text-base font-semibold leading-none">Plataforma Nobel</h1>
-              <p className="text-xs text-muted-foreground">ERP da Contabilidade</p>
+              <h1 className="text-lg font-bold leading-none tracking-tight">Nobel ERP</h1>
+              <p className="text-xs text-muted-foreground font-medium">Contabilidade Inteligente</p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={async () => {
-              await supabase.auth.signOut();
-              navigate({ to: "/login" });
-            }}
-          >
-            <LogOut className="mr-2 h-4 w-4" /> Sair
-          </Button>
+
+          <nav className="flex-1 space-y-1">
+            <SidebarNavItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-5 w-5" />} label="Visão Geral" />
+            <SidebarNavItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-5 w-5" />} label="Financeiro" />
+            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes" />
+            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Target className="h-5 w-5" />} label="Captação" />
+            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda" />
+            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Tarefas" />
+            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing IA" />
+          </nav>
+
+          <div className="mt-auto pt-6 border-t">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-medium"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate({ to: "/login" });
+              }}
+            >
+              <LogOut className="mr-3 h-5 w-5" /> Sair
+            </Button>
+          </div>
         </div>
-      </header>
+      </aside>
 
-      <main className="mx-auto max-w-7xl px-4 py-6">
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="mb-6 flex w-full flex-wrap justify-start gap-1 bg-transparent p-0">
-            <TabsTrigger value="overview"><TrendingUp className="mr-1.5 h-4 w-4" />Visão Geral</TabsTrigger>
-            <TabsTrigger value="finance"><DollarSign className="mr-1.5 h-4 w-4" />Financeiro</TabsTrigger>
-            <TabsTrigger value="clients"><Users className="mr-1.5 h-4 w-4" />Clientes</TabsTrigger>
-            <TabsTrigger value="leads"><Target className="mr-1.5 h-4 w-4" />Captação</TabsTrigger>
-            <TabsTrigger value="agenda"><Calendar className="mr-1.5 h-4 w-4" />Agenda</TabsTrigger>
-            <TabsTrigger value="tasks"><CheckSquare className="mr-1.5 h-4 w-4" />Tarefas</TabsTrigger>
-            <TabsTrigger value="marketing"><Megaphone className="mr-1.5 h-4 w-4" />Marketing IA</TabsTrigger>
-          </TabsList>
+      {/* Main Content */}
+      <div className="flex-1 md:pl-64">
+        <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur md:hidden">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-2">
+              <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-700 font-bold text-white">N</div>
+              <h1 className="text-sm font-semibold">Nobel ERP</h1>
+            </div>
+            <Button variant="ghost" size="icon" onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/login" }); }}>
+              <LogOut className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </div>
+        </header>
 
-          <TabsContent value="overview"><OverviewTab /></TabsContent>
-          <TabsContent value="finance"><FinanceTab /></TabsContent>
-          <TabsContent value="clients"><ClientsTab /></TabsContent>
-          <TabsContent value="leads"><LeadsTab /></TabsContent>
-          <TabsContent value="agenda"><AgendaTab /></TabsContent>
-          <TabsContent value="tasks"><TasksTab /></TabsContent>
-          <TabsContent value="marketing"><MarketingTab /></TabsContent>
-        </Tabs>
-      </main>
+        <main className="mx-auto max-w-7xl px-4 py-6 md:px-8">
+          {/* Mobile Tabs */}
+          <div className="md:hidden mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-2 min-w-max">
+              <MobileTabItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-4 w-4" />} label="Visão Geral" />
+              <MobileTabItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-4 w-4" />} label="Financeiro" />
+              <MobileTabItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-4 w-4" />} label="Clientes" />
+              <MobileTabItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Target className="h-4 w-4" />} label="Captação" />
+              <MobileTabItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-4 w-4" />} label="Agenda" />
+              <MobileTabItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-4 w-4" />} label="Tarefas" />
+              <MobileTabItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-4 w-4" />} label="Marketing IA" />
+            </div>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={(v: any) => setActiveTab(v)} className="w-full">
+            <TabsContent value="overview"><OverviewTab /></TabsContent>
+            <TabsContent value="finance"><FinanceTab /></TabsContent>
+            <TabsContent value="clients"><ClientsTab /></TabsContent>
+            <TabsContent value="leads"><LeadsTab /></TabsContent>
+            <TabsContent value="agenda"><AgendaTab /></TabsContent>
+            <TabsContent value="tasks"><TasksTab /></TabsContent>
+            <TabsContent value="marketing"><MarketingTab /></TabsContent>
+          </Tabs>
+        </main>
+      </div>
     </div>
+  );
+}
+
+function SidebarNavItem({ value, activeTab, setActiveTab, icon, label }: { value: string; activeTab: string; setActiveTab: (v: string) => void; icon: React.ReactNode; label: string }) {
+  const active = activeTab === value;
+  return (
+    <button
+      onClick={() => setActiveTab(value)}
+      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+        active 
+          ? "bg-emerald-50 text-emerald-700 shadow-sm" 
+          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+      }`}
+    >
+      <span className={active ? "text-emerald-600" : "text-slate-400"}>{icon}</span>
+      {label}
+    </button>
+  );
+}
+
+function MobileTabItem({ value, activeTab, setActiveTab, icon, label }: { value: string; activeTab: string; setActiveTab: (v: string) => void; icon: React.ReactNode; label: string }) {
+  const active = activeTab === value;
+  return (
+    <button
+      onClick={() => setActiveTab(value)}
+      className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all ${
+        active 
+          ? "bg-emerald-700 text-white shadow-md shadow-emerald-100" 
+          : "bg-white border text-slate-600 hover:bg-slate-50"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
   );
 }
 
@@ -232,7 +307,11 @@ function OverviewTab() {
             <CardTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-emerald-600" />Insights de IA</CardTitle>
             <CardDescription>Análise automática de gargalos e ações para aumentar a receita.</CardDescription>
           </div>
-          <Button onClick={runInsights} disabled={loadingAI}>
+          <Button 
+            onClick={runInsights} 
+            disabled={loadingAI}
+            className="bg-emerald-700 hover:bg-emerald-800 shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
             {loadingAI ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
             Analisar com IA
           </Button>
@@ -251,18 +330,28 @@ function OverviewTab() {
 
 function Kpi({ title, value, sub, trend, icon }: { title: string; value: string; sub?: string; trend?: number; icon?: React.ReactNode }) {
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium text-muted-foreground">{title}</p>
-          <span className="text-muted-foreground">{icon}</span>
+    <Card className="overflow-hidden border-none shadow-sm transition-all hover:shadow-md ring-1 ring-slate-200">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</p>
+            <p className="text-2xl font-bold tracking-tight text-slate-900">{value}</p>
+          </div>
+          <div className="rounded-xl bg-emerald-50 p-2 text-emerald-600 ring-1 ring-emerald-100">
+            {icon}
+          </div>
         </div>
-        <p className="mt-2 text-2xl font-bold tracking-tight">{value}</p>
-        {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}
-        {typeof trend === "number" && (
-          <p className={`mt-1 text-xs font-medium ${trend >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-            {trend >= 0 ? "▲" : "▼"} {Math.abs(trend).toFixed(1)}% vs mês anterior
-          </p>
+        
+        {(sub || typeof trend === "number") && (
+          <div className="mt-4 flex items-center gap-2 border-t pt-3">
+            {typeof trend === "number" && (
+              <span className={`flex items-center gap-0.5 text-xs font-bold ${trend >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
+                {trend >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                {Math.abs(trend).toFixed(1)}%
+              </span>
+            )}
+            {sub && <span className="text-xs font-medium text-slate-400">{sub}</span>}
+          </div>
         )}
       </CardContent>
     </Card>
