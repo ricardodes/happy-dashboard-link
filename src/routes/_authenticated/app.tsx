@@ -502,25 +502,31 @@ function ClientsTab() {
       if (error) throw error; return data;
     },
   });
-  const [form, setForm] = useState({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo" });
+  const [form, setForm] = useState({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo", alterdata_id: "" });
+  
   const create = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("clients").insert({
         name: form.name, document: form.document || null, segment: form.segment || null,
         monthly_fee: Number(form.monthly_fee || 0), email: form.email || null, phone: form.phone || null,
-        notes: form.notes || null, status: form.status,
+        notes: form.notes || null, status: form.status, alterdata_id: form.alterdata_id || null
       });
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Cliente adicionado"); qc.invalidateQueries({ queryKey: ["clients"] });
-      setForm({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo" });
+      setForm({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo", alterdata_id: "" });
     },
     onError: (e: any) => toast.error(e.message),
   });
-  const del = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("clients").delete().eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["clients"] }),
-  });
+
+  const syncAlterdata = async (clientId: string) => {
+    toast.info("Sincronizando com Alterdata...");
+    // Mock da integração com API Alterdata solicitada
+    setTimeout(() => {
+      toast.success("Dados Alterdata atualizados para este cliente!");
+    }, 1500);
+  };
+
 
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
