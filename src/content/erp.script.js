@@ -512,8 +512,8 @@ window.initCharts = function() {
 };
 
 // Calendar functions
-window.initFiscalCalendar = function() {
-  const cal = document.getElementById('fiscal-calendar');
+window.initCalendar = function(id) {
+  const cal = document.getElementById(id);
   if (!cal) return;
   cal.innerHTML = '';
   const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -523,33 +523,37 @@ window.initFiscalCalendar = function() {
     h.textContent = d;
     cal.appendChild(h);
   });
+  
+  // Fake some event days for visual feedback
+  const eventDays = id.includes('fiscal') ? [10, 20, 25] : [5, 12, 15, 22];
+  
   for (let i = 1; i <= 30; i++) {
     const day = document.createElement('div');
     day.className = 'cal-day';
     day.textContent = i;
-    if (i === 8) day.classList.add('today');
+    if (i === new Date().getDate()) day.classList.add('today');
+    if (eventDays.includes(i)) {
+      const dot = document.createElement('div');
+      dot.style.width = '4px';
+      dot.style.height = '4px';
+      dot.style.borderRadius = '50%';
+      dot.style.background = id.includes('fiscal') ? 'var(--danger)' : 'var(--primary)';
+      dot.style.marginTop = '2px';
+      day.appendChild(dot);
+    }
     cal.appendChild(day);
   }
 };
 
+window.initFiscalCalendar = function() {
+  window.initCalendar('fiscal-calendar');
+};
+
 window.initAgendaCalendar = function() {
-  const cal = document.getElementById('agenda-calendar');
-  if (!cal) return;
-  cal.innerHTML = '';
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  days.forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'cal-header';
-    h.textContent = d;
-    cal.appendChild(h);
-  });
-  for (let i = 1; i <= 30; i++) {
-    const day = document.createElement('div');
-    day.className = 'cal-day';
-    day.textContent = i;
-    if (i === 8) day.classList.add('today');
-    cal.appendChild(day);
-  }
+  window.initCalendar('agenda-nobel-calendar');
+  window.initCalendar('agenda-fiscal-calendar');
+  // Legacy support if needed
+  window.initCalendar('agenda-calendar');
 };
 
 // Financeiro Render
