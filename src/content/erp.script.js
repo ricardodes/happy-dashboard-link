@@ -468,15 +468,100 @@ window.filterProspeccao = async function() {
 window.renderEmpresas = function(lista) {
   const grid = document.getElementById('prospeccao-grid');
   if (!grid) return;
-  grid.innerHTML = lista.map(emp => `
-    <div class="empresa-card">
-      <div style="font-weight:700">${emp.nome}</div>
-      <div style="font-size:0.8rem;color:var(--text-muted)">${emp.cat} - ${emp.cidade}</div>
-      <div style="margin-top:0.5rem;font-size:0.85rem">${emp.tel}</div>
-      <div style="margin-top:0.5rem"><span class="badge badge-green">${emp.score} pts</span></div>
+  grid.innerHTML = lista.map(emp => {
+    const phone = (emp.tel || '').replace(/\D/g, '');
+    return `
+    <div class="empresa-card" style="display:flex;flex-direction:column;justify-content:space-between;min-height:160px">
+      <div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:0.25rem">${emp.nome}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">${emp.cat} - ${emp.cidade}</div>
+        <div style="margin-top:0.5rem;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;color:var(--text-secondary)">
+          <i data-lucide="phone" style="width:12px"></i> ${emp.tel}
+        </div>
+      </div>
+      <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
+        <span class="badge badge-green" style="font-size:0.7rem;font-weight:700">${emp.score} pts</span>
+        <button onclick="openDirectWhatsApp('${phone}', '${emp.nome}')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:100px;padding:0.5rem 0.85rem;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.4rem;transition:all 0.2s;box-shadow:0 2px 8px rgba(37,211,102,0.25)" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(37,211,102,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(37,211,102,0.25)'">
+          <i data-lucide="message-circle" style="width:14px;height:14px"></i> WhatsApp
+        </button>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
+  if (window.lucide) window.lucide.createIcons();
 };
+
+window.openWhatsAppAI = function() {
+  const panel = document.getElementById('whatsapp-ai-panel');
+  if (panel) panel.style.display = 'block';
+};
+
+window.openDirectWhatsApp = function(phone, companyName) {
+  const panel = document.getElementById('whatsapp-ai-panel');
+  if (panel) {
+    panel.style.display = 'block';
+    const waEmpresa = document.getElementById('wa-empresa');
+    const waNumero = document.getElementById('wa-numero');
+    if (waEmpresa) waEmpresa.value = companyName;
+    if (waNumero) waNumero.value = phone;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+};
+
+window.setTone = function(btn, tone) {
+  document.querySelectorAll('.wa-tone').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'var(--bg)';
+    b.style.color = 'var(--text)';
+  });
+  btn.classList.add('active');
+  btn.style.background = 'var(--primary)';
+  btn.style.color = 'white';
+  window.selectedTone = tone;
+};
+
+window.generateWhatsAppMessage = async function() {
+  const empresa = document.getElementById('wa-empresa')?.value;
+  const segmento = document.getElementById('wa-segmento')?.value;
+  const numero = document.getElementById('wa-numero')?.value;
+  const tone = window.selectedTone || 'profissional';
+  const apiKey = localStorage.getItem('nobel_groq_key');
+
+  if (!empresa) {
+    alert('Por favor, informe o nome da empresa.');
+    return;
+  }
+
+  const btn = event.currentTarget;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:flex;align-items:center;gap:0.5rem"><span class="spinner-mini"></span> Gerando...</span>';
+
+  try {
+    if (typeof window.generateMarketingCopy === 'function') {
+      const result = await window.generateMarketingCopy({
+        topic: `Mensagem de prospecção via WhatsApp para a empresa ${empresa} do segmento ${segmento}. O tom deve ser ${tone}. Foco em oferecer serviços de contabilidade consultiva e redução de impostos.`,
+        channel: 'whatsapp',
+        tone: tone,
+        apiKey: apiKey || undefined
+      });
+      
+      const cleanNumber = (numero || '').replace(/\D/g, '');
+      const text = encodeURIComponent(result.content || result);
+      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+    } else {
+      const text = encodeURIComponent(`Olá, vi sua empresa ${empresa} no mapa e gostaria de apresentar nossos serviços contábeis especializados em ${segmento}.`);
+      const cleanNumber = (numero || '').replace(/\D/g, '');
+      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao gerar mensagem: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+};
+
 
 window.toggleFinanceiroTab = (btn) => {
   document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
