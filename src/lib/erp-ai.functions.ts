@@ -33,7 +33,14 @@ async function callAI(systemPrompt: string, userPrompt: string, customKey?: stri
   if (res.status === 402) throw new Error("Créditos de IA esgotados.");
   if (!res.ok) throw new Error(`Erro IA (${res.status}): ${await res.text().catch(() => "")}`);
 
-  const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+  const text = await res.text();
+  if (!text) throw new Error("Resposta vazia da IA.");
+  let data: { choices?: Array<{ message?: { content?: string } }> };
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(`Resposta inválida da IA: ${text.slice(0, 200)}`);
+  }
   return data.choices?.[0]?.message?.content ?? "";
 }
 
