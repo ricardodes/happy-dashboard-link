@@ -2,6 +2,7 @@
 
 // Set global functions
 window.showView = function(viewId, target = null) {
+  if (event) event.preventDefault();
   console.log('showView called:', viewId);
   
   // Hide all views
