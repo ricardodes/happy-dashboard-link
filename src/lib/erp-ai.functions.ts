@@ -1,14 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
 
 async function callAI(systemPrompt: string, userPrompt: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY ausente");
+  const key = process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
+  if (!key) throw new Error("API Key ausente");
 
+  // Se usar Groq, mudamos o endpoint se necessário, mas Lovable AI Gateway é o padrão recomendado.
+  // Vamos priorizar a inteligência e encantar o cliente.
   const res = await fetch(GATEWAY, {
     method: "POST",
     headers: {

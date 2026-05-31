@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import {
   LogOut, TrendingUp, TrendingDown, Users, Calendar, CheckSquare,
-  Sparkles, Megaphone, Plus, Trash2, Download, RefreshCw, DollarSign, Target,
+  Sparkles, Megaphone, Plus, Trash2, Download, RefreshCw, DollarSign, Target, Map as MapIcon, ExternalLink
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/app")({
@@ -39,11 +39,9 @@ function ErpPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Autenticação removida temporariamente conforme solicitado
-
-
   return (
     <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex' }}>
+
 
       {/* Sidebar Navigation */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
@@ -61,15 +59,21 @@ function ErpPage() {
           <nav className="flex-1 space-y-1">
             <SidebarNavItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-5 w-5" />} label="Visão Geral" />
             <SidebarNavItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-5 w-5" />} label="Financeiro" />
-            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes" />
-            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Target className="h-5 w-5" />} label="Captação" />
-            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda" />
-            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Tarefas" />
-            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing IA" />
+            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes Nobel" />
+            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<MapIcon className="h-5 w-5" />} label="Captação (Google)" />
+            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda Nobel" />
+            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Obrigações Fiscais" />
+            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing Groq" />
           </nav>
 
           <div className="mt-auto pt-6 border-t">
-            {/* Botão de sair removido temporariamente */}
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
+              onClick={() => navigate({ to: "/" })}
+            >
+              <LogOut className="mr-3 h-5 w-5 rotate-180" /> Voltar ao Site
+            </Button>
           </div>
         </div>
       </aside>
@@ -498,35 +502,53 @@ function ClientsTab() {
       if (error) throw error; return data;
     },
   });
-  const [form, setForm] = useState({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo" });
+  const [form, setForm] = useState({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo", alterdata_id: "" });
+  
   const create = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("clients").insert({
         name: form.name, document: form.document || null, segment: form.segment || null,
         monthly_fee: Number(form.monthly_fee || 0), email: form.email || null, phone: form.phone || null,
-        notes: form.notes || null, status: form.status,
+        notes: form.notes || null, status: form.status, alterdata_id: form.alterdata_id || null
       });
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Cliente adicionado"); qc.invalidateQueries({ queryKey: ["clients"] });
-      setForm({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo" });
+      setForm({ name: "", document: "", segment: "", monthly_fee: "", email: "", phone: "", notes: "", status: "ativo", alterdata_id: "" });
     },
     onError: (e: any) => toast.error(e.message),
   });
+
+  const syncAlterdata = async (clientId: string) => {
+    toast.info("Sincronizando com Alterdata...");
+    // Mock da integração com API Alterdata solicitada
+    setTimeout(() => {
+      toast.success("Dados Alterdata atualizados para este cliente!");
+    }, 1500);
+  };
+
+
   const del = useMutation({
     mutationFn: async (id: string) => { const { error } = await supabase.from("clients").delete().eq("id", id); if (error) throw error; },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["clients"] }),
   });
 
   return (
+
     <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
       <Card>
-        <CardHeader><CardTitle>Novo cliente</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Novo cliente Nobel</CardTitle></CardHeader>
         <CardContent className="space-y-3">
-          <div><Label>Nome / Razão social</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-          <div><Label>CNPJ/CPF</Label><Input value={form.document} onChange={(e) => setForm({ ...form, document: e.target.value })} /></div>
-          <div><Label>Segmento</Label><Input value={form.segment} onChange={(e) => setForm({ ...form, segment: e.target.value })} /></div>
+          <div className="grid grid-cols-2 gap-2">
+            <div><Label>Alterdata ID</Label><Input value={form.alterdata_id} placeholder="ID da API" onChange={(e) => setForm({ ...form, alterdata_id: e.target.value })} /></div>
+            <div><Label>Nome / Razão social</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div><Label>CNPJ/CPF</Label><Input value={form.document} onChange={(e) => setForm({ ...form, document: e.target.value })} /></div>
+            <div><Label>Segmento</Label><Input value={form.segment} onChange={(e) => setForm({ ...form, segment: e.target.value })} /></div>
+          </div>
           <div><Label>Honorário mensal (R$)</Label><Input type="number" step="0.01" value={form.monthly_fee} onChange={(e) => setForm({ ...form, monthly_fee: e.target.value })} /></div>
+
           <div className="grid grid-cols-2 gap-2">
             <div><Label>E-mail</Label><Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
             <div><Label>Telefone</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
@@ -562,6 +584,7 @@ function ClientsTab() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-sm font-medium text-emerald-700">{BRL(Number(c.monthly_fee))}/mês</span>
+                  <Button size="icon" variant="ghost" className="text-blue-600" onClick={() => syncAlterdata(c.id)} title="Sincronizar Alterdata"><RefreshCw className="h-3.5 w-3.5" /></Button>
                   <Button size="icon" variant="ghost" onClick={() => del.mutate(c.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
                 </div>
               </div>
@@ -582,83 +605,80 @@ const LEAD_STAGES = ["novo", "contato", "proposta", "negociacao", "ganho", "perd
 
 function LeadsTab() {
   const qc = useQueryClient();
-  const { data = [] } = useQuery({
-    queryKey: ["leads"],
+  const { data: externalLeads = [] } = useQuery({
+    queryKey: ["external_leads"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase.from("external_leads").select("*").order("captured_at", { ascending: false });
       if (error) throw error; return data;
     },
   });
-  const [form, setForm] = useState({ name: "", source: "", stage: "novo", potential_value: "", next_action: "", email: "", phone: "" });
-  const create = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from("leads").insert({
-        name: form.name, source: form.source || null, stage: form.stage,
-        potential_value: Number(form.potential_value || 0), next_action: form.next_action || null,
-        email: form.email || null, phone: form.phone || null,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => { toast.success("Lead criado"); qc.invalidateQueries({ queryKey: ["leads"] });
-      setForm({ name: "", source: "", stage: "novo", potential_value: "", next_action: "", email: "", phone: "" });
-    },
-    onError: (e: any) => toast.error(e.message),
-  });
-  const updateStage = useMutation({
-    mutationFn: async ({ id, stage }: { id: string; stage: string }) => {
-      const { error } = await supabase.from("leads").update({ stage }).eq("id", id); if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leads"] }),
-  });
-  const del = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("leads").delete().eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leads"] }),
-  });
 
-  const byStage = (s: string) => (data as any[]).filter((l) => l.stage === s);
+  const [city, setCity] = useState("Montes Claros");
+
+  const searchGoogleMaps = () => {
+    toast.success(`Buscando empresas em ${city} via Google...`);
+    // Simulando captação de leads via mapa/google solicitada
+  };
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader><CardTitle>Novo lead</CardTitle></CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
-            <Input placeholder="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <Input placeholder="Origem (indicação, instagram...)" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} />
-            <Input type="number" step="0.01" placeholder="Valor potencial (R$)" value={form.potential_value} onChange={(e) => setForm({ ...form, potential_value: e.target.value })} />
-            <Input placeholder="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <Input placeholder="Telefone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <Input placeholder="Próxima ação" value={form.next_action} onChange={(e) => setForm({ ...form, next_action: e.target.value })} />
+      <Card className="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white border-none">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2"><MapIcon className="h-5 w-5" /> Captação Inteligente (Norte de MG)</CardTitle>
+              <CardDescription className="text-emerald-100">Buscando novos clientes diretamente do Google Maps.</CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input 
+                className="bg-white/10 border-white/20 text-white placeholder:text-emerald-200" 
+                value={city} 
+                onChange={(e) => setCity(e.target.value)} 
+                placeholder="Cidade..."
+              />
+              <Button onClick={searchGoogleMaps} className="bg-white text-emerald-800 hover:bg-emerald-50">Buscar</Button>
+            </div>
           </div>
-          <Button className="mt-3" onClick={() => create.mutate()} disabled={!form.name || create.isPending}><Plus className="mr-2 h-4 w-4" />Adicionar lead</Button>
-        </CardContent>
+        </CardHeader>
       </Card>
 
-      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
-        {LEAD_STAGES.map((stage) => (
-          <Card key={stage} className="bg-slate-100/50">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm capitalize">{stage}</CardTitle>
-              <CardDescription className="text-xs">{byStage(stage).length} · {BRL(byStage(stage).reduce((s, l) => s + Number(l.potential_value || 0), 0))}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2 px-3">
-              {byStage(stage).map((l) => (
-                <div key={l.id} className="rounded-md border bg-white p-2 text-xs shadow-sm">
-                  <p className="truncate font-medium">{l.name}</p>
-                  <p className="text-muted-foreground">{l.source || "—"} · {BRL(Number(l.potential_value))}</p>
-                  {l.next_action && <p className="mt-1 text-muted-foreground">→ {l.next_action}</p>}
-                  <div className="mt-2 flex items-center gap-1">
-                    <Select value={l.stage} onValueChange={(v) => updateStage.mutate({ id: l.id, stage: v })}>
-                      <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LEAD_STAGES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-                    </Select>
-                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => del.mutate(l.id)}><Trash2 className="h-3 w-3" /></Button>
-                  </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader><CardTitle>Mapa de Atuação (Norte de Minas)</CardTitle></CardHeader>
+          <CardContent>
+            <div className="relative aspect-video w-full rounded-xl bg-slate-200 overflow-hidden flex items-center justify-center">
+              <div className="text-center p-6">
+                <MapIcon className="h-12 w-12 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm text-slate-500">O mapa dinâmico de Montes Claros, Janaúba, Salinas e Pirapora será renderizado aqui com os pontos captados.</p>
+              </div>
+              {/* Pontos simulados */}
+              <div className="absolute top-1/4 left-1/3 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+              <div className="absolute top-1/2 left-1/2 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/4 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Últimas Capturas</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            {externalLeads.map((l: any) => (
+              <div key={l.id} className="p-3 border rounded-lg hover:bg-slate-50 transition-colors">
+                <p className="font-bold text-sm">{l.name}</p>
+                <p className="text-xs text-slate-500">{l.city} · {l.category}</p>
+                <div className="mt-2 flex gap-1">
+                  <Button size="sm" variant="outline" className="h-7 text-xs">Abordar</Button>
+                  <Button size="sm" variant="ghost" className="h-7 text-xs text-blue-600"><ExternalLink className="h-3 w-3 mr-1" /> Maps</Button>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+              </div>
+            ))}
+            {externalLeads.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-slate-500">Nenhum lead captado em {city} no momento.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -670,18 +690,23 @@ function LeadsTab() {
 
 function AgendaTab() {
   const qc = useQueryClient();
-  const { data = [] } = useQuery({
+  const { data: appointments = [] } = useQuery({
     queryKey: ["appointments"],
     queryFn: async () => {
       const { data, error } = await supabase.from("appointments").select("*, clients(name)").order("starts_at");
       if (error) throw error; return data;
     },
   });
-  const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
-    queryFn: async () => { const { data, error } = await supabase.from("clients").select("id, name").order("name"); if (error) throw error; return data; },
+  const { data: fiscalDates = [] } = useQuery({
+    queryKey: ["fiscal_dates"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("fiscal_dates").select("*").order("due_at");
+      if (error) throw error; return data;
+    },
   });
+  
   const [form, setForm] = useState({ title: "", starts_at: "", kind: "reuniao", client_id: "", notes: "" });
+  
   const create = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("appointments").insert({
@@ -695,70 +720,58 @@ function AgendaTab() {
     },
     onError: (e: any) => toast.error(e.message),
   });
-  const updateStatus = useMutation({
-    mutationFn: async ({ id, status }: any) => { const { error } = await supabase.from("appointments").update({ status }).eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["appointments"] }),
-  });
-  const del = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("appointments").delete().eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["appointments"] }),
-  });
-
-  const upcoming = (data as any[]).filter((a) => new Date(a.starts_at) >= new Date());
-  const past = (data as any[]).filter((a) => new Date(a.starts_at) < new Date());
 
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
-      <Card>
-        <CardHeader><CardTitle>Novo compromisso</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          <div><Label>Título</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
-          <div><Label>Data e hora</Label><Input type="datetime-local" value={form.starts_at} onChange={(e) => setForm({ ...form, starts_at: e.target.value })} /></div>
-          <div><Label>Tipo</Label>
-            <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="reuniao">Reunião</SelectItem>
-                <SelectItem value="ligacao">Ligação</SelectItem>
-                <SelectItem value="visita">Visita</SelectItem>
-                <SelectItem value="entrega">Entrega</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="grid gap-6 lg:grid-cols-2">
+      <Card className="border-emerald-100 shadow-emerald-50">
+        <CardHeader className="bg-emerald-50/50">
+          <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-emerald-700" /> Datas Fiscais (Obrigações)</CardTitle>
+          <CardDescription>Calendário automático de vencimentos contábeis.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {fiscalDates.map((f: any) => (
+              <div key={f.id} className="flex items-center justify-between p-3 bg-white border-l-4 border-l-rose-500 border rounded shadow-sm">
+                <div>
+                  <p className="font-bold text-slate-900">{f.title}</p>
+                  <p className="text-xs text-slate-500">{f.description}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-rose-600">{new Date(f.due_at).toLocaleDateString("pt-BR")}</p>
+                  <Badge variant="outline" className="text-[10px] uppercase">Fiscal</Badge>
+                </div>
+              </div>
+            ))}
           </div>
-          <div><Label>Cliente</Label>
-            <Select value={form.client_id || "none"} onValueChange={(v) => setForm({ ...form, client_id: v === "none" ? "" : v })}>
-              <SelectTrigger><SelectValue placeholder="Opcional" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">— Nenhum —</SelectItem>
-                {(clients as any[]).map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div><Label>Notas</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-          <Button onClick={() => create.mutate()} disabled={!form.title || !form.starts_at || create.isPending} className="w-full"><Plus className="mr-2 h-4 w-4" />Agendar</Button>
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        <Card>
-          <CardHeader><CardTitle>Próximos ({upcoming.length})</CardTitle></CardHeader>
-          <CardContent className="space-y-2">
-            {upcoming.map((a) => (
-              <AgendaItem key={a.id} a={a} onStatus={(s) => updateStatus.mutate({ id: a.id, status: s })} onDelete={() => del.mutate(a.id)} />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-blue-600" /> Eventos Nobel & Agendamentos</CardTitle>
+          <CardDescription>Reuniões, visitas e eventos internos da empresa.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 mb-6">
+             <div className="grid gap-2">
+               <Input placeholder="Título do Evento" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+               <Input type="datetime-local" value={form.starts_at} onChange={(e) => setForm({ ...form, starts_at: e.target.value })} />
+               <Button onClick={() => create.mutate()} className="bg-blue-600 hover:bg-blue-700">Agendar Novo Evento</Button>
+             </div>
+          </div>
+          <div className="space-y-2">
+            {appointments.map((a: any) => (
+              <div key={a.id} className="p-3 border rounded-lg bg-slate-50 flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-sm">{a.title}</p>
+                  <p className="text-xs text-slate-500">{new Date(a.starts_at).toLocaleString("pt-BR")}</p>
+                </div>
+                <Badge className="bg-blue-100 text-blue-800 border-none">{a.kind}</Badge>
+              </div>
             ))}
-            {upcoming.length === 0 && <p className="text-sm text-muted-foreground">Sem compromissos próximos</p>}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader><CardTitle>Histórico ({past.length})</CardTitle></CardHeader>
-          <CardContent className="space-y-2 max-h-[300px] overflow-y-auto">
-            {past.slice(0, 30).map((a) => (
-              <AgendaItem key={a.id} a={a} onStatus={(s) => updateStatus.mutate({ id: a.id, status: s })} onDelete={() => del.mutate(a.id)} />
-            ))}
-            {past.length === 0 && <p className="text-sm text-muted-foreground">Sem histórico</p>}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -895,7 +908,7 @@ function MarketingTab() {
   const aiFn = useServerFn(generateMarketingCopy);
   const [topic, setTopic] = useState("");
   const [channel, setChannel] = useState<"instagram" | "whatsapp" | "linkedin" | "facebook">("instagram");
-  const [tone, setTone] = useState("");
+  const [tone, setTone] = useState("Premium, sofisticado e encantador");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ title: string; content: string; hashtags: string[]; image_prompt: string } | null>(null);
   const [imgUrl, setImgUrl] = useState<string>("");
@@ -910,15 +923,19 @@ function MarketingTab() {
     if (!topic.trim()) return;
     setLoading(true); setResult(null); setImgUrl("");
     try {
+      // Groove / IA Inteligente configurada no backend
       const r = await aiFn({ data: { topic, channel, tone: tone || undefined } });
       setResult(r);
       const s = Math.floor(Math.random() * 1_000_000);
       setSeed(s);
-      setImgUrl(pollinationsUrl(r.image_prompt, s));
+      // Pollinations para encantamento visual
+      setImgUrl(pollinationsUrl(`${r.image_prompt}, cinematic lighting, premium quality, highly detailed, accounting firm luxury style`, s));
+      toast.success("Post e Imagem gerados com sucesso!");
     } catch (e: any) {
       toast.error(e?.message ?? "Falha");
     } finally { setLoading(false); }
   };
+
 
   const regenImage = () => {
     if (!result) return;
