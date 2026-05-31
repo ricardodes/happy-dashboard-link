@@ -1223,7 +1223,8 @@ window.saveApiKeys = function() {
 };
 
 window.handleAction = (action) => {
-  const isInternal = action.toLowerCase().includes('financeiro') || action.toLowerCase().includes('equipe') || action.toLowerCase().includes('contabil');
+  const isInternal = action.toLowerCase().includes('financeiro') || action.toLowerCase().includes('equipe') || action.toLowerCase().includes('contabil') || action.toLowerCase().includes('conta') || action.toLowerCase().includes('pagar') || action.toLowerCase().includes('receber');
+  
   
   openModal({
     title: "Ação: " + action,
