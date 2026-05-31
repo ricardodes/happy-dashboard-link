@@ -104,15 +104,67 @@ window.showView = function(viewId, target = null) {
     setTimeout(() => {
       window.initFiscalCalendar();
       window.initAgendaCalendar();
+      if (viewId === 'fiscal') window.renderFiscal();
     }, 100);
   }
   if (viewId === 'clientes') window.renderClientes();
   if (viewId === 'crm') window.renderLeads();
   if (viewId === 'financeiro') window.renderFinanceiro();
+  if (viewId === 'contabil') window.renderContabil();
   if (viewId === 'admin') window.renderAdminUsers();
   if (viewId === 'trabalhista' || viewId === 'equipe') window.renderEquipe();
   if (viewId === 'prospeccao') setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
 
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderFiscal = function() {
+  const nfeBody = document.getElementById('fiscal-nfe-table-body');
+  if (nfeBody) {
+    nfeBody.innerHTML = window.appState.fiscal.nfe.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.emissor}</td>
+        <td>R$ ${item.valor}</td>
+        <td>${item.data}</td>
+        <td><span class="status ${item.status === 'Validada' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+      </tr>
+    `).join('');
+  }
+  
+  const spedBody = document.getElementById('fiscal-sped-table-body');
+  if (spedBody) {
+    spedBody.innerHTML = window.appState.fiscal.sped.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.cliente}</td>
+        <td>${item.tipo}</td>
+        <td>${item.periodo}</td>
+        <td><span class="status ${item.status === 'Enviado' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+        <td><button class="header-btn" onclick="handleAction('Ver Protocolo')"><i data-lucide="file-text" style="width:14px"></i></button></td>
+      </tr>
+    `).join('');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderContabil = function() {
+  const balBody = document.getElementById('contabil-balancete-table-body');
+  if (balBody) {
+    // Dummy balancete data rendering
+    const staticBal = [
+      { conta: "Caixa e Equivalentes", codigo: "1.1.01", debito: "R$ 125.000", credito: "R$ 45.000", saldo: "R$ 80.000", color: "var(--accent)" },
+      { conta: "Clientes", codigo: "1.1.02", debito: "R$ 287.000", credito: "R$ 120.000", saldo: "R$ 167.000", color: "var(--accent)" },
+      { conta: "Fornecedores", codigo: "2.1.01", debito: "R$ 85.000", credito: "R$ 180.000", saldo: "R$ 95.000", color: "var(--danger)" }
+    ];
+    balBody.innerHTML = staticBal.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.conta}</td>
+        <td>${item.codigo}</td>
+        <td>${item.debito}</td>
+        <td>${item.credito}</td>
+        <td style="font-weight:700;color:${item.color}">${item.saldo}</td>
+      </tr>
+    `).join('');
+  }
   if (window.lucide) window.lucide.createIcons();
 };
 
