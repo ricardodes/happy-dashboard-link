@@ -740,8 +740,14 @@ showView = function(viewId) {
 };
 
 // Inicializar
-window.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   initCharts();
   initFiscalCalendar();
   initAgendaCalendar();
-});
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
