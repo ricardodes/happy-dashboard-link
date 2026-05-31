@@ -3,12 +3,17 @@
 lucide.createIcons();
 
 // Navegação entre views
-function showView(viewId) {
+function showView(viewId, target = null) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + viewId).classList.add('active');
+  const targetView = document.getElementById('view-' + viewId);
+  if (targetView) targetView.classList.add('active');
 
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (target) {
+    target.classList.add('active');
+  } else if (event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
+    event.currentTarget.classList.add('active');
+  }
 
   const titles = {
     'dashboard': 'Dashboard Executivo',
@@ -362,7 +367,7 @@ function toggleAppTheme() {
 }
 
 // ===== CORRIGIR showView PARA GARANTIR FUNCIONAMENTO =====
-function showView(viewId) {
+function showView(viewId, target = null) {
   // Esconder todas as views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
 
@@ -374,7 +379,9 @@ function showView(viewId) {
 
   // Atualizar nav items
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (event && event.currentTarget) {
+  if (target) {
+    target.classList.add('active');
+  } else if (event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
     event.currentTarget.classList.add('active');
   }
 
