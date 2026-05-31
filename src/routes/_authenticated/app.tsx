@@ -68,16 +68,7 @@ function ErpPage() {
           </nav>
 
           <div className="mt-auto pt-6 border-t">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-medium"
-              onClick={async () => {
-                await supabase.auth.signOut();
-                navigate({ to: "/login" });
-              }}
-            >
-              <LogOut className="mr-3 h-5 w-5" /> Sair
-            </Button>
+            {/* Botão de sair removido temporariamente */}
           </div>
         </div>
       </aside>
@@ -90,9 +81,6 @@ function ErpPage() {
               <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-700 font-bold text-white">N</div>
               <h1 className="text-sm font-semibold">Nobel ERP</h1>
             </div>
-            <Button variant="ghost" size="icon" onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/login" }); }}>
-              <LogOut className="h-5 w-5 text-muted-foreground" />
-            </Button>
           </div>
         </header>
 
