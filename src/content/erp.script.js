@@ -538,12 +538,17 @@ Aguardo seu retorno!`,
      const msg = result ? result.content : (templates[waTone] || templates['profissional']);
      preview.textContent = msg;
      actions.style.display = 'flex';
-
-  if (numero) {
-    const clean = numero.replace(/\D/g, '').replace(/^0/, '');
-    const full = clean.startsWith('55') ? clean : '55' + clean;
-    document.getElementById('wa-link').href = `https://wa.me/${full}?text=${encodeURIComponent(msg)}`;
-  }
+     if (numero) {
+       const clean = numero.replace(/\D/g, '').replace(/^0/, '');
+       const full = clean.startsWith('55') ? clean : '55' + clean;
+       document.getElementById('wa-link').href = `https://wa.me/${full}?text=${encodeURIComponent(msg)}`;
+     }
+   } catch (err) {
+     console.error('WhatsApp IA Error:', err);
+     const msg = templates[waTone] || templates['profissional'];
+     preview.textContent = msg;
+     actions.style.display = 'flex';
+   }
 
   if (window.lucide) window.lucide.createIcons();
 }
