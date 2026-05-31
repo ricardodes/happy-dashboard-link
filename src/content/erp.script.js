@@ -562,6 +562,22 @@ window.generateWhatsAppMessage = async function() {
   }
 };
 
+window.searchGoogleMaps = function(query) {
+  const cidade = document.getElementById('prop-cidade')?.value || 'Montes Claros';
+  const fullQuery = `${query} em ${cidade} MG`;
+  const encodedQuery = encodeURIComponent(fullQuery);
+  
+  const iframe = document.getElementById('google-map-frame');
+  if (iframe) {
+    // Atualiza o iframe para mostrar a região (usando busca por texto)
+    iframe.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
+  }
+  
+  // Também abre em nova aba para facilitar a navegação completa
+  window.open(`https://www.google.com/maps/search/${encodedQuery}`, '_blank');
+};
+
+
 
 window.toggleFinanceiroTab = (btn) => {
   document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
