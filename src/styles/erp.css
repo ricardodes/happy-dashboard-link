@@ -32,9 +32,9 @@
   --border-strong: rgba(15,94,62,0.2);
   --shadow: 0 4px 24px rgba(0,0,0,0.06);
   --shadow-lg: 0 20px 60px rgba(0,0,0,0.1);
-  --glass: rgba(255,255,255,0.7);
 }
-* { margin:0; padding:0; box-sizing:border-box; }
+.erp-root * { margin:0; padding:0; box-sizing:border-box; }
+
 .erp-root {
   font-family:'Inter',sans-serif;
   background:var(--bg);
