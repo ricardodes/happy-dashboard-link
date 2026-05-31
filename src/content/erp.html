@@ -1178,11 +1178,16 @@
           <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="calculator" style="width:12px"></i> Módulo Contábil</div>
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Escrituração Contábil</h2>
         </div>
-        <div class="view-toggle" id="cont-toggle">
-          <button class="active" onclick="toggleContabilTab(this,'balancete')">Balancete</button>
-          <button onclick="toggleContabilTab(this,'dre')">DRE</button>
-          <button onclick="toggleContabilTab(this,'diario')">Livro Diário</button>
-          <button onclick="toggleContabilTab(this,'razao')">Livro Razão</button>
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div class="view-toggle" id="cont-toggle">
+            <button class="active" onclick="toggleContabilTab(this,'balancete')">Balancete</button>
+            <button onclick="toggleContabilTab(this,'dre')">DRE</button>
+            <button onclick="toggleContabilTab(this,'diario')">Livro Diário</button>
+            <button onclick="toggleContabilTab(this,'razao')">Livro Razão</button>
+          </div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar novo lançamento contábil...')">
+            <i data-lucide="plus" style="width:14px"></i> Lançar
+          </button>
         </div>
       </div>
       <div id="cont-content-balancete">
