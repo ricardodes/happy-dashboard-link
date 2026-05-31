@@ -95,9 +95,41 @@ window.showView = function(viewId, target = null) {
   if (viewId === 'crm') window.renderLeads();
   if (viewId === 'financeiro') window.renderFinanceiro();
   if (viewId === 'admin') window.renderAdminUsers();
+  if (viewId === 'trabalhista' || viewId === 'equipe') window.renderEquipe();
   if (viewId === 'prospeccao') setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
 
   if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderEquipe = function() {
+  const body = document.getElementById('equipe-trabalhista-table-body');
+  if (!body) return;
+  
+  body.innerHTML = window.appState.equipe.map(m => `
+    <tr class="hover-scale">
+      <td style="font-weight:600">${m.nome}</td>
+      <td>${m.cargo}</td>
+      <td><span class="badge badge-blue">${m.depto}</span></td>
+      <td>${m.admissao}</td>
+      <td><span class="status ${m.status === 'Ativo' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${m.status}</span></td>
+      <td><button class="btn-delete" onclick="deleteEquipeMember(${m.id})"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum colaborador encontrado.</td></tr>';
+  
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.deleteEquipeMember = function(id) {
+  openModal({
+    title: "Remover da Equipe",
+    body: "<p>Deseja remover este colaborador da lista da Nobel?</p>",
+    confirmText: "Remover",
+    onConfirm: () => {
+      window.appState.equipe = window.appState.equipe.filter(m => m.id !== id);
+      window.renderEquipe();
+      closeModal();
+    }
+  });
 };
 
 // CRUD: Clientes
