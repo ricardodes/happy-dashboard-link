@@ -690,18 +690,23 @@ function LeadsTab() {
 
 function AgendaTab() {
   const qc = useQueryClient();
-  const { data = [] } = useQuery({
+  const { data: appointments = [] } = useQuery({
     queryKey: ["appointments"],
     queryFn: async () => {
       const { data, error } = await supabase.from("appointments").select("*, clients(name)").order("starts_at");
       if (error) throw error; return data;
     },
   });
-  const { data: clients = [] } = useQuery({
-    queryKey: ["clients"],
-    queryFn: async () => { const { data, error } = await supabase.from("clients").select("id, name").order("name"); if (error) throw error; return data; },
+  const { data: fiscalDates = [] } = useQuery({
+    queryKey: ["fiscal_dates"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("fiscal_dates").select("*").order("due_at");
+      if (error) throw error; return data;
+    },
   });
+  
   const [form, setForm] = useState({ title: "", starts_at: "", kind: "reuniao", client_id: "", notes: "" });
+  
   const create = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("appointments").insert({
@@ -715,70 +720,58 @@ function AgendaTab() {
     },
     onError: (e: any) => toast.error(e.message),
   });
-  const updateStatus = useMutation({
-    mutationFn: async ({ id, status }: any) => { const { error } = await supabase.from("appointments").update({ status }).eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["appointments"] }),
-  });
-  const del = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("appointments").delete().eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["appointments"] }),
-  });
-
-  const upcoming = (data as any[]).filter((a) => new Date(a.starts_at) >= new Date());
-  const past = (data as any[]).filter((a) => new Date(a.starts_at) < new Date());
 
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
-      <Card>
-        <CardHeader><CardTitle>Novo compromisso</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          <div><Label>Título</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
-          <div><Label>Data e hora</Label><Input type="datetime-local" value={form.starts_at} onChange={(e) => setForm({ ...form, starts_at: e.target.value })} /></div>
-          <div><Label>Tipo</Label>
-            <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="reuniao">Reunião</SelectItem>
-                <SelectItem value="ligacao">Ligação</SelectItem>
-                <SelectItem value="visita">Visita</SelectItem>
-                <SelectItem value="entrega">Entrega</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="grid gap-6 lg:grid-cols-2">
+      <Card className="border-emerald-100 shadow-emerald-50">
+        <CardHeader className="bg-emerald-50/50">
+          <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-emerald-700" /> Datas Fiscais (Obrigações)</CardTitle>
+          <CardDescription>Calendário automático de vencimentos contábeis.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {fiscalDates.map((f: any) => (
+              <div key={f.id} className="flex items-center justify-between p-3 bg-white border-l-4 border-l-rose-500 border rounded shadow-sm">
+                <div>
+                  <p className="font-bold text-slate-900">{f.title}</p>
+                  <p className="text-xs text-slate-500">{f.description}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-rose-600">{new Date(f.due_at).toLocaleDateString("pt-BR")}</p>
+                  <Badge variant="outline" className="text-[10px] uppercase">Fiscal</Badge>
+                </div>
+              </div>
+            ))}
           </div>
-          <div><Label>Cliente</Label>
-            <Select value={form.client_id || "none"} onValueChange={(v) => setForm({ ...form, client_id: v === "none" ? "" : v })}>
-              <SelectTrigger><SelectValue placeholder="Opcional" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">— Nenhum —</SelectItem>
-                {(clients as any[]).map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div><Label>Notas</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
-          <Button onClick={() => create.mutate()} disabled={!form.title || !form.starts_at || create.isPending} className="w-full"><Plus className="mr-2 h-4 w-4" />Agendar</Button>
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        <Card>
-          <CardHeader><CardTitle>Próximos ({upcoming.length})</CardTitle></CardHeader>
-          <CardContent className="space-y-2">
-            {upcoming.map((a) => (
-              <AgendaItem key={a.id} a={a} onStatus={(s) => updateStatus.mutate({ id: a.id, status: s })} onDelete={() => del.mutate(a.id)} />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-blue-600" /> Eventos Nobel & Agendamentos</CardTitle>
+          <CardDescription>Reuniões, visitas e eventos internos da empresa.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 mb-6">
+             <div className="grid gap-2">
+               <Input placeholder="Título do Evento" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+               <Input type="datetime-local" value={form.starts_at} onChange={(e) => setForm({ ...form, starts_at: e.target.value })} />
+               <Button onClick={() => create.mutate()} className="bg-blue-600 hover:bg-blue-700">Agendar Novo Evento</Button>
+             </div>
+          </div>
+          <div className="space-y-2">
+            {appointments.map((a: any) => (
+              <div key={a.id} className="p-3 border rounded-lg bg-slate-50 flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-sm">{a.title}</p>
+                  <p className="text-xs text-slate-500">{new Date(a.starts_at).toLocaleString("pt-BR")}</p>
+                </div>
+                <Badge className="bg-blue-100 text-blue-800 border-none">{a.kind}</Badge>
+              </div>
             ))}
-            {upcoming.length === 0 && <p className="text-sm text-muted-foreground">Sem compromissos próximos</p>}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader><CardTitle>Histórico ({past.length})</CardTitle></CardHeader>
-          <CardContent className="space-y-2 max-h-[300px] overflow-y-auto">
-            {past.slice(0, 30).map((a) => (
-              <AgendaItem key={a.id} a={a} onStatus={(s) => updateStatus.mutate({ id: a.id, status: s })} onDelete={() => del.mutate(a.id)} />
-            ))}
-            {past.length === 0 && <p className="text-sm text-muted-foreground">Sem histórico</p>}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
