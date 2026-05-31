@@ -422,7 +422,7 @@ window.renderEmpresas = function(lista) {
         </div>
       </div>
       <div class="empresa-dados">
-        <div><i data-lucide="map-pin"></i> ${emp.endereco} - ${emp.cidade}/SP</div>
+        <div><i data-lucide="map-pin"></i> ${emp.endereco} - ${emp.cidade}</div>
         <div><i data-lucide="globe"></i> ${emp.site}</div>
         <div><i data-lucide="phone"></i> ${emp.tel}</div>
         <div><i data-lucide="star"></i> ${emp.nota} (${emp.avaliacoes} avaliações)</div>
