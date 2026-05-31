@@ -31,7 +31,7 @@ function ErpPage() {
   }, [marketingFn, insightsFn, prospectsFn]);
 
   return (
-    <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', width: '100%' }}>
+    <div className="erp-root" style={{ minHeight: '100vh', width: '100%' }}>
       <InjectHtml
         html={erpHtml}
         inlineScript={erpScript}
