@@ -1,22 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { supabase } from "@/integrations/supabase/client";
-import { generateBusinessInsights, generateMarketingCopy } from "@/lib/erp-ai.functions";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
-import {
-  LogOut, TrendingUp, TrendingDown, Users, Calendar, CheckSquare,
-  Sparkles, Megaphone, Plus, Trash2, Download, RefreshCw, DollarSign, Target, Map as MapIcon, ExternalLink
-} from "lucide-react";
+import erpHtml from "@/content/erp.html?raw";
+import erpScript from "@/content/erp.script.js?raw";
+import erpCssUrl from "@/styles/erp.css?url";
+import { InjectHtml } from "@/lib/InjectHtml";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => ({
