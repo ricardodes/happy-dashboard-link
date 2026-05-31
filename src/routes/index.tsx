@@ -1,29 +1,46 @@
 import { createFileRoute } from "@tanstack/react-router";
+import landingHtml from "@/content/landing.html?raw";
+import landingScript from "@/content/landing.script.js?raw";
+import landingCssUrl from "@/styles/landing.css?url";
+import { InjectHtml } from "@/lib/InjectHtml";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      {
+        title:
+          "Contabilidade Nobel | Mais que Contabilidade. Inteligência para o crescimento.",
+      },
+      {
+        name: "description",
+        content:
+          "Contabilidade Nobel: assessoria contábil, tributária e financeira com inteligência para o crescimento do seu negócio.",
+      },
+      { property: "og:title", content: "Contabilidade Nobel" },
+      {
+        property: "og:description",
+        content:
+          "Mais que contabilidade. Inteligência para o crescimento do seu negócio.",
+      },
+      { property: "og:type", content: "website" },
     ],
   }),
-  component: Index,
+  component: LandingPage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function LandingPage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <InjectHtml
+      html={landingHtml}
+      inlineScript={landingScript}
+      externalScripts={[
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
+        "https://unpkg.com/lucide@latest",
+      ]}
+      cssUrl={landingCssUrl}
+      interceptLinkSelector='a[href="app.html"], a[href$="/app"]'
+      interceptTo="/app"
+    />
   );
 }
