@@ -33,16 +33,21 @@ export function InjectHtml({
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Load CSS once per cssUrl (dev: just append a <link> with a data attr we can dedupe on)
+  // Load CSS once per cssUrl, remove on unmount so styles don't leak across routes.
   useEffect(() => {
     if (!cssUrl) return;
     const id = `inject-css-${cssUrl}`;
-    if (document.getElementById(id)) return;
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = cssUrl;
-    document.head.appendChild(link);
+    let link = document.getElementById(id) as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = cssUrl;
+      document.head.appendChild(link);
+    }
+    return () => {
+      link?.remove();
+    };
   }, [cssUrl]);
 
   // Load external scripts (sequentially, then run inline script)
