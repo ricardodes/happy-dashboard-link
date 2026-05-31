@@ -16,19 +16,27 @@ window.appState = {
   ],
   financeiro: {
     pagar: [
-      { id: 1, descricao: "Aluguel Escritório", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
+      { id: 1, descricao: "Aluguel Sede Nobel", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
       { id: 2, descricao: "Energia Elétrica", vencimento: "15/06/2024", valor: "1.250,00", status: "Pendente" },
-      { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" }
+      { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" },
+      { id: 4, descricao: "Software ERP", vencimento: "20/06/2024", valor: "3.400,00", status: "Pendente" }
     ],
     receber: [
       { id: 1, cliente: "Hospital Santa Maria", descricao: "Honorários Maio", vencimento: "05/06/2024", valor: "25.000,00", status: "Recebido" },
-      { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" }
+      { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" },
+      { id: 3, cliente: "Construtora Norte Minas", descricao: "Honorários Junho", vencimento: "20/06/2024", valor: "18.200,00", status: "Pendente" }
     ]
   },
   users: [
     { id: 1, nome: "Admin Nobel", email: "admin@nobel.com", perfil: "Super Admin", status: "Ativo", initial: "AN", color: "var(--primary)" },
     { id: 2, nome: "Carlos Mendes", email: "carlos@nobel.com", perfil: "Comercial", status: "Ativo", initial: "CM", color: "var(--info)" },
     { id: 3, nome: "Ana Paula", email: "ana@nobel.com", perfil: "Contábil", status: "Ativo", initial: "AP", color: "var(--warning)" }
+  ],
+  equipe: [
+    { id: 1, nome: "Ana Paula Silva", cargo: "Gestora Fiscal", depto: "Fiscal", admissao: "10/02/2020", status: "Ativo" },
+    { id: 2, nome: "Carlos Mendes", cargo: "Analista Contábil", depto: "Contábil", admissao: "15/05/2021", status: "Ativo" },
+    { id: 3, nome: "Mariana Oliveira", cargo: "Analista DP", depto: "Pessoal", admissao: "20/08/2022", status: "Ativo" },
+    { id: 4, nome: "Ricardo Santos", cargo: "Auxiliar Administrativo", depto: "Financeiro", admissao: "05/01/2023", status: "Ativo" }
   ]
 };
 
