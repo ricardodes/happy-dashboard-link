@@ -679,7 +679,7 @@ function AgendaTab() {
   );
 }
 
-function AgendaItem({ a, onStatus, onDelete }: any) {
+function AgendaItem({ a, onStatus, onDelete }: { a: any; onStatus: (s: string) => void; onDelete: () => void }) {
   return (
     <div className="flex items-start justify-between rounded-lg border p-3">
       <div className="min-w-0 flex-1">
