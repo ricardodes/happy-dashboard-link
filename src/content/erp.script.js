@@ -427,17 +427,42 @@ const empresasProspeccao = [
   {"nome": "Calcário Mirabela", "cat": "Indústria", "cidade": "Mirabela", "endereco": "BR-135, KM 50", "tel": "(38) 3239-1000", "score": 92, "regime": "Lucro Real", "oportunidade": "alta"}
 ];
 
-window.filterProspeccao = function() {
+window.filterProspeccao = async function() {
   const search = document.getElementById('prop-search')?.value?.toLowerCase() || '';
   const cidade = document.getElementById('prop-cidade')?.value || '';
   const categoria = document.getElementById('prop-cat')?.value || '';
   
-  const filtradas = empresasProspeccao.filter(emp => 
-    (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
-    (!cidade || emp.cidade === cidade) &&
-    (!categoria || emp.cat === categoria)
-  );
-  window.renderEmpresas(filtradas);
+  const grid = document.getElementById('prospeccao-grid');
+  if (grid) grid.innerHTML = '<div style="padding:2rem;text-align:center;grid-column:1/-1">Buscando empresas com IA...</div>';
+
+  try {
+    const aiResults = await window.searchProspectsAI({ 
+      query: search, 
+      city: cidade || 'Montes Claros e região', 
+      category: categoria || 'Empresas diversas' 
+    });
+    
+    // Mesclar estáticos com IA e remover duplicados por nome
+    const all = [...aiResults, ...empresasProspeccao].filter((emp, index, self) =>
+      index === self.findIndex((t) => t.nome === emp.nome)
+    );
+
+    const filtradas = all.filter(emp => 
+      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
+      (!cidade || emp.cidade === cidade) &&
+      (!categoria || emp.cat === categoria)
+    );
+    window.renderEmpresas(filtradas);
+  } catch (err) {
+    console.error('Erro na busca IA:', err);
+    // Fallback para estáticos se a IA falhar
+    const filtradas = empresasProspeccao.filter(emp => 
+      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
+      (!cidade || emp.cidade === cidade) &&
+      (!categoria || emp.cat === categoria)
+    );
+    window.renderEmpresas(filtradas);
+  }
 };
 
 window.renderEmpresas = function(lista) {
@@ -481,7 +506,21 @@ function initApp() {
   if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
   if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
   if (window.lucide) window.lucide.createIcons();
+  
+  // Load saved API Keys into inputs
+  const savedGroq = localStorage.getItem('nobel_groq_key');
+  if (savedGroq && document.getElementById('api-key-groq')) {
+    document.getElementById('api-key-groq').value = savedGroq;
+  }
 }
+
+window.saveApiKeys = function() {
+  const groq = document.getElementById('api-key-groq')?.value;
+  if (groq) {
+    localStorage.setItem('nobel_groq_key', groq);
+    alert('Configurações salvas no navegador!');
+  }
+};
 
 if (document.readyState === 'loading') {
   window.addEventListener('DOMContentLoaded', initApp);

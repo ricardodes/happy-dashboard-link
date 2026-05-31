@@ -4,12 +4,10 @@ import { z } from "zod";
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-pro";
 
-async function callAI(systemPrompt: string, userPrompt: string): Promise<string> {
-  const key = process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("API Key ausente");
+async function callAI(systemPrompt: string, userPrompt: string, customKey?: string): Promise<string> {
+  const key = customKey || process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
+  if (!key || key === "sk-••••••••••••••••••••••••") throw new Error("API Key inválida ou ausente. Configure na Central de IA.");
 
-  // Se usar Groq, mudamos o endpoint se necessário, mas Lovable AI Gateway é o padrão recomendado.
-  // Vamos priorizar a inteligência e encantar o cliente.
   const res = await fetch(GATEWAY, {
     method: "POST",
     headers: {
@@ -26,72 +24,45 @@ async function callAI(systemPrompt: string, userPrompt: string): Promise<string>
   });
 
   if (res.status === 429) throw new Error("Limite de IA atingido. Tente novamente em alguns minutos.");
-  if (res.status === 402) throw new Error("Créditos de IA esgotados. Adicione créditos no workspace.");
+  if (res.status === 402) throw new Error("Créditos de IA esgotados.");
   if (!res.ok) throw new Error(`Erro IA (${res.status}): ${await res.text().catch(() => "")}`);
 
   const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
   return data.choices?.[0]?.message?.content ?? "";
 }
 
-/** Analisa snapshot financeiro e retorna insights + gargalos + recomendações. */
 export const generateBusinessInsights = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
-    z
-      .object({
-        snapshot: z.string().min(1).max(8000),
-      })
-      .parse(input),
+    z.object({ snapshot: z.string(), apiKey: z.string().optional() }).parse(input)
   )
   .handler(async ({ data }) => {
-    const system =
-      "Você é um consultor financeiro especialista em escritórios de contabilidade no Brasil. " +
-      "Receba um snapshot dos números do escritório e retorne em português: " +
-      "1) 3 insights principais sobre a saúde financeira; " +
-      "2) Os 2-3 maiores gargalos identificados; " +
-      "3) 3 ações práticas e priorizadas para aumentar a receita nos próximos 30 dias. " +
-      "Seja direto, use bullet points e números concretos quando possível. Use markdown leve (## e -).";
-    const content = await callAI(system, data.snapshot);
+    const system = "Consultor financeiro contábil. Insights, gargalos e ações.";
+    const content = await callAI(system, data.snapshot, data.apiKey);
     return { content };
   });
 
-/** Gera copy de post para redes sociais / WhatsApp + prompt de imagem casado. */
 export const generateMarketingCopy = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
-    z
-      .object({
-        topic: z.string().min(2).max(500),
-        channel: z.enum(["instagram", "whatsapp", "linkedin", "facebook"]),
-        tone: z.string().max(80).optional(),
-      })
-      .parse(input),
+    z.object({ topic: z.string(), channel: z.string(), tone: z.string().optional(), apiKey: z.string().optional() }).parse(input)
   )
   .handler(async ({ data }) => {
-    const system =
-      "Você é um copywriter de marketing de elite especializado em B2B para contabilidade premium. " +
-      "Gere um conteúdo de altíssimo nível, sofisticado, autoritário e educativo, focado em atrair clientes de alto ticket para a 'Contabilidade Nobel'. " +
-      "Responda em JSON estrito com os campos: { \"title\": string, \"content\": string, \"hashtags\": string[], \"image_prompt\": string, \"cta\": string }. " +
-      "Para Artigos: O 'content' deve ser longo (mínimo 5 parágrafos), profundo e educativo. " +
-      "Para Stories/Reels: O 'content' deve ser curto, impactante e direto (máximo 150 caracteres para o content). " +
-      "O 'image_prompt' deve ser em inglês, altamente detalhado, descrevendo uma cena de fotografia corporativa cinematográfica, iluminação dramática, luxuosa, SEM TEXTO. " +
-      "NÃO use markdown no conteúdo. Responda APENAS o JSON.";
-    const tone = data.tone ?? "profissional, confiável e acessível";
-    const user = `Canal: ${data.channel}\nTom: ${tone}\nTema: ${data.topic}`;
-    const raw = await callAI(system, user);
+    const system = "Copywriter B2B contabilidade premium. JSON: {title, content, hashtags, image_prompt, cta}.";
+    const user = `Canal: ${data.channel}\nTom: ${data.tone || 'premium'}\nTema: ${data.topic}`;
+    const raw = await callAI(system, user, data.apiKey);
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    const cleaned = jsonMatch ? jsonMatch[0] : raw;
-    let parsed: { title: string; content: string; hashtags: string[]; image_prompt: string; cta: string };
-    try {
-      parsed = JSON.parse(cleaned);
-      if (!parsed.cta) parsed.cta = "SAIBA MAIS";
-    } catch (e) {
-      console.error("JSON Parse Error:", e, "Raw:", raw);
-      parsed = {
-        title: "Conteúdo Exclusivo Nobel",
-        content: raw.substring(0, 500),
-        hashtags: ["ContabilidadeNobel", "GestaoElite"],
-        image_prompt: "Luxury minimalist office, cinematic lighting, corporate photography",
-        cta: "FALE COM UM ESPECIALISTA"
-      };
-    }
-    return parsed;
+    return JSON.parse(jsonMatch ? jsonMatch[0] : raw);
+  });
+
+export const searchProspectsAI = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z.object({ query: z.string(), city: z.string(), category: z.string(), apiKey: z.string().optional() }).parse(input)
+  )
+  .handler(async ({ data }) => {
+    const system = "Você é um especialista em prospecção B2B. Gere uma lista de 15 empresas REAIS ou ALTAMENTE PROVÁVEIS no Norte de Minas (especialmente Montes Claros e região). " +
+      "Responda APENAS um JSON Array: [{\"nome\": string, \"cat\": string, \"cidade\": string, \"endereco\": string, \"tel\": string, \"score\": number, \"regime\": string, \"oportunidade\": \"alta\"|\"media\"}]. " +
+      "Foque em empresas de médio/grande porte, clínicas e indústrias.";
+    const user = `Busca: ${data.query}. Cidade: ${data.city}. Categoria: ${data.category}.`;
+    const raw = await callAI(system, user, data.apiKey);
+    const jsonMatch = raw.match(/\[[\s\S]*\]/);
+    return JSON.parse(jsonMatch ? jsonMatch[0] : "[]");
   });
