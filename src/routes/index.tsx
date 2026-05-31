@@ -5,6 +5,13 @@ import landingCssUrl from "@/styles/landing.css?url";
 import { InjectHtml } from "@/lib/InjectHtml";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    // Se o usuário já estiver logado, manda direto para o app para evitar o flash da landing
+    const { data } = await supabase.auth.getUser();
+    if (data.user) {
+      throw redirect({ to: "/app" });
+    }
+  },
   head: () => ({
     meta: [
       {
