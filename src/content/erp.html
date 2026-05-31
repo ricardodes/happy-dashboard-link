@@ -107,7 +107,7 @@
   <div class="content" id="content-area">
 
     <!-- DASHBOARD VIEW -->
-    <div class="view active" id="view-dashboard" style="display:block">
+    <div class="view active" id="view-dashboard">
       <div class="grid-4" style="margin-bottom:1.5rem">
         <div class="kpi-card">
           <div class="kpi-label">Receita Mensal</div>
@@ -259,7 +259,10 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão de Clientes (Base Nobel)</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600" onclick="alert('Integração API Alterdata aguardando chave...')">
+          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo cliente manual...')">
+            <i data-lucide="user-plus" style="width:16px"></i> Novo Cliente
+          </button>
+          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600;display:flex;align-items:center" onclick="alert('Integração API Alterdata aguardando chave...')">
             <i data-lucide="refresh-cw" style="width:16px"></i> Sincronizar Agora
           </button>
         </div>
@@ -1060,6 +1063,12 @@
           <button onclick="toggleFinanceiroTab(this,'dre')">DRE</button>
         </div>
       </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Painel de Controle Nobel</h2>
+        <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Funcionalidade de cadastro rápido em breve...')">
+          <i data-lucide="plus" style="width:16px"></i> Ação Rápida
+        </button>
+      </div>
       <div class="grid-4" style="margin-bottom:1.5rem">
         <div class="kpi-card">
           <div class="kpi-label">Contas a Pagar</div>
@@ -1242,11 +1251,16 @@
           <div class="badge badge-red" style="margin-bottom:0.5rem"><i data-lucide="receipt" style="width:12px"></i> Módulo Fiscal</div>
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Obrigações Fiscais</h2>
         </div>
-        <div class="view-toggle" id="fisc-toggle">
-          <button class="active" onclick="toggleFiscalTab(this,'calendario')">Calendário</button>
-          <button onclick="toggleFiscalTab(this,'nfe')">NF-e / NFS-e</button>
-          <button onclick="toggleFiscalTab(this,'sped')">SPED</button>
-          <button onclick="toggleFiscalTab(this,'certidoes')">Certidões</button>
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div class="view-toggle" id="fisc-toggle">
+            <button class="active" onclick="toggleFiscalTab(this,'calendario')">Calendário</button>
+            <button onclick="toggleFiscalTab(this,'nfe')">NF-e / NFS-e</button>
+            <button onclick="toggleFiscalTab(this,'sped')">SPED</button>
+            <button onclick="toggleFiscalTab(this,'certidoes')">Certidões</button>
+          </div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar nova obrigação fiscal...')">
+            <i data-lucide="plus" style="width:14px"></i> Cadastrar
+          </button>
         </div>
       </div>
       <div id="fisc-content-calendario">
@@ -1831,7 +1845,7 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Integrada de Prazos</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
+          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo evento na agenda...')">
             <i data-lucide="calendar-plus" style="width:16px"></i> Novo Evento
           </button>
         </div>
@@ -1879,16 +1893,6 @@
         </div>
       </div>
     </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--primary)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--primary);min-width:50px">17:30</div>
-              <div>
-                <div style="font-weight:700">Entrega SPED Fiscal</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Obrigação acessória • Sistema</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- ADMIN VIEW -->
