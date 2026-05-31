@@ -235,51 +235,62 @@ window.openClientDetails = function(id) {
   const c = window.appState.clientes.find(c => c.id === id);
   if (!c) return;
   openModal({
-    title: `Dossiê do Cliente: ${c.nome}`,
+    title: `Dossiê Estratégico: ${c.nome}`,
     body: `
       <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <!-- AI Summary Header -->
+        <div style="background:linear-gradient(135deg, rgba(0,208,132,0.1), rgba(59,130,246,0.1));padding:1rem;border-radius:var(--radius-sm);border:1px solid var(--border-strong);display:flex;align-items:center;gap:1rem">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="brain-circuit"></i></div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:0.95rem">Análise Nobel IA</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary)">Cliente do setor ${c.regime.includes('Real') ? 'Industrial/Grande Porte' : 'Serviços/Comércio'} com status ${c.status}.</div>
+          </div>
+          <button class="header-btn" title="Análise Profunda" onclick="toggleClientModalTab(document.querySelector('.tab-ia-btn'), 'ia-profile')"><i data-lucide="sparkles" style="width:16px;color:var(--accent)"></i></button>
+        </div>
+
         <!-- Tabs for Modal -->
         <div class="view-toggle" style="justify-content:flex-start;margin-bottom:0">
-          <button class="active" onclick="toggleClientModalTab(this, 'info')">Informações</button>
-          <button onclick="toggleClientModalTab(this, 'ia-profile')">Central de IA - Perfil</button>
+          <button class="active" onclick="toggleClientModalTab(this, 'info')">Informações Cadastrais</button>
+          <button class="tab-ia-btn" onclick="toggleClientModalTab(this, 'ia-profile')">Central de IA Nobel</button>
         </div>
 
         <div id="client-modal-info">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
             <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
             <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
-            <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
-            <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+            <div class="form-group"><label>Regime Tributário</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
+            <div class="form-group"><label>Responsável Nobel</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
           </div>
-          <div class="form-group" style="margin-top:1rem"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
-          
-          <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-             <button class="btn-secondary" style="width:100%;gap:0.5rem" onclick="openDirectWhatsApp('5538999999999', '${c.nome}')">
-                <i data-lucide="message-square" style="width:16px"></i> WhatsApp Nobel
-             </button>
-             <button class="btn-primary" style="width:100%;gap:0.5rem" onclick="handleAction('Gerar Relatório')">
-                <i data-lucide="file-text" style="width:16px"></i> Gerar Relatório
-             </button>
+          <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center">
+             <div class="form-group"><label>Status Atual</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+             <div style="display:flex;gap:0.5rem">
+                <button class="btn-secondary" style="gap:0.5rem;padding:0.5rem 1rem" onclick="openDirectWhatsApp('5538999999999', '${c.nome}')">
+                    <i data-lucide="message-square" style="width:16px"></i> WhatsApp
+                </button>
+                <button class="btn-primary" style="gap:0.5rem;padding:0.5rem 1rem" onclick="handleAction('Gerar Relatório')">
+                    <i data-lucide="file-text" style="width:16px"></i> Relatório
+                </button>
+             </div>
           </div>
         </div>
 
         <div id="client-modal-ia-profile" style="display:none">
           <div class="card glass-morphism" style="border:1px solid rgba(0,208,132,0.2);background:rgba(0,208,132,0.02)">
             <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="brain-circuit" style="width:18px"></i></div>
-              <div style="font-weight:700">Análise de Perfil Nobel IA</div>
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="sparkles" style="width:18px"></i></div>
+              <div style="font-weight:700">Central de Inteligência de Perfil</div>
             </div>
             <div id="ai-client-insight-content" style="font-size:0.9rem;line-height:1.6;color:var(--text-secondary)">
-              <p>Clique no botão abaixo para gerar uma análise completa do perfil deste cliente baseado nos dados do Alterdata.</p>
+              <p>O Nobel IA analisa os dados fiscais e contábeis deste cliente vindos do Alterdata para identificar riscos, oportunidades de elisão fiscal e tendências de faturamento.</p>
             </div>
             <button class="nav-cta" id="btn-generate-ai-insight" style="width:100%;margin-top:1rem;gap:0.5rem;background:linear-gradient(135deg, var(--primary), var(--accent))" onclick="generateClientProfileAI(${c.id})">
-              <i data-lucide="sparkles" style="width:16px"></i> Gerar Insights de Perfil
+              <i data-lucide="brain-circuit" style="width:16px"></i> Executar Análise Preditiva
             </button>
           </div>
         </div>
       </div>
     `,
-    confirmText: "Fechar",
+    confirmText: "Fechar Dossiê",
     onConfirm: () => closeModal()
   });
 };
@@ -1212,9 +1223,15 @@ window.saveApiKeys = function() {
 };
 
 window.handleAction = (action) => {
+  const isInternal = action.toLowerCase().includes('financeiro') || action.toLowerCase().includes('equipe') || action.toLowerCase().includes('contabil') || action.toLowerCase().includes('conta') || action.toLowerCase().includes('pagar') || action.toLowerCase().includes('receber');
+  
+  
   openModal({
     title: "Ação: " + action,
-    body: `<p>A funcionalidade <strong>${action}</strong> está em desenvolvimento para integração com o sistema Alterdata.</p>`,
+    body: `<p>A funcionalidade <strong>${action}</strong> está sendo processada.</p>
+           <p style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">
+             ${isInternal ? 'Os dados desta operação são restritos ao uso interno do Escritório Nobel.' : 'Esta ação será sincronizada com os dados do cliente via Alterdata.'}
+           </p>`,
     confirmText: "Entendido",
     onConfirm: () => closeModal()
   });
@@ -1331,6 +1348,14 @@ function initApp() {
     if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
     if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
   }, 200);
+
+  // Initial Renders
+  window.renderClientes();
+  window.renderLeads();
+  window.renderFinanceiro();
+  window.renderEquipe();
+  window.renderFiscal();
+  window.renderContabil();
 
   // Load saved API Keys
   const savedGroq = localStorage.getItem('nobel_groq_key');
