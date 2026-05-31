@@ -498,13 +498,14 @@
 
 /* RESPONSIVE */
 @media(max-width:768px) {
-  .nav-links { display:none; }
-  .hero-visual { display:none; }
-  .footer-grid { grid-template-columns:1fr; }
-  .timeline::before { left:20px; }
-  .timeline-item { width:100%; padding-left:3rem; padding-right:0; justify-content:flex-start; margin-left:0; }
-  .timeline-item:nth-child(even) { width:100%; padding-left:3rem; margin-left:0; }
-  .timeline-dot { left:14px !important; right:auto !important; }
+  .landing-root .nav-links { display:none !important; }
+  .landing-root .hero-visual { display:none !important; }
+  .landing-root .footer-grid { grid-template-columns:1fr; }
+  .landing-root .timeline::before { left:20px; }
+  .landing-root .timeline-item { width:100%; padding-left:3rem; padding-right:0; justify-content:flex-start; margin-left:0; }
+  .landing-root .timeline-item:nth-child(even) { width:100%; padding-left:3rem; margin-left:0; }
+  .landing-root .timeline-dot { left:14px !important; right:auto !important; }
+  .landing-root .navbar { padding: 0.75rem 1rem !important; }
 }
 
 .reveal { opacity:0; transform:translateY(40px); transition:all 0.8s ease; }
