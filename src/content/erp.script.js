@@ -660,6 +660,10 @@ window.toggleEquipeTab = (btn, tab) => {
   });
 };
 
+window.handleAction = (action) => {
+  alert(`Ação "${action}" em desenvolvimento para integração Alterdata.`);
+};
+
 // Initialize
 function initApp() {
   console.log('App initialization started');
