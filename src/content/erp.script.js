@@ -11,8 +11,10 @@ function showView(viewId, target = null) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (target) {
     target.classList.add('active');
-  } else if (event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
-    event.currentTarget.classList.add('active');
+  } else {
+    const selector = `.sidebar-nav a.nav-item[onclick*="'${viewId}'"]`;
+    const navItem = document.querySelector(selector);
+    if (navItem) navItem.classList.add('active');
   }
 
   const titles = {
@@ -381,8 +383,10 @@ function showView(viewId, target = null) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (target) {
     target.classList.add('active');
-  } else if (event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
-    event.currentTarget.classList.add('active');
+  } else {
+    const selector = `.sidebar-nav a.nav-item[onclick*="'${viewId}'"]`;
+    const navItem = document.querySelector(selector);
+    if (navItem) navItem.classList.add('active');
   }
 
   // Títulos
