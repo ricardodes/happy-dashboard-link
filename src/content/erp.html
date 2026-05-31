@@ -259,20 +259,20 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão de Clientes (Base Nobel)</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo cliente manual...')">
+          <button class="nav-cta hover-scale" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="openNewClientModal()">
             <i data-lucide="user-plus" style="width:16px"></i> Novo Cliente
           </button>
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600;display:flex;align-items:center" onclick="alert('Integração API Alterdata aguardando chave...')">
+          <button class="header-btn hover-scale" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600;display:flex;align-items:center" onclick="syncAlterdata()">
             <i data-lucide="refresh-cw" style="width:16px"></i> Sincronizar Agora
           </button>
         </div>
       </div>
-      <div class="card">
+      <div class="card glass-morphism">
         <div class="card-header">
           <div class="card-title"><i data-lucide="users"></i> Carteira de Clientes</div>
           <div class="search-box" style="margin:0;max-width:300px">
             <i data-lucide="search"></i>
-            <input type="text" placeholder="Filtrar por nome ou CNPJ...">
+            <input type="text" placeholder="Filtrar por nome ou CNPJ..." onkeyup="filterClientes(this.value)">
           </div>
         </div>
         <table class="data-table">
@@ -286,31 +286,8 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight:600">Supermercado Central MOC</td>
-              <td>00.123.456/0001-99</td>
-              <td><span class="badge badge-blue">Lucro Real</span></td>
-              <td>Ana Paula (Fiscal)</td>
-              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:600">Clínica Vida Plena</td>
-              <td>11.222.333/0001-88</td>
-              <td><span class="badge badge-green">Simples Nacional</span></td>
-              <td>Carlos Mendes (Contábil)</td>
-              <td><span class="status status-warning"><span class="status-dot"></span> Pendência</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:600">Construtora Norte Minas</td>
-              <td>22.333.444/0001-77</td>
-              <td><span class="badge badge-blue">Lucro Presumido</span></td>
-              <td>Ana Paula (Fiscal)</td>
-              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
+          <tbody id="clientes-table-body">
+            <!-- Dinâmico via JS -->
           </tbody>
         </table>
       </div>
