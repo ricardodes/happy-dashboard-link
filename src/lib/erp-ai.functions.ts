@@ -84,8 +84,8 @@ export const searchProspectsAI = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => prospectsSchema.parse(input ?? {}))
   .handler(async ({ data }) => {
     const system = "Especialista em prospecção B2B no Norte de Minas (Montes Claros e região). " +
-      "Responda APENAS JSON Array com 15 empresas reais/prováveis: [{\"nome\":string,\"cat\":string,\"cidade\":string,\"endereco\":string,\"tel\":string,\"score\":number,\"regime\":string,\"oportunidade\":\"alta\"|\"media\"}].";
-    const user = `Busca: ${data.query}. Cidade: ${data.city}. Categoria: ${data.category}.`;
+      "Responda APENAS JSON Array com pelo menos 30 empresas reais/prováveis da região: [{\"nome\":string,\"cat\":string,\"cidade\":string,\"endereco\":string,\"tel\":string,\"score\":number,\"regime\":string,\"oportunidade\":\"alta\"|\"media\"}].";
+    const user = `Busca: ${data.query}. Cidade: ${data.city}. Categoria: ${data.category}. Seja abrangente e inclua empresas de diversos portes.`;
     const raw = await callAI(system, user, data.apiKey);
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
     try {
