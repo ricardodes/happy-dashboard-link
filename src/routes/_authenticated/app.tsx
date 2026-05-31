@@ -37,6 +37,15 @@ const BRL = (n: number) =>
 
 function ErpPage() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Redirecionamento de segurança extra para evitar flashes de outros sites
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) navigate({ to: "/login" });
+    });
+  }, [navigate]);
+
   return (
     <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar Navigation */}
