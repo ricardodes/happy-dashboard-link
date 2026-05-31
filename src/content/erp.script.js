@@ -568,8 +568,24 @@ window.renderFinanceiro = function() {
         <td><span class="status ${item.status === 'Pago' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
         <td><button class="btn-delete" onclick="deleteFinItem('pagar', ${item.id})"><i data-lucide="trash-2" style="width:14px"></i></button></td>
       </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum lançamento encontrado.</td></tr>';
   }
+
+  const receberBody = document.getElementById('financeiro-receber-table-body');
+  if (receberBody) {
+    const data = window.appState.financeiro.receber || [];
+    receberBody.innerHTML = data.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.cliente || 'Consumidor'}</td>
+        <td>${item.descricao}</td>
+        <td>${item.vencimento}</td>
+        <td style="font-weight:700">R$ ${item.valor}</td>
+        <td><span class="status ${item.status === 'Recebido' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+        <td><button class="btn-delete" onclick="deleteFinItem('receber', ${item.id})"><i data-lucide="trash-2" style="width:14px"></i></button></td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum recebimento encontrado.</td></tr>';
+  }
+  
   if (window.lucide) window.lucide.createIcons();
 };
 
