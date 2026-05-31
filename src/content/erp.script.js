@@ -128,21 +128,93 @@ window.openClientDetails = function(id) {
   const c = window.appState.clientes.find(c => c.id === id);
   if (!c) return;
   openModal({
-    title: `Detalhes: ${c.nome}`,
+    title: `Dossiê do Cliente: ${c.nome}`,
     body: `
-      <div style="display:flex;flex-direction:column;gap:1rem">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-          <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
-          <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
-          <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
-          <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <!-- Tabs for Modal -->
+        <div class="view-toggle" style="justify-content:flex-start;margin-bottom:0">
+          <button class="active" onclick="toggleClientModalTab(this, 'info')">Informações</button>
+          <button onclick="toggleClientModalTab(this, 'ia-profile')">Central de IA - Perfil</button>
         </div>
-        <div class="form-group"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+
+        <div id="client-modal-info">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
+            <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
+            <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
+            <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+          </div>
+          <div class="form-group" style="margin-top:1rem"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+          
+          <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+             <button class="btn-secondary" style="width:100%;gap:0.5rem" onclick="openDirectWhatsApp('5538999999999', '${c.nome}')">
+                <i data-lucide="message-square" style="width:16px"></i> WhatsApp Nobel
+             </button>
+             <button class="btn-primary" style="width:100%;gap:0.5rem" onclick="handleAction('Gerar Relatório')">
+                <i data-lucide="file-text" style="width:16px"></i> Gerar Relatório
+             </button>
+          </div>
+        </div>
+
+        <div id="client-modal-ia-profile" style="display:none">
+          <div class="card glass-morphism" style="border:1px solid rgba(0,208,132,0.2);background:rgba(0,208,132,0.02)">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="brain-circuit" style="width:18px"></i></div>
+              <div style="font-weight:700">Análise de Perfil Nobel IA</div>
+            </div>
+            <div id="ai-client-insight-content" style="font-size:0.9rem;line-height:1.6;color:var(--text-secondary)">
+              <p>Clique no botão abaixo para gerar uma análise completa do perfil deste cliente baseado nos dados do Alterdata.</p>
+            </div>
+            <button class="nav-cta" id="btn-generate-ai-insight" style="width:100%;margin-top:1rem;gap:0.5rem;background:linear-gradient(135deg, var(--primary), var(--accent))" onclick="generateClientProfileAI(${c.id})">
+              <i data-lucide="sparkles" style="width:16px"></i> Gerar Insights de Perfil
+            </button>
+          </div>
+        </div>
       </div>
     `,
     confirmText: "Fechar",
     onConfirm: () => closeModal()
   });
+};
+
+window.toggleClientModalTab = (btn, tab) => {
+  const modal = btn.closest('.modal-content');
+  modal.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  modal.querySelector('#client-modal-info').style.display = tab === 'info' ? 'block' : 'none';
+  modal.querySelector('#client-modal-ia-profile').style.display = tab === 'ia-profile' ? 'block' : 'none';
+};
+
+window.generateClientProfileAI = async function(id) {
+  const c = window.appState.clientes.find(c => c.id === id);
+  if (!c) return;
+  
+  const contentEl = document.getElementById('ai-client-insight-content');
+  const btn = document.getElementById('btn-generate-ai-insight');
+  
+  if (contentEl) contentEl.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;color:var(--primary)"><i data-lucide="refresh-cw" class="spin" style="width:16px"></i> Analisando dados do Alterdata...</div>';
+  if (btn) btn.disabled = true;
+  if (window.lucide) window.lucide.createIcons();
+
+  try {
+    const snapshot = `
+      Cliente: ${c.nome}
+      CNPJ: ${c.cnpj}
+      Regime: ${c.regime}
+      Responsável: ${c.responsavel}
+      Status: ${c.status}
+      Histórico: Cliente fiel, setor ${c.regime.includes('Lucro Real') ? 'indústria/grande porte' : 'serviços/comércio'}.
+      Objetivo: Entender perfil de risco, oportunidades de elisão fiscal e engajamento.
+    `;
+    
+    const result = await window.generateBusinessInsights({ snapshot });
+    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap">${result.content}</div>`;
+  } catch (err) {
+    if (contentEl) contentEl.innerHTML = `<span style="color:var(--danger)">Erro ao gerar insights: ${err.message}</span>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 };
 
 window.deleteCliente = function(id) {
