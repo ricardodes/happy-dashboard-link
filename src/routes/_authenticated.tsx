@@ -1,7 +1,6 @@
-import { createFileRoute, redirect, Outlet, isRedirect } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated")({
-  // Desabilitando autenticação temporariamente conforme solicitado
+  // Autenticação removida permanentemente. Agora esta é apenas um wrapper de layout.
   component: () => <Outlet />,
 });

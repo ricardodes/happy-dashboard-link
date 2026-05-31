@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
 interface InjectHtmlProps {
@@ -17,9 +17,6 @@ interface InjectHtmlProps {
  * Renders raw HTML inside a React component, loads required CDN scripts,
  * runs the original page's inline script, and intercepts internal anchor
  * clicks so they go through the TanStack router.
- *
- * Used to host the legacy Nobel landing + ERP HTML inside the React app
- * without rewriting 4600 lines of markup.
  */
 export function InjectHtml({
   html,
@@ -32,10 +29,14 @@ export function InjectHtml({
 }: InjectHtmlProps) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [ready, setReady] = useState(false);
 
   // Load CSS once per cssUrl, remove on unmount so styles don't leak across routes.
   useEffect(() => {
-    if (!cssUrl) return;
+    if (!cssUrl) {
+      setReady(true);
+      return;
+    }
     const id = `inject-css-${cssUrl}`;
     let link = document.getElementById(id) as HTMLLinkElement | null;
     if (!link) {
@@ -43,15 +44,20 @@ export function InjectHtml({
       link.id = id;
       link.rel = "stylesheet";
       link.href = cssUrl;
+      link.onload = () => setReady(true);
       document.head.appendChild(link);
+    } else {
+      setReady(true);
     }
     return () => {
-      link?.remove();
+      // Keep CSS if it's already there to avoid flashes, or remove if you want strict isolation
+      // link?.remove();
     };
   }, [cssUrl]);
 
   // Load external scripts (sequentially, then run inline script)
   useEffect(() => {
+    if (!ready) return;
     let cancelled = false;
 
     const loadScript = (src: string) =>
@@ -99,9 +105,8 @@ export function InjectHtml({
     return () => {
       cancelled = true;
     };
-    // We intentionally don't depend on the script arrays' identity; html is the key signal.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [html]);
+  }, [html, ready]);
 
   // Intercept internal nav clicks
   useEffect(() => {
@@ -121,6 +126,14 @@ export function InjectHtml({
     <div
       ref={ref}
       className={className}
+      style={{ 
+        visibility: ready ? 'visible' : 'hidden', 
+        opacity: ready ? 1 : 0, 
+        transition: 'opacity 0.2s',
+        minHeight: '100vh',
+        width: '100%',
+        display: 'block'
+      }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

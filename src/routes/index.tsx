@@ -31,17 +31,20 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   return (
-    <InjectHtml
-      html={landingHtml}
-      inlineScript={landingScript}
-      externalScripts={[
-        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
-        "https://unpkg.com/lucide@latest",
-      ]}
-      cssUrl={landingCssUrl}
-      interceptLinkSelector='a[href="app.html"], a[href$="/app"]'
-      interceptTo="/app"
-    />
+    <div className="landing-root" style={{ background: 'white', minHeight: '100vh', position: 'relative', zIndex: 1, display: 'block' }}>
+
+      <InjectHtml
+        html={landingHtml}
+        inlineScript={landingScript}
+        externalScripts={[
+          "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+          "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
+          "https://unpkg.com/lucide@latest",
+        ]}
+        cssUrl={landingCssUrl}
+        interceptLinkSelector='a[href="app.html"], a[href$="/app"]'
+        interceptTo="/app"
+      />
+    </div>
   );
 }

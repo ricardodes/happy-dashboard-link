@@ -1,5 +1,4 @@
-
-:root {
+.erp-root {
   --primary: #0f5e3e;
   --primary-light: #1a8a5c;
   --accent: #00d084;
@@ -33,16 +32,15 @@
   --border-strong: rgba(15,94,62,0.2);
   --shadow: 0 4px 24px rgba(0,0,0,0.06);
   --shadow-lg: 0 20px 60px rgba(0,0,0,0.1);
-  --glass: rgba(255,255,255,0.7);
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
+.erp-root * { margin:0; padding:0; box-sizing:border-box; }
+
+.erp-root {
   font-family:'Inter',sans-serif;
   background:var(--bg);
   color:var(--text);
-  overflow:hidden;
-  height:100vh;
-  width:100vw;
+  overflow:auto;
+  min-height:100vh;
 }
 .font-display { font-family:'Space Grotesk',sans-serif; }
 

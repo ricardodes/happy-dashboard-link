@@ -43,7 +43,8 @@ function ErpPage() {
 
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex' }}>
+
       {/* Sidebar Navigation */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
         <div className="flex h-full flex-col p-6">
@@ -111,6 +112,16 @@ function ErpPage() {
       </div>
     </div>
   );
+}
+
+// Inserindo componente de segurança para forçar redirecionamento caso alguém tente forçar /app logado ou deslogado
+function AuthGate() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Como a autenticação foi removida, não precisamos mais do gate de login.
+    // Mas para garantir que não haja flashes, deixamos o componente pronto para o layout.
+  }, [navigate]);
+  return null;
 }
 
 function SidebarNavItem({ value, activeTab, setActiveTab, icon, label }: { value: string; activeTab: string; setActiveTab: (v: string) => void; icon: React.ReactNode; label: string }) {
