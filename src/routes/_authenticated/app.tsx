@@ -326,18 +326,28 @@ function OverviewTab() {
 
 function Kpi({ title, value, sub, trend, icon }: { title: string; value: string; sub?: string; trend?: number; icon?: React.ReactNode }) {
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium text-muted-foreground">{title}</p>
-          <span className="text-muted-foreground">{icon}</span>
+    <Card className="overflow-hidden border-none shadow-sm transition-all hover:shadow-md ring-1 ring-slate-200">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</p>
+            <p className="text-2xl font-bold tracking-tight text-slate-900">{value}</p>
+          </div>
+          <div className="rounded-xl bg-emerald-50 p-2 text-emerald-600 ring-1 ring-emerald-100">
+            {icon}
+          </div>
         </div>
-        <p className="mt-2 text-2xl font-bold tracking-tight">{value}</p>
-        {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}
-        {typeof trend === "number" && (
-          <p className={`mt-1 text-xs font-medium ${trend >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-            {trend >= 0 ? "▲" : "▼"} {Math.abs(trend).toFixed(1)}% vs mês anterior
-          </p>
+        
+        {(sub || typeof trend === "number") && (
+          <div className="mt-4 flex items-center gap-2 border-t pt-3">
+            {typeof trend === "number" && (
+              <span className={`flex items-center gap-0.5 text-xs font-bold ${trend >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
+                {trend >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                {Math.abs(trend).toFixed(1)}%
+              </span>
+            )}
+            {sub && <span className="text-xs font-medium text-slate-400">{sub}</span>}
+          </div>
         )}
       </CardContent>
     </Card>
