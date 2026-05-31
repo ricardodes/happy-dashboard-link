@@ -1701,58 +1701,58 @@
     <div class="view" id="view-agenda">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
         <div>
-          <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="calendar" style="width:12px"></i> Agenda Inteligente</div>
-          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Calendário & Compromissos</h2>
+          <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="calendar" style="width:12px"></i> Agenda Nobel + Fiscal</div>
+          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Integrada de Prazos</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
           <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
             <i data-lucide="calendar-plus" style="width:16px"></i> Novo Evento
           </button>
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
-            <i data-lucide="link" style="width:16px"></i> Google Calendar
-          </button>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="calendar-days"></i> Junho/2024</div>
+      
+      <div class="grid-2" style="gap:1.5rem">
+        <!-- AGENDA NOBEL -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-light));color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
+            <div class="card-title" style="color:white"><i data-lucide="calendar-days"></i> Agenda Interna Nobel</div>
           </div>
-          <div class="calendar" id="agenda-calendar"></div>
+          <div class="calendar" id="agenda-calendar" style="flex:1"></div>
+          <div style="margin-top:1.5rem">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Compromissos Nobel</h4>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <div style="display:flex;gap:1rem;padding:0.75rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--primary)">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--primary)">09:00</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem">Reunião de Alinhamento</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Equipe Comercial & Fiscal</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="list-checks"></i> Compromissos do Dia</div>
+
+        <!-- AGENDA FISCAL -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-header" style="background:linear-gradient(135deg, var(--danger), #f87171);color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
+            <div class="card-title" style="color:white"><i data-lucide="alert-triangle"></i> Prazos Fiscais & Obrigações</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:0.75rem">
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--danger)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--danger);min-width:50px">09:00</div>
-              <div>
-                <div style="font-weight:700">Reunião - Hospital Santa Maria</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Apresentação de proposta • Sala 1</div>
+          <div class="calendar" id="fiscal-calendar" style="flex:1"></div>
+          <div style="margin-top:1.5rem">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Vencimentos Próximos</h4>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <div style="display:flex;gap:1rem;padding:0.75rem;background:rgba(239,68,68,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--danger)">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--danger)">DIA 20</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem">Entrega DCTF / Venc. DAS</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Impacto: 485 clientes</div>
+                </div>
               </div>
             </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--warning)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--warning);min-width:50px">11:00</div>
-              <div>
-                <div style="font-weight:700">Vencimento DAS - 5 clientes</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Obrigação fiscal • Urgente</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--info)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--info);min-width:50px">14:00</div>
-              <div>
-                <div style="font-weight:700">Call - TechSolutions Brasil</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Diagnóstico tributário • Google Meet</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--accent)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--accent);min-width:50px">16:00</div>
-              <div>
-                <div style="font-weight:700">Reunião interna - Comercial</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Pipeline review • Sala 2</div>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
             <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--primary)">
               <div style="font-size:0.8rem;font-weight:700;color:var(--primary);min-width:50px">17:30</div>
               <div>
