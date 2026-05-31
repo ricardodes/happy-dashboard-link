@@ -75,17 +75,19 @@ export const generateMarketingCopy = createServerFn({ method: "POST" })
     const tone = data.tone ?? "profissional, confiável e acessível";
     const user = `Canal: ${data.channel}\nTom: ${tone}\nTema: ${data.topic}`;
     const raw = await callAI(system, user);
-    // Tenta extrair JSON mesmo se vier com cercas
-    const cleaned = raw.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
+    // Robust JSON extraction
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    const cleaned = jsonMatch ? jsonMatch[0] : raw;
     let parsed: { title: string; content: string; hashtags: string[]; image_prompt: string };
     try {
       parsed = JSON.parse(cleaned);
-    } catch {
+    } catch (e) {
+      console.error("JSON Parse Error:", e, "Raw:", raw);
       parsed = {
-        title: "Post sugerido",
+        title: "Conteúdo Exclusivo Nobel",
         content: raw,
-        hashtags: [],
-        image_prompt: data.topic,
+        hashtags: ["ContabilidadeNobel", "InteligenciaFinanceira"],
+        image_prompt: data.topic + ", cinematic corporate photography, luxury minimalist office",
       };
     }
     return parsed;
