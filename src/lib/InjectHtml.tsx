@@ -126,7 +126,14 @@ export function InjectHtml({
     <div
       ref={ref}
       className={className}
-      style={{ visibility: ready ? 'visible' : 'hidden', opacity: ready ? 1 : 0, transition: 'opacity 0.2s' }}
+      style={{ 
+        visibility: ready ? 'visible' : 'hidden', 
+        opacity: ready ? 1 : 0, 
+        transition: 'opacity 0.2s',
+        minHeight: '100vh',
+        width: '100%',
+        display: 'block'
+      }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
