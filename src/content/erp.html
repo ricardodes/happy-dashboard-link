@@ -932,18 +932,19 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer" onclick="handleAction('Novo Recebimento')">
-            <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
-          </button>
+        <div class="card glass-morphism">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
+            <button class="nav-cta hover-scale" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer" onclick="openNewFinancialModal('receber')">
+              <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
+            </button>
           </div>
           <table class="data-table">
             <thead>
               <tr><th>Cliente</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
             </thead>
-            <tbody>
-              <tr><td style="font-weight:600">Hospital Santa Maria</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 25.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>Consultoria Especial</td><td>10/06/2024</td><td style="font-weight:700">R$ 5.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Construtora Horizonte</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            <tbody id="financeiro-receber-table-body">
+              <!-- Dinâmico -->
             </tbody>
           </table>
         </div>
