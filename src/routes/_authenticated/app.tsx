@@ -39,11 +39,9 @@ function ErpPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Autenticação removida temporariamente conforme solicitado
-
-
   return (
     <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex' }}>
+
 
       {/* Sidebar Navigation */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
@@ -69,7 +67,13 @@ function ErpPage() {
           </nav>
 
           <div className="mt-auto pt-6 border-t">
-            {/* Botão de sair removido temporariamente */}
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
+              onClick={() => navigate({ to: "/" })}
+            >
+              <LogOut className="mr-3 h-5 w-5 rotate-180" /> Voltar ao Site
+            </Button>
           </div>
         </div>
       </aside>
