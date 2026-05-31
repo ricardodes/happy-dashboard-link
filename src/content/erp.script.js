@@ -18,13 +18,28 @@ window.appState = {
     pagar: [
       { id: 1, descricao: "Aluguel Sede Nobel", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
       { id: 2, descricao: "Energia Elétrica", vencimento: "15/06/2024", valor: "1.250,00", status: "Pendente" },
-      { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" },
-      { id: 4, descricao: "Software ERP", vencimento: "20/06/2024", valor: "3.400,00", status: "Pendente" }
+      { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" }
     ],
     receber: [
       { id: 1, cliente: "Hospital Santa Maria", descricao: "Honorários Maio", vencimento: "05/06/2024", valor: "25.000,00", status: "Recebido" },
-      { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" },
-      { id: 3, cliente: "Construtora Norte Minas", descricao: "Honorários Junho", vencimento: "20/06/2024", valor: "18.200,00", status: "Pendente" }
+      { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" }
+    ]
+  },
+  fiscal: {
+    nfe: [
+      { id: 1, emissor: "Supermercado Central", valor: "4.500,00", data: "01/06/2024", status: "Validada" },
+      { id: 2, emissor: "Clínica Vida Plena", valor: "12.800,00", data: "01/06/2024", status: "Validada" },
+      { id: 3, emissor: "TechSolutions Brasil", valor: "8.900,00", data: "02/06/2024", status: "Pendente" }
+    ],
+    sped: [
+      { id: 1, cliente: "Supermercado Central", tipo: "SPED Fiscal", periodo: "05/2024", status: "Enviado" },
+      { id: 2, cliente: "Clínica Vida Plena", tipo: "EFD-Contribuições", periodo: "05/2024", status: "Pendente" }
+    ]
+  },
+  contabil: {
+    lancamentos: [
+      { id: 1, conta: "Caixa", debito: "R$ 10.000", credito: "R$ 0", data: "01/06/2024" },
+      { id: 2, conta: "Bancos", debito: "R$ 0", credito: "R$ 10.000", data: "01/06/2024" }
     ]
   },
   users: [
