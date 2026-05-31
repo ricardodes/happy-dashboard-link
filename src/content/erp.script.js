@@ -4,9 +4,15 @@ lucide.createIcons();
 
 // Navegação entre views
 function showView(viewId, target = null) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
   const targetView = document.getElementById('view-' + viewId);
-  if (targetView) targetView.classList.add('active');
+  if (targetView) {
+    targetView.classList.add('active');
+    targetView.style.display = 'block';
+  }
 
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (target) {
@@ -370,13 +376,18 @@ function toggleAppTheme() {
 
 // ===== CORRIGIR showView PARA GARANTIR FUNCIONAMENTO =====
 function showView(viewId, target = null) {
+  console.log('showView called with:', viewId);
   // Esconder todas as views
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
 
   // Mostrar a view solicitada
   const targetView = document.getElementById('view-' + viewId);
   if (targetView) {
     targetView.classList.add('active');
+    targetView.style.display = 'block';
   }
 
   // Atualizar nav items
