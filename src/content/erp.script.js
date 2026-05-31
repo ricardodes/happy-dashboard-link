@@ -604,25 +604,64 @@ window.searchGoogleMaps = function(query) {
 
 
 
-window.toggleFinanceiroTab = (btn) => {
+window.toggleFinanceiroTab = (btn, tab) => {
   document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  // Toggle content
+  const sections = ['pagar', 'receber', 'fluxo', 'dre'];
+  sections.forEach(s => {
+    const el = document.getElementById('fin-content-' + s);
+    if (el) el.style.display = (s === tab) ? 'block' : 'none';
+  });
 };
-window.toggleContabilTab = (btn) => {
+
+window.toggleContabilTab = (btn, tab) => {
   document.querySelectorAll('#cont-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  const sections = ['balancete', 'dre', 'diario', 'razao'];
+  sections.forEach(s => {
+    const el = document.getElementById('cont-content-' + s);
+    if (el) el.style.display = (s === tab) ? 'block' : 'none';
+  });
 };
-window.toggleFiscalTab = (btn) => {
+
+window.toggleFiscalTab = (btn, tab) => {
   document.querySelectorAll('#fisc-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  const sections = ['calendario', 'nfe', 'sped', 'certidoes'];
+  sections.forEach(s => {
+    const el = document.getElementById('fisc-content-' + s);
+    if (el) el.style.display = (s === tab) ? 'block' : 'none';
+  });
 };
-window.toggleTrabalhistaTab = (btn) => {
+
+window.toggleTrabalhistaTab = (btn, tab) => {
   document.querySelectorAll('#trab-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  const sections = ['folha', 'funcionarios', 'esocial', 'ferias'];
+  sections.forEach(s => {
+    const el = document.getElementById('trab-content-' + s);
+    if (el) el.style.display = (s === tab) ? 'block' : 'none';
+  });
 };
-window.toggleEquipeTab = (btn) => {
+
+window.toggleEquipeTab = (btn, tab) => {
   document.querySelectorAll('#equipe-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  const sections = ['lista', 'desempenho', 'escalas'];
+  sections.forEach(s => {
+    const el = document.getElementById('equipe-content-' + s);
+    if (el) el.style.display = (s === tab) ? 'block' : 'none';
+  });
+};
+
+window.handleAction = (action) => {
+  alert(`Ação "${action}" em desenvolvimento para integração Alterdata.`);
 };
 
 // Initialize

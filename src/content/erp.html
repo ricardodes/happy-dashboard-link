@@ -1082,25 +1082,83 @@
           <div class="kpi-change positive">Crescimento estimado</div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i data-lucide="list"></i> Contas a Pagar - Junho/2024</div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer">
+      <div id="fin-content-pagar">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Pagar - Junho/2024</div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer" onclick="handleAction('Nova Conta a Pagar')">
             <i data-lucide="plus" style="width:14px"></i> Nova Conta
           </button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Fornecedor</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-weight:600">Escritório de Software</td><td>Licenças anuais</td><td>10/06/2024</td><td style="font-weight:700">R$ 18.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Imobiliária Centro</td><td>Aluguel sede</td><td>15/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Energia Elétrica</td><td>Conta de luz</td><td>20/06/2024</td><td style="font-weight:700">R$ 3.450,00</td><td><span class="status status-info"><span class="status-dot"></span> Agendado</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Fornecedor XYZ</td><td>Material de escritório</td><td>25/06/2024</td><td style="font-weight:700">R$ 2.180,00</td><td><span class="status status-success"><span class="status-dot"></span> Pago</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Consultoria Jurídica</td><td>Assessoria mensal</td><td>30/06/2024</td><td style="font-weight:700">R$ 8.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr><th>Fornecedor</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
-          </thead>
-          <tbody>
-            <tr><td style="font-weight:600">Escritório de Software</td><td>Licenças anuais</td><td>10/06/2024</td><td style="font-weight:700">R$ 18.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Imobiliária Centro</td><td>Aluguel sede</td><td>15/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Energia Elétrica</td><td>Conta de luz</td><td>20/06/2024</td><td style="font-weight:700">R$ 3.450,00</td><td><span class="status status-info"><span class="status-dot"></span> Agendado</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Fornecedor XYZ</td><td>Material de escritório</td><td>25/06/2024</td><td style="font-weight:700">R$ 2.180,00</td><td><span class="status status-success"><span class="status-dot"></span> Pago</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Consultoria Jurídica</td><td>Assessoria mensal</td><td>30/06/2024</td><td style="font-weight:700">R$ 8.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-          </tbody>
-        </table>
+      </div>
+
+      <div id="fin-content-receber" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer" onclick="handleAction('Novo Recebimento')">
+            <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
+          </button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Cliente</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-weight:600">Hospital Santa Maria</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 25.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>Consultoria Especial</td><td>10/06/2024</td><td style="font-weight:700">R$ 5.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Construtora Horizonte</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="fin-content-fluxo" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="activity"></i> Fluxo de Caixa Projetado</div>
+          </div>
+          <div style="height:300px;padding:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;height:200px;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+              <div style="flex:1;background:var(--accent);height:60%;border-radius:4px 4px 0 0;position:relative" title="Semana 1"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 42K</span></div>
+              <div style="flex:1;background:var(--accent);height:85%;border-radius:4px 4px 0 0;position:relative" title="Semana 2"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 58K</span></div>
+              <div style="flex:1;background:var(--danger);height:40%;border-radius:4px 4px 0 0;position:relative" title="Semana 3"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 28K</span></div>
+              <div style="flex:1;background:var(--accent);height:75%;border-radius:4px 4px 0 0;position:relative" title="Semana 4"><span style="position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700">R$ 51K</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted)">
+              <span>Semana 1</span><span>Semana 2</span><span>Semana 3</span><span>Semana 4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="fin-content-dre" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="pie-chart"></i> DRE Gerencial Nobel</div>
+          </div>
+          <div style="padding:1rem">
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Faturamento Bruto</span><span style="font-weight:700;color:var(--accent)">R$ 487.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Custos Variáveis</span><span style="font-weight:700;color:var(--danger)">R$ 42.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;border-bottom:1px solid var(--border)"><span style="font-weight:600">Margem de Contribuição</span><span style="font-weight:700">R$ 445.000</span></div>
+               <div style="display:flex;justify-content:space-between;padding:0.75rem;background:var(--bg-hover);border-radius:8px"><span style="font-weight:800">Resultado Líquido</span><span style="font-weight:800;color:var(--accent)">R$ 218.348</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1118,7 +1176,7 @@
           <button onclick="toggleContabilTab(this,'razao')">Livro Razão</button>
         </div>
       </div>
-      <div class="grid-2">
+      <div id="cont-content-balancete">
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="scale"></i> Balancete - Maio/2024</div>
@@ -1135,6 +1193,9 @@
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div id="cont-content-dre" style="display:none">
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="trending-up"></i> DRE - Maio/2024</div>
@@ -1165,6 +1226,13 @@
           </div>
         </div>
       </div>
+
+      <div id="cont-content-diario" style="display:none">
+        <div class="card"><div class="card-header"><div class="card-title">Livro Diário</div></div><div style="padding:2rem;text-align:center;color:var(--text-muted)">Aguardando seleção de período.</div></div>
+      </div>
+      <div id="cont-content-razao" style="display:none">
+        <div class="card"><div class="card-header"><div class="card-title">Livro Razão</div></div><div style="padding:2rem;text-align:center;color:var(--text-muted)">Aguardando seleção de conta contábil.</div></div>
+      </div>
     </div>
 
     <!-- FISCAL VIEW -->
@@ -1181,56 +1249,92 @@
           <button onclick="toggleFiscalTab(this,'certidoes')">Certidões</button>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="calendar-days"></i> Calendário Fiscal - Junho/2024</div>
+      <div id="fisc-content-calendario">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i data-lucide="calendar-days"></i> Calendário Fiscal - Junho/2024</div>
+            </div>
+            <div class="calendar" id="fiscal-calendar"></div>
+            <div style="margin-top:1rem;display:flex;gap:1rem;font-size:0.8rem">
+              <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--danger)"></span> Urgente</span>
+              <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--warning)"></span> Atenção</span>
+              <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Concluído</span>
+            </div>
           </div>
-          <div class="calendar" id="fiscal-calendar"></div>
-          <div style="margin-top:1rem;display:flex;gap:1rem;font-size:0.8rem">
-            <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--danger)"></span> Urgente</span>
-            <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--warning)"></span> Atenção</span>
-            <span style="display:flex;align-items:center;gap:0.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Concluído</span>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i data-lucide="alert-circle"></i> Obrigações do Dia</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm)">
+                <div style="width:40px;height:40px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;color:var(--danger)"><i data-lucide="alert-triangle" style="width:18px"></i></div>
+                <div style="flex:1">
+                  <div style="font-weight:700">DAS - Simples Nacional</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Vence em 2 dias • 5 clientes pendentes</div>
+                </div>
+                <span class="badge badge-red">URGENTE</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-sm)">
+                <div style="width:40px;height:40px;border-radius:50%;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--warning)"><i data-lucide="clock" style="width:18px"></i></div>
+                <div style="flex:1">
+                  <div style="font-weight:700">SPED Fiscal</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Vence em 5 dias • 12 clientes pendentes</div>
+                </div>
+                <span class="badge badge-orange">ATENÇÃO</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(0,208,132,0.05);border:1px solid rgba(0,208,132,0.2);border-radius:var(--radius-sm)">
+                <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,208,132,0.1);display:flex;align-items:center;justify-content:center;color:var(--accent)"><i data-lucide="check-circle" style="width:18px"></i></div>
+                <div style="flex:1">
+                  <div style="font-weight:700">eSocial</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Entregue • 528 clientes</div>
+                </div>
+                <span class="badge badge-green">CONCLUÍDO</span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div id="fisc-content-nfe" style="display:none">
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i data-lucide="alert-circle"></i> Obrigações do Dia</div>
+            <div class="card-title"><i data-lucide="file-text"></i> Notas Fiscais Processadas</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:0.75rem">
-            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm)">
-              <div style="width:40px;height:40px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;color:var(--danger)"><i data-lucide="alert-triangle" style="width:18px"></i></div>
-              <div style="flex:1">
-                <div style="font-weight:700">DAS - Simples Nacional</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Vence em 2 dias • 5 clientes pendentes</div>
-              </div>
-              <span class="badge badge-red">URGENTE</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-sm)">
-              <div style="width:40px;height:40px;border-radius:50%;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--warning)"><i data-lucide="clock" style="width:18px"></i></div>
-              <div style="flex:1">
-                <div style="font-weight:700">SPED Fiscal</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Vence em 5 dias • 12 clientes pendentes</div>
-              </div>
-              <span class="badge badge-orange">ATENÇÃO</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(0,208,132,0.05);border:1px solid rgba(0,208,132,0.2);border-radius:var(--radius-sm)">
-              <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,208,132,0.1);display:flex;align-items:center;justify-content:center;color:var(--accent)"><i data-lucide="check-circle" style="width:18px"></i></div>
-              <div style="flex:1">
-                <div style="font-weight:700">eSocial</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Entregue • 528 clientes</div>
-              </div>
-              <span class="badge badge-green">CONCLUÍDO</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:rgba(0,208,132,0.05);border:1px solid rgba(0,208,132,0.2);border-radius:var(--radius-sm)">
-              <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,208,132,0.1);display:flex;align-items:center;justify-content:center;color:var(--accent)"><i data-lucide="check-circle" style="width:18px"></i></div>
-              <div style="flex:1">
-                <div style="font-weight:700">FGTS</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Entregue • 528 clientes</div>
-              </div>
-              <span class="badge badge-green">CONCLUÍDO</span>
-            </div>
+          <table class="data-table">
+            <thead><tr><th>Emissor</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">Supermercado Central</td><td>R$ 4.500,00</td><td>01/06/2024</td><td><span class="status status-success"><span class="status-dot"></span> Validada</span></td></tr>
+              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>R$ 12.800,00</td><td>01/06/2024</td><td><span class="status status-success"><span class="status-dot"></span> Validada</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="fisc-content-sped" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="archive"></i> Arquivos SPED</div>
           </div>
+          <div style="padding:2rem;text-align:center;color:var(--text-muted)">
+             <i data-lucide="folder-open" style="width:48px;margin-bottom:1rem;opacity:0.3"></i>
+             <p>Selecione um cliente para visualizar os arquivos SPED gerados.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="fisc-content-certidoes" style="display:none">
+        <div class="card">
+          <div class="card-header">
+             <div class="card-title"><i data-lucide="shield-check"></i> Gestão de Certidões</div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Cliente</th><th>Certidão</th><th>Vencimento</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">Nobel Escritório</td><td>Receita Federal</td><td>15/12/2024</td><td><span class="status status-success"><span class="status-dot"></span> Válida</span></td></tr>
+              <tr><td style="font-weight:600">Nobel Escritório</td><td>FGTS</td><td>20/07/2024</td><td><span class="status status-success"><span class="status-dot"></span> Válida</span></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -1239,53 +1343,75 @@
     <div class="view" id="view-trabalhista">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
         <div>
-          <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="hard-hat" style="width:12px"></i> Módulo Trabalhista</div>
-          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Folha e Departamento Pessoal</h2>
+          <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="hard-hat" style="width:12px"></i> Módulo Trabalhista Interno</div>
+          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Equipe Contabilidade Nobel</h2>
         </div>
         <div class="view-toggle" id="trab-toggle">
-          <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha</button>
-          <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Funcionários</button>
-          <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial</button>
-          <button onclick="toggleTrabalhistaTab(this,'ferias')">Férias</button>
+          <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha Interna</button>
+          <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Colaboradores</button>
+          <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
+          <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
         </div>
       </div>
-      <div class="grid-4" style="margin-bottom:1.5rem">
-        <div class="kpi-card">
-          <div class="kpi-label">Total de Funcionários</div>
-          <div class="kpi-value">1.247</div>
-          <div class="kpi-change positive">+23 admissões este mês</div>
+      
+      <div id="trab-content-folha">
+        <div class="grid-4" style="margin-bottom:1.5rem">
+          <div class="kpi-card">
+            <div class="kpi-label">Total de Colaboradores</div>
+            <div class="kpi-value">24</div>
+            <div class="kpi-change positive">Equipe interna Nobel</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Folha Mensal Interna</div>
+            <div class="kpi-value">R$ 145.800</div>
+            <div class="kpi-change positive">+2.1% (reajuste anual)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Encargos Sociais</div>
+            <div class="kpi-value">R$ 48.200</div>
+            <div class="kpi-change">FGTS, INSS e IRRF</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Benefícios</div>
+            <div class="kpi-value">R$ 12.400</div>
+            <div class="kpi-change positive">VA, VR e Convênio</div>
+          </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Folha Mensal</div>
-          <div class="kpi-value">R$ 3.2M</div>
-          <div class="kpi-change positive">+4.5% vs mês anterior</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Encargos</div>
-          <div class="kpi-value">R$ 1.1M</div>
-          <div class="kpi-change">34.3% da folha</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Rescisões</div>
-          <div class="kpi-value">8</div>
-          <div class="kpi-change negative">2 pendentes de cálculo</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="users"></i> Quadro de Colaboradores Nobel</div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Nome</th><th>Cargo</th><th>Departamento</th><th>Admissão</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">Ana Paula Silva</td><td>Gestora Fiscal</td><td>Fiscal</td><td>10/02/2020</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Carlos Mendes</td><td>Analista Contábil</td><td>Contábil</td><td>15/05/2021</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Mariana Oliveira</td><td>Analista DP</td><td>Pessoal</td><td>20/08/2022</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Ricardo Santos</td><td>Auxiliar Administrativo</td><td>Financeiro</td><td>05/01/2023</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i data-lucide="users"></i> Funcionários por Cliente</div>
+
+      <div id="trab-content-funcionarios" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Lista Detalhada de Colaboradores</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Carregando dados da folha interna...</div>
         </div>
-        <table class="data-table">
-          <thead><tr><th>Cliente</th><th>Funcionários</th><th>Folha</th><th>Encargos</th><th>Status eSocial</th><th>Ações</th></tr></thead>
-          <tbody>
-            <tr><td style="font-weight:600">Hospital Santa Maria</td><td>142</td><td>R$ 485.000</td><td>R$ 168.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Construtora Horizonte</td><td>89</td><td>R$ 312.000</td><td>R$ 108.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Restaurante Sabor & Arte</td><td>34</td><td>R$ 78.000</td><td>R$ 27.000</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Clínica Vida Plena</td><td>28</td><td>R$ 95.000</td><td>R$ 33.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">TechSolutions Brasil</td><td>56</td><td>R$ 198.000</td><td>R$ 68.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-          </tbody>
-        </table>
       </div>
+      <div id="trab-content-esocial" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Eventos eSocial (Interno)</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Todos os eventos S-1200 e S-1210 transmitidos com sucesso.</div>
+        </div>
+      </div>
+      <div id="trab-content-ferias" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Controle de Férias Equipe Nobel</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Escala de férias 2024/2025 definida.</div>
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- PORTAL VIEW -->
