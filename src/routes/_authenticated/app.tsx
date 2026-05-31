@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import {
   LogOut, TrendingUp, TrendingDown, Users, Calendar, CheckSquare,
-  Sparkles, Megaphone, Plus, Trash2, Download, RefreshCw, DollarSign, Target,
+  Sparkles, Megaphone, Plus, Trash2, Download, RefreshCw, DollarSign, Target, Map as MapIcon, ExternalLink
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/app")({
