@@ -615,12 +615,12 @@ window.genMarketing = async function(type) {
   try {
     // Definir tópicos baseados no tipo
     const topics = {
-      'post': 'Redução de impostos para empresas de tecnologia',
-      'story': 'Dica rápida: Planejamento tributário inteligente',
-      'reels': 'Por que sua empresa paga mais impostos do que deveria?',
-      'banner': 'Contabilidade Nobel: Inteligência para seu crescimento',
-      'artigo': 'Os impactos da Reforma Tributária no Simples Nacional em 2024',
-      'email': 'Seu diagnóstico tributário gratuito está pronto'
+      'post': 'Estratégias avançadas de redução de impostos para empresas de tecnologia e inovação',
+      'story': 'Dica de ouro: Como o planejamento tributário preventivo pode salvar o caixa da sua empresa hoje',
+      'reels': 'O segredo que as grandes empresas usam para pagar menos impostos legalmente',
+      'banner': 'Contabilidade Nobel: Liderança, Confiança e Inteligência para impulsionar seu negócio',
+      'artigo': 'Guia Definitivo: Navegando pela Reforma Tributária Brasileira e as Oportunidades para o Simples Nacional em 2024',
+      'email': 'Relatório Exclusivo: Oportunidades de Otimização Fiscal identificadas para o seu Perfil'
     };
 
     const channels = {
