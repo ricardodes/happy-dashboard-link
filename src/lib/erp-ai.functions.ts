@@ -34,7 +34,6 @@ async function callAI(systemPrompt: string, userPrompt: string): Promise<string>
 
 /** Analisa snapshot financeiro e retorna insights + gargalos + recomendações. */
 export const generateBusinessInsights = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) =>
     z
       .object({
