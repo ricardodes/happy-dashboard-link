@@ -1333,53 +1333,75 @@
     <div class="view" id="view-trabalhista">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
         <div>
-          <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="hard-hat" style="width:12px"></i> Módulo Trabalhista</div>
-          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Folha e Departamento Pessoal</h2>
+          <div class="badge badge-blue" style="margin-bottom:0.5rem"><i data-lucide="hard-hat" style="width:12px"></i> Módulo Trabalhista Interno</div>
+          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Equipe Contabilidade Nobel</h2>
         </div>
         <div class="view-toggle" id="trab-toggle">
-          <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha</button>
-          <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Funcionários</button>
-          <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial</button>
-          <button onclick="toggleTrabalhistaTab(this,'ferias')">Férias</button>
+          <button class="active" onclick="toggleTrabalhistaTab(this,'folha')">Folha Interna</button>
+          <button onclick="toggleTrabalhistaTab(this,'funcionarios')">Colaboradores</button>
+          <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
+          <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
         </div>
       </div>
-      <div class="grid-4" style="margin-bottom:1.5rem">
-        <div class="kpi-card">
-          <div class="kpi-label">Total de Funcionários</div>
-          <div class="kpi-value">1.247</div>
-          <div class="kpi-change positive">+23 admissões este mês</div>
+      
+      <div id="trab-content-folha">
+        <div class="grid-4" style="margin-bottom:1.5rem">
+          <div class="kpi-card">
+            <div class="kpi-label">Total de Colaboradores</div>
+            <div class="kpi-value">24</div>
+            <div class="kpi-change positive">Equipe interna Nobel</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Folha Mensal Interna</div>
+            <div class="kpi-value">R$ 145.800</div>
+            <div class="kpi-change positive">+2.1% (reajuste anual)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Encargos Sociais</div>
+            <div class="kpi-value">R$ 48.200</div>
+            <div class="kpi-change">FGTS, INSS e IRRF</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Benefícios</div>
+            <div class="kpi-value">R$ 12.400</div>
+            <div class="kpi-change positive">VA, VR e Convênio</div>
+          </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Folha Mensal</div>
-          <div class="kpi-value">R$ 3.2M</div>
-          <div class="kpi-change positive">+4.5% vs mês anterior</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Encargos</div>
-          <div class="kpi-value">R$ 1.1M</div>
-          <div class="kpi-change">34.3% da folha</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Rescisões</div>
-          <div class="kpi-value">8</div>
-          <div class="kpi-change negative">2 pendentes de cálculo</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="users"></i> Quadro de Colaboradores Nobel</div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Nome</th><th>Cargo</th><th>Departamento</th><th>Admissão</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">Ana Paula Silva</td><td>Gestora Fiscal</td><td>Fiscal</td><td>10/02/2020</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Carlos Mendes</td><td>Analista Contábil</td><td>Contábil</td><td>15/05/2021</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Mariana Oliveira</td><td>Analista DP</td><td>Pessoal</td><td>20/08/2022</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+              <tr><td style="font-weight:600">Ricardo Santos</td><td>Auxiliar Administrativo</td><td>Financeiro</td><td>05/01/2023</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i data-lucide="users"></i> Funcionários por Cliente</div>
+
+      <div id="trab-content-funcionarios" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Lista Detalhada de Colaboradores</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Carregando dados da folha interna...</div>
         </div>
-        <table class="data-table">
-          <thead><tr><th>Cliente</th><th>Funcionários</th><th>Folha</th><th>Encargos</th><th>Status eSocial</th><th>Ações</th></tr></thead>
-          <tbody>
-            <tr><td style="font-weight:600">Hospital Santa Maria</td><td>142</td><td>R$ 485.000</td><td>R$ 168.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Construtora Horizonte</td><td>89</td><td>R$ 312.000</td><td>R$ 108.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Restaurante Sabor & Arte</td><td>34</td><td>R$ 78.000</td><td>R$ 27.000</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">Clínica Vida Plena</td><td>28</td><td>R$ 95.000</td><td>R$ 33.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-            <tr><td style="font-weight:600">TechSolutions Brasil</td><td>56</td><td>R$ 198.000</td><td>R$ 68.000</td><td><span class="status status-success"><span class="status-dot"></span> Em dia</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-          </tbody>
-        </table>
       </div>
+      <div id="trab-content-esocial" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Eventos eSocial (Interno)</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Todos os eventos S-1200 e S-1210 transmitidos com sucesso.</div>
+        </div>
+      </div>
+      <div id="trab-content-ferias" style="display:none">
+        <div class="card">
+           <div class="card-header"><div class="card-title">Controle de Férias Equipe Nobel</div></div>
+           <div style="padding:2rem;text-align:center;color:var(--text-muted)">Escala de férias 2024/2025 definida.</div>
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- PORTAL VIEW -->
