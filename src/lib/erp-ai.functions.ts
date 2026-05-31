@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-3-flash-preview";
+const MODEL = "anthropic/claude-3.5-sonnet";
 
 async function callAI(systemPrompt: string, userPrompt: string): Promise<string> {
   const key = process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
