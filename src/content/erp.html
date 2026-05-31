@@ -1176,7 +1176,7 @@
           <button onclick="toggleContabilTab(this,'razao')">Livro Razão</button>
         </div>
       </div>
-      <div class="grid-2">
+      <div id="cont-content-balancete">
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="scale"></i> Balancete - Maio/2024</div>
@@ -1193,6 +1193,9 @@
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div id="cont-content-dre" style="display:none">
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="trending-up"></i> DRE - Maio/2024</div>
@@ -1222,6 +1225,13 @@
             <div style="text-align:right;font-size:0.85rem;color:var(--text-muted)">Margem Líquida: 44.8%</div>
           </div>
         </div>
+      </div>
+
+      <div id="cont-content-diario" style="display:none">
+        <div class="card"><div class="card-header"><div class="card-title">Livro Diário</div></div><div style="padding:2rem;text-align:center;color:var(--text-muted)">Aguardando seleção de período.</div></div>
+      </div>
+      <div id="cont-content-razao" style="display:none">
+        <div class="card"><div class="card-header"><div class="card-title">Livro Razão</div></div><div style="padding:2rem;text-align:center;color:var(--text-muted)">Aguardando seleção de conta contábil.</div></div>
       </div>
     </div>
 
