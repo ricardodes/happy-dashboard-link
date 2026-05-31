@@ -1056,18 +1056,17 @@
           <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="wallet" style="width:12px"></i> Módulo Financeiro</div>
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Financeira</h2>
         </div>
-        <div class="view-toggle" id="fin-toggle">
-          <button class="active" onclick="toggleFinanceiroTab(this,'pagar')">Contas a Pagar</button>
-          <button onclick="toggleFinanceiroTab(this,'receber')">Contas a Receber</button>
-          <button onclick="toggleFinanceiroTab(this,'fluxo')">Fluxo de Caixa</button>
-          <button onclick="toggleFinanceiroTab(this,'dre')">DRE</button>
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div class="view-toggle" id="fin-toggle">
+            <button class="active" onclick="toggleFinanceiroTab(this,'pagar')">Contas a Pagar</button>
+            <button onclick="toggleFinanceiroTab(this,'receber')">Contas a Receber</button>
+            <button onclick="toggleFinanceiroTab(this,'fluxo')">Fluxo de Caixa</button>
+            <button onclick="toggleFinanceiroTab(this,'dre')">DRE</button>
+          </div>
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Lançar nova entrada ou saída no financeiro...')">
+            <i data-lucide="plus" style="width:14px"></i> Lançar
+          </button>
         </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
-        <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Painel de Controle Nobel</h2>
-        <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Funcionalidade de cadastro rápido em breve...')">
-          <i data-lucide="plus" style="width:16px"></i> Ação Rápida
-        </button>
       </div>
       <div class="grid-4" style="margin-bottom:1.5rem">
         <div class="kpi-card">
