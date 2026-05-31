@@ -476,9 +476,9 @@ window.toggleEquipeTab = (btn) => {
 // Initialize
 function initApp() {
   console.log('App initialization started');
-  window.initCharts();
-  window.initFiscalCalendar();
-  window.initAgendaCalendar();
+  if (typeof window.initCharts === 'function') window.initCharts();
+  if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+  if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
   if (window.lucide) window.lucide.createIcons();
 }
 
