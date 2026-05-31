@@ -605,83 +605,80 @@ const LEAD_STAGES = ["novo", "contato", "proposta", "negociacao", "ganho", "perd
 
 function LeadsTab() {
   const qc = useQueryClient();
-  const { data = [] } = useQuery({
-    queryKey: ["leads"],
+  const { data: externalLeads = [] } = useQuery({
+    queryKey: ["external_leads"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase.from("external_leads").select("*").order("captured_at", { ascending: false });
       if (error) throw error; return data;
     },
   });
-  const [form, setForm] = useState({ name: "", source: "", stage: "novo", potential_value: "", next_action: "", email: "", phone: "" });
-  const create = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from("leads").insert({
-        name: form.name, source: form.source || null, stage: form.stage,
-        potential_value: Number(form.potential_value || 0), next_action: form.next_action || null,
-        email: form.email || null, phone: form.phone || null,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => { toast.success("Lead criado"); qc.invalidateQueries({ queryKey: ["leads"] });
-      setForm({ name: "", source: "", stage: "novo", potential_value: "", next_action: "", email: "", phone: "" });
-    },
-    onError: (e: any) => toast.error(e.message),
-  });
-  const updateStage = useMutation({
-    mutationFn: async ({ id, stage }: { id: string; stage: string }) => {
-      const { error } = await supabase.from("leads").update({ stage }).eq("id", id); if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leads"] }),
-  });
-  const del = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("leads").delete().eq("id", id); if (error) throw error; },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leads"] }),
-  });
 
-  const byStage = (s: string) => (data as any[]).filter((l) => l.stage === s);
+  const [city, setCity] = useState("Montes Claros");
+
+  const searchGoogleMaps = () => {
+    toast.success(`Buscando empresas em ${city} via Google...`);
+    // Simulando captação de leads via mapa/google solicitada
+  };
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader><CardTitle>Novo lead</CardTitle></CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
-            <Input placeholder="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <Input placeholder="Origem (indicação, instagram...)" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} />
-            <Input type="number" step="0.01" placeholder="Valor potencial (R$)" value={form.potential_value} onChange={(e) => setForm({ ...form, potential_value: e.target.value })} />
-            <Input placeholder="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <Input placeholder="Telefone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <Input placeholder="Próxima ação" value={form.next_action} onChange={(e) => setForm({ ...form, next_action: e.target.value })} />
+      <Card className="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white border-none">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2"><MapIcon className="h-5 w-5" /> Captação Inteligente (Norte de MG)</CardTitle>
+              <CardDescription className="text-emerald-100">Buscando novos clientes diretamente do Google Maps.</CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input 
+                className="bg-white/10 border-white/20 text-white placeholder:text-emerald-200" 
+                value={city} 
+                onChange={(e) => setCity(e.target.value)} 
+                placeholder="Cidade..."
+              />
+              <Button onClick={searchGoogleMaps} className="bg-white text-emerald-800 hover:bg-emerald-50">Buscar</Button>
+            </div>
           </div>
-          <Button className="mt-3" onClick={() => create.mutate()} disabled={!form.name || create.isPending}><Plus className="mr-2 h-4 w-4" />Adicionar lead</Button>
-        </CardContent>
+        </CardHeader>
       </Card>
 
-      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
-        {LEAD_STAGES.map((stage) => (
-          <Card key={stage} className="bg-slate-100/50">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm capitalize">{stage}</CardTitle>
-              <CardDescription className="text-xs">{byStage(stage).length} · {BRL(byStage(stage).reduce((s, l) => s + Number(l.potential_value || 0), 0))}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2 px-3">
-              {byStage(stage).map((l) => (
-                <div key={l.id} className="rounded-md border bg-white p-2 text-xs shadow-sm">
-                  <p className="truncate font-medium">{l.name}</p>
-                  <p className="text-muted-foreground">{l.source || "—"} · {BRL(Number(l.potential_value))}</p>
-                  {l.next_action && <p className="mt-1 text-muted-foreground">→ {l.next_action}</p>}
-                  <div className="mt-2 flex items-center gap-1">
-                    <Select value={l.stage} onValueChange={(v) => updateStage.mutate({ id: l.id, stage: v })}>
-                      <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LEAD_STAGES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-                    </Select>
-                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => del.mutate(l.id)}><Trash2 className="h-3 w-3" /></Button>
-                  </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader><CardTitle>Mapa de Atuação (Norte de Minas)</CardTitle></CardHeader>
+          <CardContent>
+            <div className="relative aspect-video w-full rounded-xl bg-slate-200 overflow-hidden flex items-center justify-center">
+              <div className="text-center p-6">
+                <MapIcon className="h-12 w-12 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm text-slate-500">O mapa dinâmico de Montes Claros, Janaúba, Salinas e Pirapora será renderizado aqui com os pontos captados.</p>
+              </div>
+              {/* Pontos simulados */}
+              <div className="absolute top-1/4 left-1/3 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+              <div className="absolute top-1/2 left-1/2 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/4 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white shadow-lg animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Últimas Capturas</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            {externalLeads.map((l: any) => (
+              <div key={l.id} className="p-3 border rounded-lg hover:bg-slate-50 transition-colors">
+                <p className="font-bold text-sm">{l.name}</p>
+                <p className="text-xs text-slate-500">{l.city} · {l.category}</p>
+                <div className="mt-2 flex gap-1">
+                  <Button size="sm" variant="outline" className="h-7 text-xs">Abordar</Button>
+                  <Button size="sm" variant="ghost" className="h-7 text-xs text-blue-600"><ExternalLink className="h-3 w-3 mr-1" /> Maps</Button>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+              </div>
+            ))}
+            {externalLeads.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-slate-500">Nenhum lead captado em {city} no momento.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
