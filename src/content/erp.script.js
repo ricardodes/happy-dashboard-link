@@ -1349,6 +1349,14 @@ function initApp() {
     if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
   }, 200);
 
+  // Initial Renders
+  window.renderClientes();
+  window.renderLeads();
+  window.renderFinanceiro();
+  window.renderEquipe();
+  window.renderFiscal();
+  window.renderContabil();
+
   // Load saved API Keys
   const savedGroq = localStorage.getItem('nobel_groq_key');
   if (savedGroq && document.getElementById('api-key-groq')) {
