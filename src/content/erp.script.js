@@ -1,9 +1,5 @@
-
-// Inicializar ícones
-lucide.createIcons();
-
-// Navegação entre views
-function showView(viewId, target = null) {
+// Define showView globally explicitly
+window.showView = function(viewId, target = null) {
   console.log('showView called with:', viewId);
   // Esconder todas as views
   document.querySelectorAll('.view').forEach(v => {
@@ -16,9 +12,6 @@ function showView(viewId, target = null) {
   if (targetView) {
     targetView.classList.add('active');
     targetView.style.display = 'block';
-    console.log('Target view set to display:block', targetView.id);
-  } else {
-    console.warn('Target view not found:', 'view-' + viewId);
   }
 
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -47,46 +40,53 @@ function showView(viewId, target = null) {
     'agenda': 'Agenda Inteligente',
     'admin': 'Painel Admin Master'
   };
-  document.getElementById('page-title').textContent = titles[viewId] || 'Plataforma Nobel';
+  const titleEl = document.getElementById('page-title');
+  if (titleEl) titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
 
-  // Inicializar charts se dashboard
+  // Inicializar componentes específicos
   if (viewId === 'dashboard') {
-    setTimeout(initCharts, 100);
+    setTimeout(() => {
+      if (typeof window.initCharts === 'function') window.initCharts();
+    }, 100);
   }
-  // Inicializar calendários se fiscal ou agenda
   if (viewId === 'fiscal') {
-    setTimeout(initFiscalCalendar, 100);
+    setTimeout(() => {
+      if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+    }, 100);
   }
   if (viewId === 'agenda') {
-    setTimeout(initAgendaCalendar, 100);
+    setTimeout(() => {
+      if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+    }, 100);
   }
 
-  lucide.createIcons();
+  if (window.lucide) window.lucide.createIcons();
 }
 
-// Toggle sidebar mobile
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
+// Map functions to window
+window.toggleSidebar = function() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
 }
 
-// Toggle tema
-function toggleAppTheme() {
+window.toggleAppTheme = function() {
   const html = document.documentElement;
   const icon = document.getElementById('app-theme-icon');
-  if (html.getAttribute('data-theme') === 'dark') {
+  const current = html.getAttribute('data-theme');
+  if (current === 'dark') {
     html.setAttribute('data-theme', 'light');
-    icon.setAttribute('data-lucide', 'moon');
+    if (icon) icon.setAttribute('data-lucide', 'moon');
   } else {
     html.setAttribute('data-theme', 'dark');
-    icon.setAttribute('data-lucide', 'sun');
+    if (icon) icon.setAttribute('data-lucide', 'sun');
   }
-  lucide.createIcons();
-  initCharts();
+  if (window.lucide) window.lucide.createIcons();
+  if (typeof window.initCharts === 'function') window.initCharts();
 }
 
 // Charts
 let chartReceita, chartSegmento;
-function initCharts() {
+window.initCharts = function() {
   const ctxReceita = document.getElementById('chart-receita');
   const ctxSegmento = document.getElementById('chart-segmento');
   if (!ctxReceita || !ctxSegmento) return;
@@ -99,61 +99,7 @@ function initCharts() {
   if (chartSegmento) chartSegmento.destroy();
 
   chartReceita = new Chart(ctxReceita, {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-      datasets: [{
-        label: 'Receita 2024',
-        data: [320, 345, 380, 410, 487, 520],
-        borderColor: '#00d084',
-        backgroundColor: 'rgba(0,208,132,0.1)',
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#00d084',
-        pointBorderColor: '#0f5e3e',
-        pointBorderWidth: 2,
-        pointRadius: 5
-      }, {
-        label: 'Receita 2023',
-        data: [280, 295, 310, 330, 350, 380],
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59,130,246,0.05)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 0,
-        borderDash: [5, 5]
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: textColor } } },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { color: textColor } },
-        y: { grid: { color: gridColor }, ticks: { color: textColor }, beginAtZero: true }
-      },
-      layout: { padding: 10 }
-    }
-  });
-
-  chartSegmento = new Chart(ctxSegmento, {
-    type: 'doughnut',
-    data: {
-      labels: ['Saúde', 'Tecnologia', 'Comércio', 'Construção', 'Serviços', 'Outros'],
-      datasets: [{
-        data: [28, 22, 18, 12, 15, 5],
-        backgroundColor: ['#00d084', '#3b82f6', '#f59e0b', '#ef4444', '#a855f7', '#64748b'],
-        borderWidth: 0,
-        hoverOffset: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '65%',
-      plugins: { 
-        legend: { position: 'right', labels: { color: textColor, padding: 15, font: { size: 12 } } } 
-      },
+...
       layout: { padding: 10 }
     }
   });
@@ -773,9 +719,9 @@ showView = function(viewId) {
 
 // Inicializar
 function initApp() {
-  initCharts();
-  initFiscalCalendar();
-  initAgendaCalendar();
+  if (typeof window.initCharts === 'function') window.initCharts();
+  if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+  if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
 }
 
 if (document.readyState === 'loading') {
