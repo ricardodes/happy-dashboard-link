@@ -1,14 +1,30 @@
+// Define showView globally explicitly
+window.showView = function(viewId, target = null) {
+  console.log('showView called with:', viewId);
+  // Esconder todas as views
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
 
-// Inicializar ícones
-lucide.createIcons();
-
-// Navegação entre views
-function showView(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + viewId).classList.add('active');
+  // Mostrar a view solicitada
+  const targetView = document.getElementById('view-' + viewId);
+  if (targetView) {
+    targetView.classList.add('active');
+    targetView.style.display = 'block';
+    console.log('Target view set to display:block', targetView.id);
+  } else {
+    console.warn('Target view not found:', 'view-' + viewId);
+  }
 
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (target) {
+    target.classList.add('active');
+  } else {
+    const selector = `.sidebar-nav a.nav-item[onclick*="'${viewId}'"]`;
+    const navItem = document.querySelector(selector);
+    if (navItem) navItem.classList.add('active');
+  }
 
   const titles = {
     'dashboard': 'Dashboard Executivo',
@@ -27,46 +43,59 @@ function showView(viewId) {
     'agenda': 'Agenda Inteligente',
     'admin': 'Painel Admin Master'
   };
-  document.getElementById('page-title').textContent = titles[viewId] || 'Plataforma Nobel';
+  const titleEl = document.getElementById('page-title');
+  if (titleEl) titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
 
-  // Inicializar charts se dashboard
+  // Inicializar componentes específicos
   if (viewId === 'dashboard') {
-    setTimeout(initCharts, 100);
+    setTimeout(() => {
+      if (typeof window.initCharts === 'function') window.initCharts();
+    }, 100);
   }
-  // Inicializar calendários se fiscal ou agenda
   if (viewId === 'fiscal') {
-    setTimeout(initFiscalCalendar, 100);
+    setTimeout(() => {
+      if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+    }, 100);
   }
   if (viewId === 'agenda') {
-    setTimeout(initAgendaCalendar, 100);
+    setTimeout(() => {
+      if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+    }, 100);
+  }
+  if (viewId === 'prospeccao') {
+    setTimeout(() => {
+      if (typeof window.filterProspeccao === 'function') window.filterProspeccao();
+    }, 100);
   }
 
-  lucide.createIcons();
+  if (window.lucide) window.lucide.createIcons();
 }
 
 // Toggle sidebar mobile
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
+window.toggleSidebar = function() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
 }
 
 // Toggle tema
-function toggleAppTheme() {
+window.toggleAppTheme = function() {
   const html = document.documentElement;
   const icon = document.getElementById('app-theme-icon');
-  if (html.getAttribute('data-theme') === 'dark') {
+  const current = html.getAttribute('data-theme');
+  if (current === 'dark') {
     html.setAttribute('data-theme', 'light');
-    icon.setAttribute('data-lucide', 'moon');
+    if (icon) icon.setAttribute('data-lucide', 'moon');
   } else {
     html.setAttribute('data-theme', 'dark');
-    icon.setAttribute('data-lucide', 'sun');
+    if (icon) icon.setAttribute('data-lucide', 'sun');
   }
-  lucide.createIcons();
-  initCharts();
+  if (window.lucide) window.lucide.createIcons();
+  if (typeof window.initCharts === 'function') window.initCharts();
 }
 
 // Charts
 let chartReceita, chartSegmento;
-function initCharts() {
+window.initCharts = function() {
   const ctxReceita = document.getElementById('chart-receita');
   const ctxSegmento = document.getElementById('chart-segmento');
   if (!ctxReceita || !ctxSegmento) return;
@@ -140,7 +169,7 @@ function initCharts() {
 }
 
 // Fiscal Calendar
-function initFiscalCalendar() {
+window.initFiscalCalendar = function() {
   const cal = document.getElementById('fiscal-calendar');
   if (!cal) return;
   cal.innerHTML = '';
@@ -169,7 +198,7 @@ function initFiscalCalendar() {
 }
 
 // Agenda Calendar
-function initAgendaCalendar() {
+window.initAgendaCalendar = function() {
   const cal = document.getElementById('agenda-calendar');
   if (!cal) return;
   cal.innerHTML = '';
@@ -192,7 +221,7 @@ function initAgendaCalendar() {
 }
 
 // Chat IA
-function sendChat() {
+window.sendChat = function() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
   if (!msg) return;
@@ -205,7 +234,7 @@ function sendChat() {
     </div>
   `;
   input.value = '';
-  lucide.createIcons();
+  if (window.lucide) window.lucide.createIcons();
   container.scrollTop = container.scrollHeight;
 
   setTimeout(() => {
@@ -222,202 +251,9 @@ function sendChat() {
         <div class="chat-bubble">${resp}</div>
       </div>
     `;
-    lucide.createIcons();
+    if (window.lucide) window.lucide.createIcons();
     container.scrollTop = container.scrollHeight;
   }, 1500);
-}
-
-// Portal Chat
-function sendPortalChat() {
-  const input = document.getElementById('chat-portal-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  const container = document.getElementById('chat-portal-messages');
-  container.innerHTML += `
-    <div class="chat-message user">
-      <div class="chat-avatar user"><i data-lucide="user" style="width:18px"></i></div>
-      <div class="chat-bubble">${msg}</div>
-    </div>
-  `;
-  input.value = '';
-  lucide.createIcons();
-  container.scrollTop = container.scrollHeight;
-
-  setTimeout(() => {
-    const respostas = [
-      'Sua guia DAS de junho já está disponível para download na aba "Guias". O vencimento é dia 20/06.',
-      'O balancete de maio/2024 foi enviado para o e-mail cadastrado. Também está disponível no portal para download.',
-      'Identifiquei que sua empresa está elegível para o Simples Nacional em 2024. Posso agendar uma call para explicar os benefícios?',
-      'Sua certidão negativa de débitos foi renovada em 15/05/2024. Está válida por 180 dias.'
-    ];
-    const resp = respostas[Math.floor(Math.random() * respostas.length)];
-    container.innerHTML += `
-      <div class="chat-message ai">
-        <div class="chat-avatar ai"><i data-lucide="sparkles" style="width:18px"></i></div>
-        <div class="chat-bubble">${resp}</div>
-      </div>
-    `;
-    lucide.createIcons();
-    container.scrollTop = container.scrollHeight;
-  }, 1200);
-}
-
-// Toggle IA Config
-function toggleConfigIA() {
-  const config = document.getElementById('ia-config');
-  config.style.display = config.style.display === 'none' ? 'block' : 'none';
-}
-
-// Quick Actions IA
-function quickAction(type) {
-  const chatInput = document.getElementById('chat-input');
-  const prompts = {
-    'analisar': 'Analise a saúde fiscal da empresa TechSolutions Brasil e sugira otimizações tributárias.',
-    'proposta': 'Crie uma proposta comercial para uma clínica médica com 15 funcionários, faturamento de R$ 350K/mês.',
-    'relatorio': 'Gere um relatório DRE comparativo do último trimestre para o cliente Hospital Santa Maria.',
-    'campanha': 'Crie uma campanha de e-mail marketing sobre o novo prazo do Simples Nacional para junho/2024.'
-  };
-  chatInput.value = prompts[type];
-  sendChat();
-}
-
-// Marketing Generator
-function genMarketing(type) {
-  const preview = document.getElementById('marketing-preview');
-  const content = document.getElementById('marketing-content');
-  preview.style.display = 'block';
-  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo com IA...</span></div>';
-
-  const results = {
-    'post': '<div style="max-width:400px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem"><div style="font-weight:700;margin-bottom:0.75rem">📊 Contabilidade Nobel</div><div style="line-height:1.6;color:var(--text)">Você sabia que 68% das empresas pagam mais impostos do que deveriam? 🚨<br><br>Com nosso planejamento tributário inteligente, já economizamos R$ 2.4M para nossos clientes este ano. 💰<br><br>👉 Agende seu diagnóstico gratuito e descubra quanto sua empresa pode economizar!</div><div style="margin-top:1rem;color:var(--accent);font-weight:600">#ContabilidadeNobel #PlanejamentoTributário #Economia</div></div>',
-    'story': '<div style="max-width:300px;margin:0 auto;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);padding:2rem;color:white;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">💚</div><div style="font-weight:800;font-size:1.25rem;margin-bottom:0.5rem">NOBEL AI</div><div style="font-size:0.9rem;opacity:0.9">Inteligência Artificial aplicada à contabilidade do seu negócio</div><div style="margin-top:1.5rem;font-size:0.8rem;opacity:0.7">Deslize up para saber mais →</div></div>',
-    'reels': '<div style="max-width:300px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden"><div style="height:200px;background:linear-gradient(135deg,#0f5e3e,#00d084);display:flex;align-items:center;justify-content:center;color:white;font-size:4rem">🎬</div><div style="padding:1rem"><div style="font-weight:700">Como reduzir 30% dos seus impostos</div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem">Dicas práticas de planejamento tributário</div></div></div>',
-    'banner': '<div style="max-width:600px;margin:0 auto;height:200px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:white;padding:2rem"><div style="text-align:center"><div style="font-size:2.5rem;font-weight:800;margin-bottom:0.5rem">CONTABILIDADE NOBEL</div><div style="font-size:1.1rem;opacity:0.9">Mais que contabilidade. Inteligência para o crescimento.</div></div></div>',
-    'artigo': '<div style="max-width:600px;margin:0 auto;line-height:1.8;color:var(--text)"><h2 style="color:var(--accent);margin-bottom:1rem">Reforma Tributária: Impactos para o Simples Nacional</h2><p>A nova reforma tributária traz mudanças significativas para empresas do Simples Nacional. Neste artigo, analisamos...</p><p style="margin-top:1rem"><strong>1. O IBS e sua aplicação</strong><br>O Imposto sobre Bens e Serviços (IBS) unificará PIS, COFINS, ICMS e ISS...</p></div>',
-    'email': '<div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:2rem"><div style="color:var(--accent);font-weight:700;margin-bottom:1rem">CONTABILIDADE NOBEL</div><div style="font-size:1.25rem;font-weight:700;margin-bottom:1rem">Seu diagnóstico tributário está pronto! 🎉</div><div style="line-height:1.6;color:var(--text-secondary);margin-bottom:1.5rem">Prezado cliente,<br><br>Concluímos a análise da saúde fiscal da sua empresa. Identificamos <strong style="color:var(--accent)">oportunidades de economia</strong> que podem reduzir sua carga tributária em até 22%.</div><button style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;border:none;padding:0.875rem 1.5rem;border-radius:100px;font-weight:700;cursor:pointer">Ver Relatório Completo</button></div>'
-  };
-
-  setTimeout(() => {
-    content.innerHTML = results[type] || 'Conteúdo gerado com sucesso!';
-  }, 2000);
-}
-
-// CSS spinner
-const style = document.createElement('style');
-style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-document.head.appendChild(style);
-
-
-
-// ===== CONTROLE DE ABAS (view-toggle) =====
-function toggleFinanceiroTab(btn, tab) {
-  document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  // Aqui pode adicionar lógica para mostrar/ocultar conteúdo específico
-}
-
-function toggleContabilTab(btn, tab) {
-  document.querySelectorAll('#cont-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function toggleFiscalTab(btn, tab) {
-  document.querySelectorAll('#fisc-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function toggleTrabalhistaTab(btn, tab) {
-  document.querySelectorAll('#trab-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function toggleEquipeTab(btn, tab) {
-  document.querySelectorAll('#equipe-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ===== TEMA ESCURO/LIGHT CORRIGIDO =====
-function toggleAppTheme() {
-  const html = document.documentElement;
-  const icon = document.getElementById('app-theme-icon');
-  const current = html.getAttribute('data-theme');
-
-  if (current === 'dark') {
-    html.setAttribute('data-theme', 'light');
-    if (icon) {
-      icon.setAttribute('data-lucide', 'moon');
-      lucide.createIcons();
-    }
-    // Forçar recriação dos charts
-    setTimeout(initCharts, 100);
-  } else {
-    html.setAttribute('data-theme', 'dark');
-    if (icon) {
-      icon.setAttribute('data-lucide', 'sun');
-      lucide.createIcons();
-    }
-    setTimeout(initCharts, 100);
-  }
-}
-
-// ===== CORRIGIR showView PARA GARANTIR FUNCIONAMENTO =====
-function showView(viewId) {
-  // Esconder todas as views
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-
-  // Mostrar a view solicitada
-  const targetView = document.getElementById('view-' + viewId);
-  if (targetView) {
-    targetView.classList.add('active');
-  }
-
-  // Atualizar nav items
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (event && event.currentTarget) {
-    event.currentTarget.classList.add('active');
-  }
-
-  // Títulos
-  const titles = {
-    'dashboard': 'Dashboard Executivo',
-    'crm': 'CRM Comercial',
-    'prospeccao': 'Mapa de Prospecção',
-    'ia': 'Central de IA',
-    'marketing': 'Gerador de Marketing',
-    'financeiro': 'Gestão Financeira',
-    'contabil': 'Escrituração Contábil',
-    'fiscal': 'Obrigações Fiscais',
-    'trabalhista': 'Folha e DP',
-    'portal': 'Portal do Cliente',
-    'informativos': 'Informativos',
-    'documentos': 'Documentos',
-    'equipe': 'Equipe Nobel',
-    'agenda': 'Agenda Inteligente',
-    'admin': 'Painel Admin Master'
-  };
-  const titleEl = document.getElementById('page-title');
-  if (titleEl) {
-    titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
-  }
-
-  // Inicializar componentes específicos
-  if (viewId === 'dashboard') {
-    setTimeout(initCharts, 100);
-  }
-  if (viewId === 'fiscal') {
-    setTimeout(initFiscalCalendar, 100);
-  }
-  if (viewId === 'agenda') {
-    setTimeout(initAgendaCalendar, 100);
-  }
-  if (viewId === 'prospeccao') {
-    setTimeout(() => {
-      if (typeof filterProspeccao === 'function') filterProspeccao();
-    }, 100);
-  }
-
-  lucide.createIcons();
 }
 
 // DADOS DE PROSPECÇÃO
@@ -562,7 +398,7 @@ function getIcon(cat) {
   return iconesCat[cat] || "building-2";
 }
 
-function renderEmpresas(lista) {
+window.renderEmpresas = function(lista) {
   const grid = document.getElementById('prospeccao-grid');
   if (!grid) return;
   grid.innerHTML = '';
@@ -608,13 +444,13 @@ function renderEmpresas(lista) {
     grid.appendChild(card);
   });
 
-  lucide.createIcons();
+  if (window.lucide) window.lucide.createIcons();
 }
 
-function filterProspeccao() {
-  const search = document.getElementById('prop-search').value.toLowerCase();
-  const cidade = document.getElementById('prop-cidade').value;
-  const cat = document.getElementById('prop-cat').value;
+window.filterProspeccao = function() {
+  const search = document.getElementById('prop-search')?.value?.toLowerCase() || '';
+  const cidade = document.getElementById('prop-cidade')?.value || '';
+  const cat = document.getElementById('prop-cat')?.value || '';
 
   let filtradas = empresasProspeccao.filter(emp => {
     const matchSearch = !search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search);
@@ -625,10 +461,10 @@ function filterProspeccao() {
 
   // Ordenar por score
   filtradas.sort((a, b) => b.score - a.score);
-  renderEmpresas(filtradas);
+  window.renderEmpresas(filtradas);
 }
 
-function searchGoogleMaps(query) {
+window.searchGoogleMaps = function(query) {
   const frame = document.getElementById('google-map-frame');
   if (frame) {
     const encoded = encodeURIComponent(query);
@@ -636,7 +472,7 @@ function searchGoogleMaps(query) {
   }
 }
 
-function openWhatsApp(numero, empresa, segmento) {
+window.openWhatsApp = function(numero, empresa, segmento) {
   const msg = `Olá! Sou da Contabilidade Nobel. Identificamos que a ${empresa} (${segmento}) tem grande potencial de otimização tributária. Gostaria de agendar um diagnóstico gratuito?`;
   const clean = numero.replace(/\D/g, '').replace(/^0/, '');
   const full = clean.startsWith('55') ? clean : '55' + clean;
@@ -646,15 +482,15 @@ function openWhatsApp(numero, empresa, segmento) {
 // WHATSAPP AI PANEL
 let waTone = 'profissional';
 
-function openWhatsAppAI() {
+window.openWhatsAppAI = function() {
   const panel = document.getElementById('whatsapp-ai-panel');
   if (panel) {
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    lucide.createIcons();
+    if (window.lucide) window.lucide.createIcons();
   }
 }
 
-function setTone(btn, tone) {
+window.setTone = function(btn, tone) {
   waTone = tone;
   document.querySelectorAll('.wa-tone').forEach(b => {
     b.style.background = 'var(--bg)';
@@ -664,7 +500,7 @@ function setTone(btn, tone) {
   btn.style.color = 'white';
 }
 
-function generateWhatsAppMessage() {
+window.generateWhatsAppMessage = function() {
   const segmento = document.getElementById('wa-segmento').value;
   const empresa = document.getElementById('wa-empresa').value || 'Empresa';
   const numero = document.getElementById('wa-numero').value;
@@ -712,36 +548,97 @@ Interessado?`
     document.getElementById('wa-link').href = `https://wa.me/${full}?text=${encodeURIComponent(msg)}`;
   }
 
-  lucide.createIcons();
+  if (window.lucide) window.lucide.createIcons();
 }
 
-function copyMessage() {
+window.copyMessage = function() {
   const text = document.getElementById('wa-preview').textContent;
   navigator.clipboard.writeText(text).then(() => {
     alert('Mensagem copiada para a área de transferência!');
   });
 }
 
-function toggleDashTab(btn, periodo) {
-  document.querySelectorAll('#dash-toggle-receita button').forEach(b => b.classList.remove('active'));
+// ===== CONTROLE DE ABAS (view-toggle) =====
+window.toggleFinanceiroTab = function(btn, tab) {
+  document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  // Aqui poderia atualizar o chart com dados do período
 }
 
-// Inicializar prospecção quando a view é aberta
-const originalShowView = showView;
-showView = function(viewId) {
-  originalShowView(viewId);
-  if (viewId === 'prospeccao') {
-    setTimeout(() => {
-      filterProspeccao();
-    }, 100);
+window.toggleContabilTab = function(btn, tab) {
+  document.querySelectorAll('#cont-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+window.toggleFiscalTab = function(btn, tab) {
+  document.querySelectorAll('#fisc-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+window.toggleTrabalhistaTab = function(btn, tab) {
+  document.querySelectorAll('#trab-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+window.toggleEquipeTab = function(btn, tab) {
+  document.querySelectorAll('#equipe-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+window.toggleConfigIA = function() {
+  const config = document.getElementById('ia-config');
+  if (config) config.style.display = config.style.display === 'none' ? 'block' : 'none';
+}
+
+window.quickAction = function(type) {
+  const chatInput = document.getElementById('chat-input');
+  const prompts = {
+    'analisar': 'Analise a saúde fiscal da empresa TechSolutions Brasil e sugira otimizações tributárias.',
+    'proposta': 'Crie uma proposta comercial para uma clínica médica com 15 funcionários, faturamento de R$ 350K/mês.',
+    'relatorio': 'Gere um relatório DRE comparativo do último trimestre para o cliente Hospital Santa Maria.',
+    'campanha': 'Crie uma campanha de e-mail marketing sobre o novo prazo do Simples Nacional para junho/2024.'
+  };
+  if (chatInput) {
+    chatInput.value = prompts[type];
+    window.sendChat();
   }
-};
+}
+
+window.genMarketing = function(type) {
+  const preview = document.getElementById('marketing-preview');
+  const content = document.getElementById('marketing-content');
+  if (!preview || !content) return;
+  preview.style.display = 'block';
+  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo com IA...</span></div>';
+
+  const results = {
+    'post': '<div style="max-width:400px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem"><div style="font-weight:700;margin-bottom:0.75rem">📊 Contabilidade Nobel</div><div style="line-height:1.6;color:var(--text)">Você sabia que 68% das empresas pagam mais impostos do que deveriam? 🚨<br><br>Com nosso planejamento tributário inteligente, já economizamos R$ 2.4M para nossos clientes este ano. 💰<br><br>👉 Agende seu diagnóstico gratuito e descubra quanto sua empresa pode economizar!</div><div style="margin-top:1rem;color:var(--accent);font-weight:600">#ContabilidadeNobel #PlanejamentoTributário #Economia</div></div>',
+    'story': '<div style="max-width:300px;margin:0 auto;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);padding:2rem;color:white;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">💚</div><div style="font-weight:800;font-size:1.25rem;margin-bottom:0.5rem">NOBEL AI</div><div style="font-size:0.9rem;opacity:0.9">Inteligência Artificial aplicada à contabilidade do seu negócio</div><div style="margin-top:1.5rem;font-size:0.8rem;opacity:0.7">Deslize up para saber mais →</div></div>',
+    'reels': '<div style="max-width:300px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden"><div style="height:200px;background:linear-gradient(135deg,#0f5e3e,#00d084);display:flex;align-items:center;justify-content:center;color:white;font-size:4rem">🎬</div><div style="padding:1rem"><div style="font-weight:700">Como reduzir 30% dos seus impostos</div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem">Dicas práticas de planejamento tributário</div></div></div>',
+    'banner': '<div style="max-width:600px;margin:0 auto;height:200px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:white;padding:2rem"><div style="text-align:center"><div style="font-size:2.5rem;font-weight:800;margin-bottom:0.5rem">CONTABILIDADE NOBEL</div><div style="font-size:1.1rem;opacity:0.9">Mais que contabilidade. Inteligência para o crescimento.</div></div></div>',
+    'artigo': '<div style="max-width:600px;margin:0 auto;line-height:1.8;color:var(--text)"><h2 style="color:var(--accent);margin-bottom:1rem">Reforma Tributária: Impactos para o Simples Nacional</h2><p>A nova reforma tributária traz mudanças significativas para empresas do Simples Nacional. Neste artigo, analisamos...</p><p style="margin-top:1rem"><strong>1. O IBS e sua aplicação</strong><br>O Imposto sobre Bens e Serviços (IBS) unificará PIS, COFINS, ICMS e ISS...</p></div>',
+    'email': '<div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:2rem"><div style="color:var(--accent);font-weight:700;margin-bottom:1rem">CONTABILIDADE NOBEL</div><div style="font-size:1.25rem;font-weight:700;margin-bottom:1rem">Seu diagnóstico tributário está pronto! 🎉</div><div style="line-height:1.6;color:var(--text-secondary);margin-bottom:1.5rem">Prezado cliente,<br><br>Concluímos a análise da saúde fiscal da sua empresa. Identificamos <strong style="color:var(--accent)">oportunidades de economia</strong> que podem reduzir sua carga tributária em até 22%.</div><button style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;border:none;padding:0.875rem 1.5rem;border-radius:100px;font-weight:700;cursor:pointer">Ver Relatório Completo</button></div>'
+  };
+
+  setTimeout(() => {
+    content.innerHTML = results[type] || 'Conteúdo gerado com sucesso!';
+  }, 2000);
+}
+
+// CSS spinner
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
 
 // Inicializar
-window.addEventListener('DOMContentLoaded', () => {
-  initCharts();
-  initFiscalCalendar();
-  initAgendaCalendar();
-});
+function initApp() {
+  console.log('initApp executing...');
+  if (typeof window.initCharts === 'function') window.initCharts();
+  if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+  if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
