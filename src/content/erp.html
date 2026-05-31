@@ -2039,7 +2039,26 @@
       </div>
     </div>
 
-  </div> <!-- end content -->
+    </div> <!-- end content -->
+
+    <!-- Generic Modal Container -->
+    <div id="modal-overlay" class="modal-overlay" onclick="if(event.target === this) closeModal()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title" class="font-display">Título do Modal</h3>
+          <button class="modal-close" onclick="closeModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div id="modal-body" class="modal-body">
+          <!-- Conteúdo dinâmico aqui -->
+        </div>
+        <div id="modal-footer" class="modal-footer">
+          <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button id="modal-confirm-btn" class="btn-primary">Confirmar</button>
+        </div>
+      </div>
+    </div>
 </div> <!-- end main -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
