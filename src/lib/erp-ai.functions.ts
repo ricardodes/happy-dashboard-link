@@ -69,25 +69,28 @@ export const generateMarketingCopy = createServerFn({ method: "POST" })
     const system =
       "Você é um copywriter de marketing de elite especializado em B2B para contabilidade premium. " +
       "Gere um conteúdo de altíssimo nível, sofisticado, autoritário e educativo, focado em atrair clientes de alto ticket para a 'Contabilidade Nobel'. " +
-      "Responda em JSON estrito com os campos: { \"title\": string, \"content\": string, \"hashtags\": string[], \"image_prompt\": string }. " +
-      "O 'image_prompt' deve ser em inglês, altamente detalhado, descrevendo uma cena de fotografia corporativa cinematográfica, iluminação dramática, minimalista e luxuosa, sem texto na imagem. " +
-      "NÃO use markdown no conteúdo, use apenas quebras de linha normais. Responda apenas o JSON.";
+      "Responda em JSON estrito com os campos: { \"title\": string, \"content\": string, \"hashtags\": string[], \"image_prompt\": string, \"cta\": string }. " +
+      "Para Artigos: O 'content' deve ser longo (mínimo 5 parágrafos), profundo e educativo. " +
+      "Para Stories/Reels: O 'content' deve ser curto, impactante e direto (máximo 150 caracteres para o content). " +
+      "O 'image_prompt' deve ser em inglês, altamente detalhado, descrevendo uma cena de fotografia corporativa cinematográfica, iluminação dramática, luxuosa, SEM TEXTO. " +
+      "NÃO use markdown no conteúdo. Responda APENAS o JSON.";
     const tone = data.tone ?? "profissional, confiável e acessível";
     const user = `Canal: ${data.channel}\nTom: ${tone}\nTema: ${data.topic}`;
     const raw = await callAI(system, user);
-    // Robust JSON extraction
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     const cleaned = jsonMatch ? jsonMatch[0] : raw;
-    let parsed: { title: string; content: string; hashtags: string[]; image_prompt: string };
+    let parsed: { title: string; content: string; hashtags: string[]; image_prompt: string; cta: string };
     try {
       parsed = JSON.parse(cleaned);
+      if (!parsed.cta) parsed.cta = "SAIBA MAIS";
     } catch (e) {
       console.error("JSON Parse Error:", e, "Raw:", raw);
       parsed = {
         title: "Conteúdo Exclusivo Nobel",
-        content: raw,
-        hashtags: ["ContabilidadeNobel", "InteligenciaFinanceira"],
-        image_prompt: data.topic + ", cinematic corporate photography, luxury minimalist office",
+        content: raw.substring(0, 500),
+        hashtags: ["ContabilidadeNobel", "GestaoElite"],
+        image_prompt: "Luxury minimalist office, cinematic lighting, corporate photography",
+        cta: "FALE COM UM ESPECIALISTA"
       };
     }
     return parsed;
