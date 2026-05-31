@@ -1202,7 +1202,7 @@
             <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
             <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
           </div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar novo colaborador ou evento DP...')">
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="openNewEmployeeModal()">
             <i data-lucide="plus" style="width:14px"></i> Cadastrar
           </button>
         </div>
@@ -1610,7 +1610,7 @@
             <button onclick="toggleEquipeTab(this,'financeiro')">Financeiro</button>
             <button onclick="toggleEquipeTab(this,'atendimento')">Atendimento</button>
           </div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Adicionar novo membro à equipe...')">
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="openNewTeamMemberModal()">
             <i data-lucide="plus" style="width:14px"></i> Novo Membro
           </button>
         </div>
@@ -1690,7 +1690,7 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Integrada de Prazos</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo evento na agenda...')">
+          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="openNewEventModal()">
             <i data-lucide="calendar-plus" style="width:16px"></i> Novo Evento
           </button>
         </div>
