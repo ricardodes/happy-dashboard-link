@@ -35,85 +35,25 @@ const BRL = (n: number) =>
 // ROOT
 // ---------------------------------------------------------------------------
 
+import erpHtml from "@/content/erp.html?raw";
+import erpScript from "@/content/erp.script.js?raw";
+import erpCssUrl from "@/styles/erp.css?url";
+import { InjectHtml } from "@/lib/InjectHtml";
+
 function ErpPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', display: 'flex' }}>
-
-
-      {/* Sidebar Navigation */}
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r bg-white md:block">
-        <div className="flex h-full flex-col p-6">
-          <div className="mb-10 flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-800 to-emerald-600 font-bold text-white shadow-lg shadow-emerald-200">
-              N
-            </div>
-            <div>
-              <h1 className="text-lg font-bold leading-none tracking-tight">Nobel ERP</h1>
-              <p className="text-xs text-muted-foreground font-medium">Contabilidade Inteligente</p>
-            </div>
-          </div>
-
-          <nav className="flex-1 space-y-1">
-            <SidebarNavItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-5 w-5" />} label="Visão Geral" />
-            <SidebarNavItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-5 w-5" />} label="Financeiro" />
-            <SidebarNavItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-5 w-5" />} label="Clientes Nobel" />
-            <SidebarNavItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<MapIcon className="h-5 w-5" />} label="Captação (Google)" />
-            <SidebarNavItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-5 w-5" />} label="Agenda Nobel" />
-            <SidebarNavItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-5 w-5" />} label="Obrigações Fiscais" />
-            <SidebarNavItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-5 w-5" />} label="Marketing Groq" />
-          </nav>
-
-          <div className="mt-auto pt-6 border-t">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
-              onClick={() => navigate({ to: "/" })}
-            >
-              <LogOut className="mr-3 h-5 w-5 rotate-180" /> Voltar ao Site
-            </Button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 md:pl-64">
-        <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur md:hidden">
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-700 font-bold text-white">N</div>
-              <h1 className="text-sm font-semibold">Nobel ERP</h1>
-            </div>
-          </div>
-        </header>
-
-        <main className="mx-auto max-w-7xl px-4 py-6 md:px-8">
-          {/* Mobile Tabs */}
-          <div className="md:hidden mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            <div className="flex gap-2 min-w-max">
-              <MobileTabItem value="overview" activeTab={activeTab} setActiveTab={setActiveTab} icon={<TrendingUp className="h-4 w-4" />} label="Visão Geral" />
-              <MobileTabItem value="finance" activeTab={activeTab} setActiveTab={setActiveTab} icon={<DollarSign className="h-4 w-4" />} label="Financeiro" />
-              <MobileTabItem value="clients" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Users className="h-4 w-4" />} label="Clientes" />
-              <MobileTabItem value="leads" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Target className="h-4 w-4" />} label="Captação" />
-              <MobileTabItem value="agenda" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Calendar className="h-4 w-4" />} label="Agenda" />
-              <MobileTabItem value="tasks" activeTab={activeTab} setActiveTab={setActiveTab} icon={<CheckSquare className="h-4 w-4" />} label="Tarefas" />
-              <MobileTabItem value="marketing" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Megaphone className="h-4 w-4" />} label="Marketing IA" />
-            </div>
-          </div>
-
-          <Tabs value={activeTab} onValueChange={(v: any) => setActiveTab(v)} className="w-full">
-            <TabsContent value="overview"><OverviewTab /></TabsContent>
-            <TabsContent value="finance"><FinanceTab /></TabsContent>
-            <TabsContent value="clients"><ClientsTab /></TabsContent>
-            <TabsContent value="leads"><LeadsTab /></TabsContent>
-            <TabsContent value="agenda"><AgendaTab /></TabsContent>
-            <TabsContent value="tasks"><TasksTab /></TabsContent>
-            <TabsContent value="marketing"><MarketingTab /></TabsContent>
-          </Tabs>
-        </main>
-      </div>
+    <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', width: '100%' }}>
+      <InjectHtml
+        html={erpHtml}
+        inlineScript={erpScript}
+        externalScripts={[
+          "https://cdn.jsdelivr.net/npm/chart.js",
+          "https://unpkg.com/lucide@latest",
+        ]}
+        cssUrl={erpCssUrl}
+      />
     </div>
   );
 }
