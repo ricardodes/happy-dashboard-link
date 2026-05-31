@@ -16,7 +16,7 @@ window.appState = {
   ],
   financeiro: {
     pagar: [
-      { id: 1, descricao: "Aluguel Escritório", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
+      { id: 1, descricao: "Aluguel Sede Nobel", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
       { id: 2, descricao: "Energia Elétrica", vencimento: "15/06/2024", valor: "1.250,00", status: "Pendente" },
       { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" }
     ],
@@ -25,10 +25,33 @@ window.appState = {
       { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" }
     ]
   },
+  fiscal: {
+    nfe: [
+      { id: 1, emissor: "Supermercado Central", valor: "4.500,00", data: "01/06/2024", status: "Validada" },
+      { id: 2, emissor: "Clínica Vida Plena", valor: "12.800,00", data: "01/06/2024", status: "Validada" },
+      { id: 3, emissor: "TechSolutions Brasil", valor: "8.900,00", data: "02/06/2024", status: "Pendente" }
+    ],
+    sped: [
+      { id: 1, cliente: "Supermercado Central", tipo: "SPED Fiscal", periodo: "05/2024", status: "Enviado" },
+      { id: 2, cliente: "Clínica Vida Plena", tipo: "EFD-Contribuições", periodo: "05/2024", status: "Pendente" }
+    ]
+  },
+  contabil: {
+    lancamentos: [
+      { id: 1, conta: "Caixa", debito: "R$ 10.000", credito: "R$ 0", data: "01/06/2024" },
+      { id: 2, conta: "Bancos", debito: "R$ 0", credito: "R$ 10.000", data: "01/06/2024" }
+    ]
+  },
   users: [
     { id: 1, nome: "Admin Nobel", email: "admin@nobel.com", perfil: "Super Admin", status: "Ativo", initial: "AN", color: "var(--primary)" },
     { id: 2, nome: "Carlos Mendes", email: "carlos@nobel.com", perfil: "Comercial", status: "Ativo", initial: "CM", color: "var(--info)" },
     { id: 3, nome: "Ana Paula", email: "ana@nobel.com", perfil: "Contábil", status: "Ativo", initial: "AP", color: "var(--warning)" }
+  ],
+  equipe: [
+    { id: 1, nome: "Ana Paula Silva", cargo: "Gestora Fiscal", depto: "Fiscal", admissao: "10/02/2020", status: "Ativo" },
+    { id: 2, nome: "Carlos Mendes", cargo: "Analista Contábil", depto: "Contábil", admissao: "15/05/2021", status: "Ativo" },
+    { id: 3, nome: "Mariana Oliveira", cargo: "Analista DP", depto: "Pessoal", admissao: "20/08/2022", status: "Ativo" },
+    { id: 4, nome: "Ricardo Santos", cargo: "Auxiliar Administrativo", depto: "Financeiro", admissao: "05/01/2023", status: "Ativo" }
   ]
 };
 
@@ -81,15 +104,99 @@ window.showView = function(viewId, target = null) {
     setTimeout(() => {
       window.initFiscalCalendar();
       window.initAgendaCalendar();
+      if (viewId === 'fiscal') window.renderFiscal();
     }, 100);
   }
   if (viewId === 'clientes') window.renderClientes();
   if (viewId === 'crm') window.renderLeads();
   if (viewId === 'financeiro') window.renderFinanceiro();
+  if (viewId === 'contabil') window.renderContabil();
   if (viewId === 'admin') window.renderAdminUsers();
+  if (viewId === 'trabalhista' || viewId === 'equipe') window.renderEquipe();
   if (viewId === 'prospeccao') setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
 
   if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderFiscal = function() {
+  const nfeBody = document.getElementById('fiscal-nfe-table-body');
+  if (nfeBody) {
+    nfeBody.innerHTML = window.appState.fiscal.nfe.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.emissor}</td>
+        <td>R$ ${item.valor}</td>
+        <td>${item.data}</td>
+        <td><span class="status ${item.status === 'Validada' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+      </tr>
+    `).join('');
+  }
+  
+  const spedBody = document.getElementById('fiscal-sped-table-body');
+  if (spedBody) {
+    spedBody.innerHTML = window.appState.fiscal.sped.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.cliente}</td>
+        <td>${item.tipo}</td>
+        <td>${item.periodo}</td>
+        <td><span class="status ${item.status === 'Enviado' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+        <td><button class="header-btn" onclick="handleAction('Ver Protocolo')"><i data-lucide="file-text" style="width:14px"></i></button></td>
+      </tr>
+    `).join('');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderContabil = function() {
+  const balBody = document.getElementById('contabil-balancete-table-body');
+  if (balBody) {
+    // Dummy balancete data rendering
+    const staticBal = [
+      { conta: "Caixa e Equivalentes", codigo: "1.1.01", debito: "R$ 125.000", credito: "R$ 45.000", saldo: "R$ 80.000", color: "var(--accent)" },
+      { conta: "Clientes", codigo: "1.1.02", debito: "R$ 287.000", credito: "R$ 120.000", saldo: "R$ 167.000", color: "var(--accent)" },
+      { conta: "Fornecedores", codigo: "2.1.01", debito: "R$ 85.000", credito: "R$ 180.000", saldo: "R$ 95.000", color: "var(--danger)" }
+    ];
+    balBody.innerHTML = staticBal.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.conta}</td>
+        <td>${item.codigo}</td>
+        <td>${item.debito}</td>
+        <td>${item.credito}</td>
+        <td style="font-weight:700;color:${item.color}">${item.saldo}</td>
+      </tr>
+    `).join('');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.renderEquipe = function() {
+  const body = document.getElementById('equipe-trabalhista-table-body');
+  if (!body) return;
+  
+  body.innerHTML = window.appState.equipe.map(m => `
+    <tr class="hover-scale">
+      <td style="font-weight:600">${m.nome}</td>
+      <td>${m.cargo}</td>
+      <td><span class="badge badge-blue">${m.depto}</span></td>
+      <td>${m.admissao}</td>
+      <td><span class="status ${m.status === 'Ativo' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${m.status}</span></td>
+      <td><button class="btn-delete" onclick="deleteEquipeMember(${m.id})"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum colaborador encontrado.</td></tr>';
+  
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.deleteEquipeMember = function(id) {
+  openModal({
+    title: "Remover da Equipe",
+    body: "<p>Deseja remover este colaborador da lista da Nobel?</p>",
+    confirmText: "Remover",
+    onConfirm: () => {
+      window.appState.equipe = window.appState.equipe.filter(m => m.id !== id);
+      window.renderEquipe();
+      closeModal();
+    }
+  });
 };
 
 // CRUD: Clientes
@@ -512,8 +619,8 @@ window.initCharts = function() {
 };
 
 // Calendar functions
-window.initFiscalCalendar = function() {
-  const cal = document.getElementById('fiscal-calendar');
+window.initCalendar = function(id) {
+  const cal = document.getElementById(id);
   if (!cal) return;
   cal.innerHTML = '';
   const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -523,33 +630,37 @@ window.initFiscalCalendar = function() {
     h.textContent = d;
     cal.appendChild(h);
   });
+  
+  // Fake some event days for visual feedback
+  const eventDays = id.includes('fiscal') ? [10, 20, 25] : [5, 12, 15, 22];
+  
   for (let i = 1; i <= 30; i++) {
     const day = document.createElement('div');
     day.className = 'cal-day';
     day.textContent = i;
-    if (i === 8) day.classList.add('today');
+    if (i === new Date().getDate()) day.classList.add('today');
+    if (eventDays.includes(i)) {
+      const dot = document.createElement('div');
+      dot.style.width = '4px';
+      dot.style.height = '4px';
+      dot.style.borderRadius = '50%';
+      dot.style.background = id.includes('fiscal') ? 'var(--danger)' : 'var(--primary)';
+      dot.style.marginTop = '2px';
+      day.appendChild(dot);
+    }
     cal.appendChild(day);
   }
 };
 
+window.initFiscalCalendar = function() {
+  window.initCalendar('fiscal-calendar');
+};
+
 window.initAgendaCalendar = function() {
-  const cal = document.getElementById('agenda-calendar');
-  if (!cal) return;
-  cal.innerHTML = '';
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  days.forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'cal-header';
-    h.textContent = d;
-    cal.appendChild(h);
-  });
-  for (let i = 1; i <= 30; i++) {
-    const day = document.createElement('div');
-    day.className = 'cal-day';
-    day.textContent = i;
-    if (i === 8) day.classList.add('today');
-    cal.appendChild(day);
-  }
+  window.initCalendar('agenda-nobel-calendar');
+  window.initCalendar('agenda-fiscal-calendar');
+  // Legacy support if needed
+  window.initCalendar('agenda-calendar');
 };
 
 // Financeiro Render
@@ -564,8 +675,24 @@ window.renderFinanceiro = function() {
         <td><span class="status ${item.status === 'Pago' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
         <td><button class="btn-delete" onclick="deleteFinItem('pagar', ${item.id})"><i data-lucide="trash-2" style="width:14px"></i></button></td>
       </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum lançamento encontrado.</td></tr>';
   }
+
+  const receberBody = document.getElementById('financeiro-receber-table-body');
+  if (receberBody) {
+    const data = window.appState.financeiro.receber || [];
+    receberBody.innerHTML = data.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.cliente || 'Consumidor'}</td>
+        <td>${item.descricao}</td>
+        <td>${item.vencimento}</td>
+        <td style="font-weight:700">R$ ${item.valor}</td>
+        <td><span class="status ${item.status === 'Recebido' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+        <td><button class="btn-delete" onclick="deleteFinItem('receber', ${item.id})"><i data-lucide="trash-2" style="width:14px"></i></button></td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum recebimento encontrado.</td></tr>';
+  }
+  
   if (window.lucide) window.lucide.createIcons();
 };
 
@@ -1226,3 +1353,83 @@ if (document.readyState === 'loading') {
 } else {
   initApp();
 }
+
+// More CRUD & Modals
+window.openNewEmployeeModal = function() {
+  const body = `
+    <form id="new-employee-form">
+      <div class="form-group"><label>Nome Completo</label><input type="text" name="nome" class="form-control" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group"><label>Cargo</label><input type="text" name="cargo" class="form-control" required></div>
+        <div class="form-group"><label>Departamento</label>
+          <select name="depto" class="form-control">
+            <option>Fiscal</option><option>Contábil</option><option>Pessoal</option><option>Financeiro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Data Admissão</label><input type="date" name="admissao" class="form-control"></div>
+    </form>
+  `;
+  openModal({
+    title: "Cadastrar Novo Colaborador Nobel",
+    body,
+    confirmText: "Salvar Cadastro",
+    onConfirm: () => {
+      alert("Colaborador cadastrado no banco de dados interno da Nobel.");
+      closeModal();
+    }
+  });
+};
+
+window.openNewTeamMemberModal = window.openNewEmployeeModal;
+
+window.openNewEventModal = function() {
+  const body = `
+    <form id="new-event-form">
+      <div class="form-group"><label>Título do Compromisso</label><input type="text" name="titulo" class="form-control" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group"><label>Data</label><input type="date" name="data" class="form-control" required></div>
+        <div class="form-group"><label>Hora</label><input type="time" name="hora" class="form-control"></div>
+      </div>
+      <div class="form-group"><label>Tipo</label>
+        <select name="tipo" class="form-control">
+          <option>Interno</option><option>Reunião Cliente</option><option>Prazo Fiscal</option>
+        </select>
+      </div>
+    </form>
+  `;
+  openModal({
+    title: "Novo Evento na Agenda Nobel",
+    body,
+    confirmText: "Agendar",
+    onConfirm: () => {
+      alert("Evento agendado com sucesso.");
+      closeModal();
+    }
+  });
+};
+
+window.openNewFiscalModal = function() {
+  const body = `
+    <form id="new-fiscal-form">
+      <div class="form-group"><label>Obrigação / Guia</label><input type="text" name="titulo" class="form-control" placeholder="Ex: DAS Junho" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group"><label>Vencimento</label><input type="date" name="vencimento" class="form-control" required></div>
+        <div class="form-group"><label>Prioridade</label>
+          <select name="prioridade" class="form-control">
+            <option>Normal</option><option>Urgente</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  `;
+  openModal({
+    title: "Cadastrar Prazo Fiscal",
+    body,
+    confirmText: "Salvar Prazo",
+    onConfirm: () => {
+      alert("Prazo fiscal cadastrado para monitoramento.");
+      closeModal();
+    }
+  });
+};

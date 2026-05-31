@@ -917,7 +917,7 @@
             <thead>
               <tr><th>Fornecedor</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
             </thead>
-            <tbody>
+            <tbody id="financeiro-pagar-table-body">
               <tr><td style="font-weight:600">Escritório de Software</td><td>Licenças anuais</td><td>10/06/2024</td><td style="font-weight:700">R$ 18.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
               <tr><td style="font-weight:600">Imobiliária Centro</td><td>Aluguel sede</td><td>15/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
               <tr><td style="font-weight:600">Energia Elétrica</td><td>Conta de luz</td><td>20/06/2024</td><td style="font-weight:700">R$ 3.450,00</td><td><span class="status status-info"><span class="status-dot"></span> Agendado</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
@@ -929,9 +929,6 @@
       </div>
 
       <div id="fin-content-receber" style="display:none">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
         <div class="card glass-morphism">
           <div class="card-header">
             <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
@@ -1018,13 +1015,8 @@
           </div>
           <table class="data-table">
             <thead><tr><th>Conta</th><th>Código</th><th>Débito</th><th>Crédito</th><th>Saldo</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:600">Caixa e Equivalentes</td><td>1.1.01</td><td>R$ 125.000</td><td>R$ 45.000</td><td style="font-weight:700;color:var(--accent)">R$ 80.000</td></tr>
-              <tr><td style="font-weight:600">Clientes</td><td>1.1.02</td><td>R$ 287.000</td><td>R$ 120.000</td><td style="font-weight:700;color:var(--accent)">R$ 167.000</td></tr>
-              <tr><td style="font-weight:600">Fornecedores</td><td>2.1.01</td><td>R$ 85.000</td><td>R$ 180.000</td><td style="font-weight:700;color:var(--danger)">R$ 95.000</td></tr>
-              <tr><td style="font-weight:600">Capital Social</td><td>2.3.01</td><td>R$ 0</td><td>R$ 500.000</td><td style="font-weight:700;color:var(--accent)">R$ 500.000</td></tr>
-              <tr><td style="font-weight:600">Receita de Serviços</td><td>3.1.01</td><td>R$ 0</td><td>R$ 487.000</td><td style="font-weight:700;color:var(--accent)">R$ 487.000</td></tr>
-              <tr><td style="font-weight:600">Despesas Administrativas</td><td>3.2.01</td><td>R$ 124.500</td><td>R$ 0</td><td style="font-weight:700;color:var(--danger)">R$ 124.500</td></tr>
+            <tbody id="contabil-balancete-table-body">
+              <!-- Dinâmico -->
             </tbody>
           </table>
         </div>
@@ -1146,9 +1138,8 @@
           </div>
           <table class="data-table">
             <thead><tr><th>Emissor</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:600">Supermercado Central</td><td>R$ 4.500,00</td><td>01/06/2024</td><td><span class="status status-success"><span class="status-dot"></span> Validada</span></td></tr>
-              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>R$ 12.800,00</td><td>01/06/2024</td><td><span class="status status-success"><span class="status-dot"></span> Validada</span></td></tr>
+            <tbody id="fiscal-nfe-table-body">
+              <!-- Dinâmico -->
             </tbody>
           </table>
         </div>
@@ -1162,10 +1153,12 @@
               <i data-lucide="upload" style="width:14px"></i> Importar
             </button>
           </div>
-          <div style="padding:2rem;text-align:center;color:var(--text-muted)">
-             <i data-lucide="folder-open" style="width:48px;margin-bottom:1rem;opacity:0.3"></i>
-             <p>Selecione um cliente para visualizar os arquivos SPED gerados.</p>
-          </div>
+          <table class="data-table">
+            <thead><tr><th>Cliente</th><th>Tipo</th><th>Período</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="fiscal-sped-table-body">
+              <!-- Dinâmico -->
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -1237,11 +1230,8 @@
           </div>
           <table class="data-table">
             <thead><tr><th>Nome</th><th>Cargo</th><th>Departamento</th><th>Admissão</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:600">Ana Paula Silva</td><td>Gestora Fiscal</td><td>Fiscal</td><td>10/02/2020</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Carlos Mendes</td><td>Analista Contábil</td><td>Contábil</td><td>15/05/2021</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Mariana Oliveira</td><td>Analista DP</td><td>Pessoal</td><td>20/08/2022</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Ricardo Santos</td><td>Auxiliar Administrativo</td><td>Financeiro</td><td>05/01/2023</td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            <tbody id="equipe-trabalhista-table-body">
+              <!-- Dinâmico -->
             </tbody>
           </table>
         </div>
@@ -1702,7 +1692,7 @@
           <div class="card-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-light));color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
             <div class="card-title" style="color:white"><i data-lucide="calendar-days"></i> Agenda Interna Nobel</div>
           </div>
-          <div class="calendar" id="agenda-calendar" style="flex:1"></div>
+          <div class="calendar" id="agenda-nobel-calendar" style="flex:1"></div>
           <div style="margin-top:1.5rem">
             <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Compromissos Nobel</h4>
             <div style="display:flex;flex-direction:column;gap:0.75rem">
@@ -1722,7 +1712,7 @@
           <div class="card-header" style="background:linear-gradient(135deg, var(--danger), #f87171);color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
             <div class="card-title" style="color:white"><i data-lucide="alert-triangle"></i> Prazos Fiscais & Obrigações</div>
           </div>
-          <div class="calendar" id="fiscal-calendar" style="flex:1"></div>
+          <div class="calendar" id="agenda-fiscal-calendar" style="flex:1"></div>
           <div style="margin-top:1.5rem">
             <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Vencimentos Próximos</h4>
             <div style="display:flex;flex-direction:column;gap:0.75rem">
