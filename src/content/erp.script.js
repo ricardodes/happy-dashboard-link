@@ -428,55 +428,182 @@ const empresasProspeccao = [
 ];
 
 window.filterProspeccao = async function() {
-  const search = document.getElementById('prop-search')?.value?.toLowerCase() || '';
+  const searchInput = document.getElementById('prop-search');
+  const search = searchInput?.value?.trim() || '';
   const cidade = document.getElementById('prop-cidade')?.value || '';
   const categoria = document.getElementById('prop-cat')?.value || '';
   
   const grid = document.getElementById('prospeccao-grid');
-  if (grid) grid.innerHTML = '<div style="padding:2rem;text-align:center;grid-column:1/-1">Buscando empresas com IA...</div>';
+  if (grid) {
+    grid.innerHTML = `
+      <div style="padding:4rem;text-align:center;grid-column:1/-1">
+        <div class="spinner-mini" style="margin:0 auto 1rem;border-top-color:var(--primary);width:30px;height:30px;border-width:3px"></div>
+        <div style="font-weight:700;font-size:1.1rem">IA Nobel buscando no Google Maps...</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:0.5rem">Localizando empresas em ${cidade || 'Norte de Minas'}</div>
+      </div>
+    `;
+  }
 
   try {
+    const apiKey = localStorage.getItem('nobel_groq_key');
     const aiResults = await window.searchProspectsAI({ 
       query: search, 
-      city: cidade || 'Montes Claros e região', 
-      category: categoria || 'Empresas diversas' 
+      city: cidade || 'Montes Claros e região Norte de Minas', 
+      category: categoria || 'Empresas diversas',
+      apiKey: apiKey || undefined
     });
     
-    // Mesclar estáticos com IA e remover duplicados por nome
-    const all = [...aiResults, ...empresasProspeccao].filter((emp, index, self) =>
-      index === self.findIndex((t) => t.nome === emp.nome)
+    // Mesclar estáticos com IA e remover duplicados por nome (case insensitive)
+    const all = [...(aiResults || []), ...empresasProspeccao];
+    const unique = all.filter((emp, index, self) =>
+      index === self.findIndex((t) => t.nome.toLowerCase() === emp.nome.toLowerCase())
     );
 
-    const filtradas = all.filter(emp => 
-      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
-      (!cidade || emp.cidade === cidade) &&
-      (!categoria || emp.cat === categoria)
-    );
+    // Se houver busca ou filtro, aplicar. Se não, mostrar os melhores resultados da IA.
+    let filtradas = unique.filter(emp => {
+      const s = search.toLowerCase();
+      const matchSearch = !s || emp.nome.toLowerCase().includes(s) || emp.cat.toLowerCase().includes(s);
+      const matchCidade = !cidade || emp.cidade === cidade;
+      const matchCategoria = !categoria || emp.cat.toLowerCase().includes(categoria.toLowerCase());
+      return matchSearch && matchCidade && matchCategoria;
+    });
+
+    // Se o filtro removeu tudo da IA que era relevante, prioriza o que a IA trouxe
+    if (filtradas.length === 0 && aiResults && aiResults.length > 0) {
+      filtradas = aiResults;
+    }
+
     window.renderEmpresas(filtradas);
+    
+    // Atualiza o mapa se tiver cidade
+    if (cidade) {
+       const iframe = document.getElementById('google-map-frame');
+       if (iframe) iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(categoria + ' em ' + cidade + ' MG')}&output=embed`;
+    }
   } catch (err) {
     console.error('Erro na busca IA:', err);
-    // Fallback para estáticos se a IA falhar
     const filtradas = empresasProspeccao.filter(emp => 
-      (!search || emp.nome.toLowerCase().includes(search) || emp.cat.toLowerCase().includes(search)) && 
-      (!cidade || emp.cidade === cidade) &&
-      (!categoria || emp.cat === categoria)
+      (!search || emp.nome.toLowerCase().includes(search.toLowerCase())) && 
+      (!cidade || emp.cidade === cidade)
     );
     window.renderEmpresas(filtradas);
   }
 };
 
+
 window.renderEmpresas = function(lista) {
   const grid = document.getElementById('prospeccao-grid');
   if (!grid) return;
-  grid.innerHTML = lista.map(emp => `
-    <div class="empresa-card">
-      <div style="font-weight:700">${emp.nome}</div>
-      <div style="font-size:0.8rem;color:var(--text-muted)">${emp.cat} - ${emp.cidade}</div>
-      <div style="margin-top:0.5rem;font-size:0.85rem">${emp.tel}</div>
-      <div style="margin-top:0.5rem"><span class="badge badge-green">${emp.score} pts</span></div>
+  grid.innerHTML = lista.map(emp => {
+    const phone = (emp.tel || '').replace(/\D/g, '');
+    return `
+    <div class="empresa-card" style="display:flex;flex-direction:column;justify-content:space-between;min-height:160px">
+      <div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:0.25rem">${emp.nome}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">${emp.cat} - ${emp.cidade}</div>
+        <div style="margin-top:0.5rem;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;color:var(--text-secondary)">
+          <i data-lucide="phone" style="width:12px"></i> ${emp.tel}
+        </div>
+      </div>
+      <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
+        <span class="badge badge-green" style="font-size:0.7rem;font-weight:700">${emp.score} pts</span>
+        <button onclick="openDirectWhatsApp('${phone}', '${emp.nome}')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:100px;padding:0.5rem 0.85rem;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.4rem;transition:all 0.2s;box-shadow:0 2px 8px rgba(37,211,102,0.25)" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(37,211,102,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(37,211,102,0.25)'">
+          <i data-lucide="message-circle" style="width:14px;height:14px"></i> WhatsApp
+        </button>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
+  if (window.lucide) window.lucide.createIcons();
 };
+
+window.openWhatsAppAI = function() {
+  const panel = document.getElementById('whatsapp-ai-panel');
+  if (panel) panel.style.display = 'block';
+};
+
+window.openDirectWhatsApp = function(phone, companyName) {
+  const panel = document.getElementById('whatsapp-ai-panel');
+  if (panel) {
+    panel.style.display = 'block';
+    const waEmpresa = document.getElementById('wa-empresa');
+    const waNumero = document.getElementById('wa-numero');
+    if (waEmpresa) waEmpresa.value = companyName;
+    if (waNumero) waNumero.value = phone;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+};
+
+window.setTone = function(btn, tone) {
+  document.querySelectorAll('.wa-tone').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'var(--bg)';
+    b.style.color = 'var(--text)';
+  });
+  btn.classList.add('active');
+  btn.style.background = 'var(--primary)';
+  btn.style.color = 'white';
+  window.selectedTone = tone;
+};
+
+window.generateWhatsAppMessage = async function() {
+  const empresa = document.getElementById('wa-empresa')?.value;
+  const segmento = document.getElementById('wa-segmento')?.value;
+  const numero = document.getElementById('wa-numero')?.value;
+  const tone = window.selectedTone || 'profissional';
+  const apiKey = localStorage.getItem('nobel_groq_key');
+
+  if (!empresa) {
+    alert('Por favor, informe o nome da empresa.');
+    return;
+  }
+
+  const btn = event.currentTarget;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:flex;align-items:center;gap:0.5rem"><span class="spinner-mini"></span> Gerando...</span>';
+
+  try {
+    if (typeof window.generateMarketingCopy === 'function') {
+      const result = await window.generateMarketingCopy({
+        topic: `Mensagem de prospecção via WhatsApp para a empresa ${empresa} do segmento ${segmento}. O tom deve ser ${tone}. Foco em oferecer serviços de contabilidade consultiva e redução de impostos.`,
+        channel: 'whatsapp',
+        tone: tone,
+        apiKey: apiKey || undefined
+      });
+      
+      const cleanNumber = (numero || '').replace(/\D/g, '');
+      const text = encodeURIComponent(result.content || result);
+      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+    } else {
+      const text = encodeURIComponent(`Olá, vi sua empresa ${empresa} no mapa e gostaria de apresentar nossos serviços contábeis especializados em ${segmento}.`);
+      const cleanNumber = (numero || '').replace(/\D/g, '');
+      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao gerar mensagem: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+};
+
+window.searchGoogleMaps = function(query) {
+  const cidade = document.getElementById('prop-cidade')?.value || 'Montes Claros';
+  const fullQuery = `${query} em ${cidade} MG`;
+  const encodedQuery = encodeURIComponent(fullQuery);
+  
+  const iframe = document.getElementById('google-map-frame');
+  if (iframe) {
+    // Atualiza o iframe para mostrar a região (usando busca por texto)
+    iframe.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
+  }
+  
+  // Também abre em nova aba para facilitar a navegação completa
+  window.open(`https://www.google.com/maps/search/${encodedQuery}`, '_blank');
+};
+
+
 
 window.toggleFinanceiroTab = (btn) => {
   document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
