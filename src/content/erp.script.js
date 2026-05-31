@@ -30,21 +30,20 @@ window.showView = function(viewId, target = null) {
 
   // Titles
   const titles = {
-    'dashboard': 'Dashboard Executivo',
-    'crm': 'CRM Comercial',
-    'prospeccao': 'Mapa de Prospecção',
-    'ia': 'Central de IA',
+    'dashboard': 'Painel de Controle Nobel',
+    'clientes': 'Gestão de Clientes (Alterdata)',
+    'crm': 'Pipeline de Vendas',
+    'prospeccao': 'Mapa de Inteligência',
+    'ia': 'Inteligência Artificial Nobel',
     'marketing': 'Gerador de Marketing',
-    'financeiro': 'Gestão Financeira',
-    'contabil': 'Escrituração Contábil',
-    'fiscal': 'Obrigações Fiscais',
-    'trabalhista': 'Folha e DP',
-    'portal': 'Portal do Cliente',
-    'informativos': 'Informativos',
-    'documentos': 'Documentos',
-    'equipe': 'Equipe Nobel',
-    'agenda': 'Agenda Inteligente',
-    'admin': 'Painel Admin Master'
+    'financeiro': 'Financeiro Interno',
+    'contabil': 'Setor Contábil',
+    'fiscal': 'Setor Fiscal',
+    'trabalhista': 'Setor de RH/DP',
+    'informativos': 'Central de Informativos',
+    'equipe': 'Gestão de Equipe',
+    'agenda': 'Agenda Nobel & Fiscal',
+    'admin': 'Painel Administrativo'
   };
   const titleEl = document.getElementById('page-title');
   if (titleEl) titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
@@ -53,11 +52,11 @@ window.showView = function(viewId, target = null) {
   if (viewId === 'dashboard') {
     setTimeout(() => { if (typeof window.initCharts === 'function') window.initCharts(); }, 100);
   }
-  if (viewId === 'fiscal') {
-    setTimeout(() => { if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar(); }, 100);
-  }
-  if (viewId === 'agenda') {
-    setTimeout(() => { if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar(); }, 100);
+  if (viewId === 'fiscal' || viewId === 'agenda') {
+    setTimeout(() => { 
+      if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar(); 
+      if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+    }, 100);
   }
   if (viewId === 'prospeccao') {
     setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);

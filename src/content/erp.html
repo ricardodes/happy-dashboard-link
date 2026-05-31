@@ -15,9 +15,11 @@
       <a class="nav-item active" href="#" onclick="showView('dashboard', this);">
         <i data-lucide="layout-dashboard"></i> Dashboard
       </a>
+      <a class="nav-item" href="#" onclick="showView('clientes', this);">
+        <i data-lucide="users"></i> Clientes (Alterdata)
+      </a>
       <a class="nav-item" href="#" onclick="showView('crm', this);">
-        <i data-lucide="users"></i> CRM Comercial
-        <span class="nav-badge">12</span>
+        <i data-lucide="bar-chart-3"></i> Pipeline Comercial
       </a>
       <a class="nav-item" href="#" onclick="showView('prospeccao', this);">
         <i data-lucide="map-pin"></i> Prospecção
@@ -25,61 +27,51 @@
       <a class="nav-item" href="#" onclick="showView('ia', this);">
         <i data-lucide="brain-circuit"></i> Central de IA
       </a>
-      <a class="nav-item" href="#" onclick="showView('marketing', this);">
-        <i data-lucide="megaphone"></i> Marketing
-      </a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Operação</div>
-      <a class="nav-item" href="#" onclick="showView('financeiro', this);">
-        <i data-lucide="wallet"></i> Financeiro
+      <div class="nav-group-title">Operação Nobel</div>
+      <a class="nav-item" href="#" onclick="showView('fiscal', this);">
+        <i data-lucide="receipt"></i> Departamento Fiscal
       </a>
       <a class="nav-item" href="#" onclick="showView('contabil', this);">
-        <i data-lucide="calculator"></i> Contábil
+        <i data-lucide="calculator"></i> Departamento Contábil
       </a>
-      <a class="nav-item" href="#" onclick="showView('fiscal', this);">
-        <i data-lucide="receipt"></i> Fiscal
+      <a class="nav-item" href="#" onclick="showView('financeiro', this);">
+        <i data-lucide="wallet"></i> Financeiro Interno
       </a>
       <a class="nav-item" href="#" onclick="showView('trabalhista', this);">
-        <i data-lucide="hard-hat"></i> Trabalhista
+        <i data-lucide="hard-hat"></i> Departamento Pessoal
       </a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Clientes & Conteúdo</div>
-      <a class="nav-item" href="https://econtador.alterdata.com.br/NobelContabilidade" target="_blank" style="background:linear-gradient(135deg,rgba(0,208,132,0.15),rgba(16,185,129,0.05));border:1px solid rgba(0,208,132,0.2);color:var(--accent);cursor:pointer">
-        <i data-lucide="log-in"></i> Portal do Cliente (Alterdata)
-      </a>
-      <a class="nav-item" href="#" onclick="showView('portal', this);">
-        <i data-lucide="user-circle"></i> Portal do Cliente
+      <div class="nav-group-title">Comunicação</div>
+      <a class="nav-item" href="#" onclick="showView('marketing', this);">
+        <i data-lucide="megaphone"></i> Marketing Nobel
       </a>
       <a class="nav-item" href="#" onclick="showView('informativos', this);">
         <i data-lucide="newspaper"></i> Informativos
       </a>
-      <a class="nav-item" href="#" onclick="showView('documentos', this);">
-        <i data-lucide="folder-open"></i> Documentos
-      </a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Gestão</div>
+      <a class="nav-item" href="#" onclick="showView('agenda', this);">
+        <i data-lucide="calendar"></i> Agenda & Fiscal
+      </a>
       <a class="nav-item" href="#" onclick="showView('equipe', this);">
         <i data-lucide="users-2"></i> Equipe
       </a>
-      <a class="nav-item" href="#" onclick="showView('agenda', this);">
-        <i data-lucide="calendar"></i> Agenda
-      </a>
       <a class="nav-item" href="#" onclick="showView('admin', this);">
-        <i data-lucide="settings"></i> Admin Master
+        <i data-lucide="settings"></i> Configurações
       </a>
     </div>
   </nav>
   <div class="sidebar-footer">
     <div class="user-card">
-      <div class="user-avatar">AN</div>
+      <div class="user-avatar">N</div>
       <div class="user-info">
-        <div class="user-name">Admin Nobel</div>
-        <div class="user-role">Super Administrador</div>
+        <div class="user-name">Escritório Nobel</div>
+        <div class="user-role">Gestão Interna</div>
       </div>
-      <i data-lucide="more-vertical" style="width:16px;color:var(--text-muted);cursor:pointer"></i>
     </div>
   </div>
 </aside>
@@ -256,6 +248,68 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- CLIENTES ALTERDATA VIEW -->
+    <div class="view" id="view-clientes">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+        <div>
+          <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="database" style="width:12px"></i> Sincronizado: Alterdata</div>
+          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão de Clientes (Base Nobel)</h2>
+        </div>
+        <div style="display:flex;gap:0.75rem">
+          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600" onclick="alert('Integração API Alterdata aguardando chave...')">
+            <i data-lucide="refresh-cw" style="width:16px"></i> Sincronizar Agora
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="users"></i> Carteira de Clientes</div>
+          <div class="search-box" style="margin:0;max-width:300px">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Filtrar por nome ou CNPJ...">
+          </div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Razão Social</th>
+              <th>CNPJ</th>
+              <th>Regime</th>
+              <th>Responsável Nobel</th>
+              <th>Status Fiscal</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600">Supermercado Central MOC</td>
+              <td>00.123.456/0001-99</td>
+              <td><span class="badge badge-blue">Lucro Real</span></td>
+              <td>Ana Paula (Fiscal)</td>
+              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
+              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Clínica Vida Plena</td>
+              <td>11.222.333/0001-88</td>
+              <td><span class="badge badge-green">Simples Nacional</span></td>
+              <td>Carlos Mendes (Contábil)</td>
+              <td><span class="status status-warning"><span class="status-dot"></span> Pendência</span></td>
+              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Construtora Norte Minas</td>
+              <td>22.333.444/0001-77</td>
+              <td><span class="badge badge-blue">Lucro Presumido</span></td>
+              <td>Ana Paula (Fiscal)</td>
+              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
+              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -1647,58 +1701,58 @@
     <div class="view" id="view-agenda">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
         <div>
-          <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="calendar" style="width:12px"></i> Agenda Inteligente</div>
-          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Calendário & Compromissos</h2>
+          <div class="badge badge-green" style="margin-bottom:0.5rem"><i data-lucide="calendar" style="width:12px"></i> Agenda Nobel + Fiscal</div>
+          <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Integrada de Prazos</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
           <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
             <i data-lucide="calendar-plus" style="width:16px"></i> Novo Evento
           </button>
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
-            <i data-lucide="link" style="width:16px"></i> Google Calendar
-          </button>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="calendar-days"></i> Junho/2024</div>
+      
+      <div class="grid-2" style="gap:1.5rem">
+        <!-- AGENDA NOBEL -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-light));color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
+            <div class="card-title" style="color:white"><i data-lucide="calendar-days"></i> Agenda Interna Nobel</div>
           </div>
-          <div class="calendar" id="agenda-calendar"></div>
+          <div class="calendar" id="agenda-calendar" style="flex:1"></div>
+          <div style="margin-top:1.5rem">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Compromissos Nobel</h4>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <div style="display:flex;gap:1rem;padding:0.75rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--primary)">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--primary)">09:00</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem">Reunião de Alinhamento</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Equipe Comercial & Fiscal</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><i data-lucide="list-checks"></i> Compromissos do Dia</div>
+
+        <!-- AGENDA FISCAL -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-header" style="background:linear-gradient(135deg, var(--danger), #f87171);color:white;margin:-1.5rem -1.5rem 1.5rem -1.5rem;padding:1.5rem;border-radius:var(--radius) var(--radius) 0 0">
+            <div class="card-title" style="color:white"><i data-lucide="alert-triangle"></i> Prazos Fiscais & Obrigações</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:0.75rem">
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--danger)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--danger);min-width:50px">09:00</div>
-              <div>
-                <div style="font-weight:700">Reunião - Hospital Santa Maria</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Apresentação de proposta • Sala 1</div>
+          <div class="calendar" id="fiscal-calendar" style="flex:1"></div>
+          <div style="margin-top:1.5rem">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem">Vencimentos Próximos</h4>
+            <div style="display:flex;flex-direction:column;gap:0.75rem">
+              <div style="display:flex;gap:1rem;padding:0.75rem;background:rgba(239,68,68,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--danger)">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--danger)">DIA 20</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem">Entrega DCTF / Venc. DAS</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Impacto: 485 clientes</div>
+                </div>
               </div>
             </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--warning)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--warning);min-width:50px">11:00</div>
-              <div>
-                <div style="font-weight:700">Vencimento DAS - 5 clientes</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Obrigação fiscal • Urgente</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--info)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--info);min-width:50px">14:00</div>
-              <div>
-                <div style="font-weight:700">Call - TechSolutions Brasil</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Diagnóstico tributário • Google Meet</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--accent)">
-              <div style="font-size:0.8rem;font-weight:700;color:var(--accent);min-width:50px">16:00</div>
-              <div>
-                <div style="font-weight:700">Reunião interna - Comercial</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Pipeline review • Sala 2</div>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
             <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-hover);border-radius:var(--radius-sm);border-left:3px solid var(--primary)">
               <div style="font-size:0.8rem;font-weight:700;color:var(--primary);min-width:50px">17:30</div>
               <div>
