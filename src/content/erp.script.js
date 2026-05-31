@@ -1038,11 +1038,49 @@ window.toggleConfigIA = function() {
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 };
 
+window.openAlterdataConfig = function() {
+  const savedKey = localStorage.getItem('nobel_alterdata_key') || '';
+  const savedUrl = localStorage.getItem('nobel_alterdata_url') || '';
+  
+  openModal({
+    title: "Configurar Integração Alterdata",
+    body: `
+      <form id="alterdata-config-form">
+        <div class="form-group">
+          <label>URL da API Alterdata</label>
+          <input type="text" id="alt-url" class="form-control" value="${savedUrl}" placeholder="https://api.alterdata.com.br/v1">
+        </div>
+        <div class="form-group">
+          <label>Chave de API (Token)</label>
+          <input type="password" id="alt-key" class="form-control" value="${savedKey}" placeholder="Seu token de acesso">
+        </div>
+        <div style="background:rgba(59,130,246,0.1);padding:1rem;border-radius:8px;font-size:0.8rem;color:var(--info)">
+          <i data-lucide="info" style="width:14px;display:inline"></i> 
+          Os dados do Alterdata serão usados para alimentar a Carteira de Clientes e a Inteligência de Perfil.
+        </div>
+      </form>
+    `,
+    confirmText: "Salvar Configurações",
+    onConfirm: () => {
+      const key = document.getElementById('alt-key').value;
+      const url = document.getElementById('alt-url').value;
+      localStorage.setItem('nobel_alterdata_key', key);
+      localStorage.setItem('nobel_alterdata_url', url);
+      
+      const statusText = document.getElementById('alterdata-status-text');
+      if (statusText) statusText.textContent = key ? 'Conectado' : 'Pendente';
+      
+      alert('Configurações do Alterdata salvas!');
+      closeModal();
+    }
+  });
+};
+
 window.saveApiKeys = function() {
   const groq = document.getElementById('api-key-groq')?.value;
   if (groq) {
     localStorage.setItem('nobel_groq_key', groq);
-    alert('Configurações salvas no navegador!');
+    alert('Configurações de IA salvas!');
   }
 };
 
