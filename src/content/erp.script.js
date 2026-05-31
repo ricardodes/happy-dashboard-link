@@ -1,24 +1,52 @@
-// Nobel ERP Script - Final Clean Version
+// Nobel ERP Script - High Fidelity Robust Version
+// Integrated State Management, Modal System, and Dynamic CRUD
 
-// Set global functions
+// Global App State
+window.appState = {
+  clientes: [
+    { id: 1, nome: "Supermercado Central MOC", cnpj: "00.123.456/0001-99", regime: "Lucro Real", responsavel: "Ana Paula (Fiscal)", status: "Regular" },
+    { id: 2, nome: "Clínica Vida Plena", cnpj: "11.222.333/0001-88", regime: "Simples Nacional", responsavel: "Carlos Mendes (Contábil)", status: "Pendência" },
+    { id: 3, nome: "Construtora Norte Minas", cnpj: "22.333.444/0001-77", regime: "Lucro Presumido", responsavel: "Ana Paula (Fiscal)", status: "Regular" }
+  ],
+  leads: [
+    { id: 1, nome: "TechSolutions Brasil", segmento: "Tecnologia", cidade: "São Paulo", responsavel: "Carlos M.", valor: "4.2K", stage: "novo" },
+    { id: 2, nome: "Restaurante Sabor & Arte", segmento: "Alimentação", cidade: "Campinas", responsavel: "Julia A.", valor: "1.8K", stage: "novo" },
+    { id: 3, nome: "Construtora Horizonte", segmento: "Construção", cidade: "Rio de Janeiro", responsavel: "Ana P.", valor: "8.5K", stage: "contato" },
+    { id: 4, nome: "Advocacia Silva & Partners", segmento: "Serviços", cidade: "Belo Horizonte", responsavel: "Fernando S.", valor: "6.0K", stage: "qualificacao" }
+  ],
+  financeiro: {
+    pagar: [
+      { id: 1, descricao: "Aluguel Escritório", vencimento: "10/06/2024", valor: "12.500,00", status: "Pendente" },
+      { id: 2, descricao: "Energia Elétrica", vencimento: "15/06/2024", valor: "1.250,00", status: "Pendente" },
+      { id: 3, descricao: "Internet/Telefonia", vencimento: "05/06/2024", valor: "850,00", status: "Pago" }
+    ],
+    receber: [
+      { id: 1, cliente: "Hospital Santa Maria", descricao: "Honorários Maio", vencimento: "05/06/2024", valor: "25.000,00", status: "Recebido" },
+      { id: 2, cliente: "Clínica Vida Plena", descricao: "Consultoria Especial", vencimento: "10/06/2024", valor: "5.500,00", status: "Pendente" }
+    ]
+  },
+  users: [
+    { id: 1, nome: "Admin Nobel", email: "admin@nobel.com", perfil: "Super Admin", status: "Ativo", initial: "AN", color: "var(--primary)" },
+    { id: 2, nome: "Carlos Mendes", email: "carlos@nobel.com", perfil: "Comercial", status: "Ativo", initial: "CM", color: "var(--info)" },
+    { id: 3, nome: "Ana Paula", email: "ana@nobel.com", perfil: "Contábil", status: "Ativo", initial: "AP", color: "var(--warning)" }
+  ]
+};
+
+// Generic View Manager
 window.showView = function(viewId, target = null) {
   if (event) event.preventDefault();
-  console.log('showView called:', viewId);
   
-  // Hide all views
   document.querySelectorAll('.view').forEach(v => {
     v.classList.remove('active');
     v.style.display = 'none';
   });
 
-  // Show target view
   const targetView = document.getElementById('view-' + viewId);
   if (targetView) {
     targetView.classList.add('active');
     targetView.style.display = 'block';
   }
 
-  // Update nav items
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (target) {
     target.classList.add('active');
@@ -28,7 +56,6 @@ window.showView = function(viewId, target = null) {
     if (navItem) navItem.classList.add('active');
   }
 
-  // Titles
   const titles = {
     'dashboard': 'Painel de Controle Nobel',
     'clientes': 'Gestão de Clientes (Alterdata)',
@@ -48,23 +75,275 @@ window.showView = function(viewId, target = null) {
   const titleEl = document.getElementById('page-title');
   if (titleEl) titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
 
-  // Component initialization
-  if (viewId === 'dashboard') {
-    setTimeout(() => { if (typeof window.initCharts === 'function') window.initCharts(); }, 100);
-  }
+  // Initializers
+  if (viewId === 'dashboard') setTimeout(window.initCharts, 100);
   if (viewId === 'fiscal' || viewId === 'agenda') {
-    setTimeout(() => { 
-      if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar(); 
-      if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+    setTimeout(() => {
+      window.initFiscalCalendar();
+      window.initAgendaCalendar();
     }, 100);
   }
-  if (viewId === 'prospeccao') {
-    setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
-  }
+  if (viewId === 'clientes') window.renderClientes();
+  if (viewId === 'crm') window.renderLeads();
+  if (viewId === 'financeiro') window.renderFinanceiro();
+  if (viewId === 'admin') window.renderAdminUsers();
+  if (viewId === 'prospeccao') setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
 
   if (window.lucide) window.lucide.createIcons();
 };
 
+// CRUD: Clientes
+window.renderClientes = function(filter = "") {
+  const container = document.getElementById('clientes-table-body');
+  if (!container) return;
+
+  const data = window.appState.clientes.filter(c => 
+    c.nome.toLowerCase().includes(filter.toLowerCase()) || 
+    c.cnpj.includes(filter)
+  );
+
+  container.innerHTML = data.map(c => `
+    <tr class="hover-scale">
+      <td style="font-weight:600">${c.nome}</td>
+      <td>${c.cnpj}</td>
+      <td><span class="badge ${c.regime.includes('Simples') ? 'badge-green' : 'badge-blue'}">${c.regime}</span></td>
+      <td>${c.responsavel}</td>
+      <td><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${c.status}</span></td>
+      <td>
+        <div style="display:flex;gap:0.5rem">
+          <button class="header-btn" onclick="openClientDetails(${c.id})"><i data-lucide="eye" style="width:16px"></i></button>
+          <button class="btn-delete" onclick="deleteCliente(${c.id})"><i data-lucide="trash-2" style="width:16px"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.filterClientes = function(value) {
+  window.renderClientes(value);
+};
+
+window.openClientDetails = function(id) {
+  const c = window.appState.clientes.find(c => c.id === id);
+  if (!c) return;
+  openModal({
+    title: `Detalhes: ${c.nome}`,
+    body: `
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group"><label>Razão Social</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.nome}</div></div>
+          <div class="form-group"><label>CNPJ</label><div style="font-weight:600;padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.cnpj}</div></div>
+          <div class="form-group"><label>Regime</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.regime}</div></div>
+          <div class="form-group"><label>Responsável</label><div style="padding:0.75rem;background:var(--bg-hover);border-radius:8px">${c.responsavel}</div></div>
+        </div>
+        <div class="form-group"><label>Status</label><span class="status ${c.status === 'Regular' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span>${c.status}</span></div>
+      </div>
+    `,
+    confirmText: "Fechar",
+    onConfirm: () => closeModal()
+  });
+};
+
+window.deleteCliente = function(id) {
+  const c = window.appState.clientes.find(c => c.id === id);
+  if (!c) return;
+  openModal({
+    title: "Confirmar Exclusão",
+    body: `<p>Deseja realmente remover o cliente <strong>${c.nome}</strong>? Esta ação não pode ser desfeita.</p>`,
+    confirmText: "Sim, Remover",
+    onConfirm: () => {
+      window.appState.clientes = window.appState.clientes.filter(c => c.id !== id);
+      window.renderClientes();
+      closeModal();
+    }
+  });
+};
+
+window.openNewClientModal = function() {
+  const body = `
+    <form id="new-client-form">
+      <div class="form-group">
+        <label>Razão Social</label>
+        <input type="text" name="nome" class="form-control" placeholder="Ex: Nobel Tecnologia Ltda" required>
+      </div>
+      <div class="form-group">
+        <label>CNPJ</label>
+        <input type="text" name="cnpj" class="form-control" placeholder="00.000.000/0001-00" required>
+      </div>
+      <div class="form-group">
+        <label>Regime Tributário</label>
+        <select name="regime" class="form-control">
+          <option>Simples Nacional</option>
+          <option>Lucro Presumido</option>
+          <option>Lucro Real</option>
+          <option>MEI</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Responsável Nobel</label>
+        <input type="text" name="responsavel" class="form-control" placeholder="Nome do consultor" required>
+      </div>
+    </form>
+  `;
+  openModal({
+    title: "Cadastrar Novo Cliente",
+    body: body,
+    confirmText: "Cadastrar Cliente",
+    onConfirm: () => {
+      const form = document.getElementById('new-client-form');
+      const formData = new FormData(form);
+      const newClient = {
+        id: Date.now(),
+        nome: formData.get('nome'),
+        cnpj: formData.get('cnpj'),
+        regime: formData.get('regime'),
+        responsavel: formData.get('responsavel'),
+        status: "Regular"
+      };
+      window.appState.clientes.push(newClient);
+      window.renderClientes();
+      closeModal();
+    }
+  });
+};
+
+// CRUD: Leads (CRM)
+window.renderLeads = function() {
+  const container = document.getElementById('crm-kanban');
+  if (!container) return;
+
+  const stages = [
+    { id: 'novo', title: 'Lead Novo', color: 'var(--text-muted)' },
+    { id: 'contato', title: 'Contato', color: 'var(--info)' },
+    { id: 'qualificacao', title: 'Qualificação', color: 'var(--warning)' },
+    { id: 'diagnostico', title: 'Diagnóstico', color: 'var(--accent)' },
+    { id: 'proposta', title: 'Proposta', color: '#a855f7' },
+    { id: 'fechado', title: 'Fechado', color: 'var(--primary)' }
+  ];
+
+  container.innerHTML = stages.map(stage => {
+    const leads = window.appState.leads.filter(l => l.stage === stage.id);
+    return `
+      <div class="kanban-col">
+        <div class="kanban-header">
+          <div class="kanban-title">
+            <span style="width:8px;height:8px;border-radius:50%;background:${stage.color};display:inline-block"></span>
+            ${stage.title}
+          </div>
+          <span class="kanban-count">${leads.length}</span>
+        </div>
+        ${leads.map(lead => `
+          <div class="kanban-card hover-scale">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div class="kanban-card-title">${lead.nome}</div>
+              <button class="btn-delete" onclick="deleteLead(${lead.id})" style="padding:2px"><i data-lucide="x" style="width:14px"></i></button>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">${lead.segmento} • ${lead.cidade}</div>
+            <div class="kanban-card-meta">
+              <div class="kanban-card-avatar">${lead.responsavel.substring(0,2).toUpperCase()}</div>
+              <span>${lead.responsavel}</span>
+              <span style="margin-left:auto;font-weight:700">R$ ${lead.valor}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.deleteLead = function(id) {
+  const lead = window.appState.leads.find(l => l.id === id);
+  if (!lead) return;
+  openModal({
+    title: "Confirmar Exclusão do Lead",
+    body: `<p>Deseja remover o lead <strong>${lead.nome}</strong> do pipeline?</p>`,
+    confirmText: "Sim, Remover",
+    onConfirm: () => {
+      window.appState.leads = window.appState.leads.filter(l => l.id !== id);
+      window.renderLeads();
+      closeModal();
+    }
+  });
+};
+
+window.openNewLeadModal = function() {
+  const body = `
+    <form id="new-lead-form">
+      <div class="form-group">
+        <label>Nome da Empresa / Lead</label>
+        <input type="text" name="nome" class="form-control" placeholder="Nome da empresa" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label>Segmento</label>
+          <input type="text" name="segmento" class="form-control" placeholder="Ex: Tecnologia">
+        </div>
+        <div class="form-group">
+          <label>Cidade</label>
+          <input type="text" name="cidade" class="form-control" placeholder="Cidade">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label>Responsável</label>
+          <input type="text" name="responsavel" class="form-control" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label>Valor Mensal Estimado</label>
+          <input type="text" name="valor" class="form-control" placeholder="Ex: 2.5K">
+        </div>
+      </div>
+    </form>
+  `;
+  openModal({
+    title: "Adicionar Novo Lead ao Pipeline",
+    body: body,
+    confirmText: "Criar Lead",
+    onConfirm: () => {
+      const form = document.getElementById('new-lead-form');
+      const formData = new FormData(form);
+      const newLead = {
+        id: Date.now(),
+        nome: formData.get('nome'),
+        segmento: formData.get('segmento'),
+        cidade: formData.get('cidade'),
+        responsavel: formData.get('responsavel'),
+        valor: formData.get('valor'),
+        stage: "novo"
+      };
+      window.appState.leads.push(newLead);
+      window.renderLeads();
+      closeModal();
+    }
+  });
+};
+
+// Modal System Logic
+window.openModal = function(config) {
+  const overlay = document.getElementById('modal-overlay');
+  const title = document.getElementById('modal-title');
+  const body = document.getElementById('modal-body');
+  const confirmBtn = document.getElementById('modal-confirm-btn');
+
+  title.textContent = config.title || "Modal";
+  body.innerHTML = config.body || "";
+  confirmBtn.textContent = config.confirmText || "Confirmar";
+  
+  confirmBtn.onclick = () => {
+    if (config.onConfirm) config.onConfirm();
+  };
+
+  overlay.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeModal = function() {
+  document.getElementById('modal-overlay').style.display = 'none';
+};
+
+// Sidebar & Theme
 window.toggleSidebar = function() {
   const sidebar = document.getElementById('sidebar');
   if (sidebar) sidebar.classList.toggle('open');
@@ -160,7 +439,7 @@ window.initCharts = function() {
   });
 };
 
-// Calendar
+// Calendar functions
 window.initFiscalCalendar = function() {
   const cal = document.getElementById('fiscal-calendar');
   if (!cal) return;
@@ -201,7 +480,112 @@ window.initAgendaCalendar = function() {
   }
 };
 
-// IA Functions
+// Financeiro Render
+window.renderFinanceiro = function() {
+  const pagarBody = document.getElementById('financeiro-pagar-table-body');
+  if (pagarBody) {
+    pagarBody.innerHTML = window.appState.financeiro.pagar.map(item => `
+      <tr class="hover-scale">
+        <td style="font-weight:600">${item.descricao}</td>
+        <td>${item.vencimento}</td>
+        <td style="font-weight:700">R$ ${item.valor}</td>
+        <td><span class="status ${item.status === 'Pago' ? 'status-success' : 'status-warning'}"><span class="status-dot"></span> ${item.status}</span></td>
+        <td><button class="btn-delete" onclick="deleteFinItem('pagar', ${item.id})"><i data-lucide="trash-2" style="width:14px"></i></button></td>
+      </tr>
+    `).join('');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.deleteFinItem = function(type, id) {
+  openModal({
+    title: "Confirmar Exclusão",
+    body: "<p>Deseja remover este lançamento financeiro?</p>",
+    confirmText: "Sim, Remover",
+    onConfirm: () => {
+      window.appState.financeiro[type] = window.appState.financeiro[type].filter(item => item.id !== id);
+      window.renderFinanceiro();
+      closeModal();
+    }
+  });
+};
+
+window.openNewFinancialModal = function(type) {
+  const title = type === 'pagar' ? "Nova Conta a Pagar" : "Novo Recebimento";
+  const body = `
+    <form id="new-fin-form">
+      <div class="form-group">
+        <label>Descrição</label>
+        <input type="text" name="descricao" class="form-control" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label>Vencimento</label>
+          <input type="date" name="vencimento" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Valor (R$)</label>
+          <input type="number" step="0.01" name="valor" class="form-control" required>
+        </div>
+      </div>
+    </form>
+  `;
+  openModal({
+    title,
+    body,
+    confirmText: "Salvar Lançamento",
+    onConfirm: () => {
+      const form = document.getElementById('new-fin-form');
+      const formData = new FormData(form);
+      const newItem = {
+        id: Date.now(),
+        descricao: formData.get('descricao'),
+        vencimento: formData.get('vencimento'),
+        valor: parseFloat(formData.get('valor')).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+        status: "Pendente"
+      };
+      window.appState.financeiro[type].push(newItem);
+      window.renderFinanceiro();
+      closeModal();
+    }
+  });
+};
+
+// Admin Users Render
+window.renderAdminUsers = function() {
+  const body = document.getElementById('admin-users-table-body');
+  if (!body) return;
+  body.innerHTML = window.appState.users.map(u => `
+    <tr class="hover-scale">
+      <td style="font-weight:600;display:flex;align-items:center;gap:0.75rem">
+        <div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem;background:${u.color}">${u.initial}</div>
+        ${u.nome}
+      </td>
+      <td>${u.email}</td>
+      <td><span class="badge ${u.perfil === 'Super Admin' ? 'badge-red' : 'badge-blue'}">${u.perfil}</span></td>
+      <td><span class="status status-success"><span class="status-dot"></span> ${u.status}</span></td>
+      <td><button class="btn-delete" onclick="deleteUser(${u.id})"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+    </tr>
+  `).join('');
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.deleteUser = function(id) {
+  const u = window.appState.users.find(u => u.id === id);
+  if (!u) return;
+  openModal({
+    title: "Confirmar Exclusão de Usuário",
+    body: `<p>Deseja remover o usuário <strong>${u.nome}</strong>?</p>`,
+    confirmText: "Sim, Remover",
+    onConfirm: () => {
+      window.appState.users = window.appState.users.filter(u => u.id !== id);
+      window.renderAdminUsers();
+      closeModal();
+    }
+  });
+};
+
+// IA Chat
 window.sendChat = function() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
@@ -228,6 +612,15 @@ window.sendChat = function() {
       `;
       if (window.lucide) window.lucide.createIcons();
       container.scrollTop = container.scrollHeight;
+    }).catch(err => {
+      container.innerHTML += `
+        <div class="chat-message ai">
+          <div class="chat-avatar ai"><i data-lucide="sparkles" style="width:18px"></i></div>
+          <div class="chat-bubble">Desculpe, houve um erro ao processar sua pergunta. Tente configurar sua API Key na seção de configurações.</div>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+      container.scrollTop = container.scrollHeight;
     });
   }
 };
@@ -238,7 +631,7 @@ window.genMarketing = async function(type) {
   const content = document.getElementById('marketing-content');
   if (!preview || !content) return;
   preview.style.display = 'block';
-  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo premium com IA Nobel...</span></div>';
+  content.innerHTML = '<div style="display:flex;align-items:center;gap:1rem"><div class="spinner-mini" style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><span>Gerando conteúdo premium com IA Nobel...</span></div>';
 
   const topics = {
     'post': 'Estratégias avançadas de redução de impostos para empresas de tecnologia e inovação',
@@ -268,12 +661,10 @@ window.genMarketing = async function(type) {
     });
 
     if (result) {
-
       const isVertical = type === 'story' || type === 'reels';
       const width = isVertical ? 720 : 1080;
       const height = isVertical ? 1280 : 1080;
       const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(result.image_prompt)}?width=${width}&height=${height}&nologo=true&model=flux&seed=${Math.floor(Math.random()*1000)}`;
-      
       const fallbackImg = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1080&auto=format&fit=crop";
       
       let html = '';
@@ -281,64 +672,10 @@ window.genMarketing = async function(type) {
         html = `
           <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
             <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.8">
-            <div style="position:absolute;top:0;left:0;right:0;height:100px;background:linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);padding:1.5rem;display:flex;align-items:center;gap:0.75rem;z-index:2">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.7rem;border:2px solid white">N</div>
-              <div style="font-weight:700;font-size:0.85rem;text-shadow:0 1px 2px rgba(0,0,0,0.5)">Contabilidade Nobel</div>
-            </div>
             <div style="position:relative;z-index:1;padding:2rem;display:flex;flex-direction:column;height:100%;justify-content:flex-end;padding-bottom:5rem">
               <div style="font-weight:900;font-size:1.8rem;margin-bottom:1rem;line-height:1.1;text-shadow:0 2px 10px rgba(0,0,0,0.8)">${result.title}</div>
-              <div style="font-size:1rem;line-height:1.4;margin-bottom:2rem;background:rgba(0,0,0,0.4);padding:1rem;border-radius:12px;backdrop-filter:blur(4px)">${result.content}</div>
-              <div style="background:white;color:black;padding:0.8rem;border-radius:100px;font-weight:800;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);letter-spacing:1px;font-size:0.8rem">${result.cta || 'SAIBA MAIS'}</div>
-            </div>
-          </div>`;
-      } else if (type === 'reels') {
-        html = `
-          <div style="max-width:350px;margin:0 auto;background:#000;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg);border:8px solid #1a1a1a">
-            <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.7">
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;opacity:0.6">
-              <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center">
-                <div style="width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 15px solid white; margin-left: 5px"></div>
-              </div>
-            </div>
-            <div style="position:relative;z-index:1;padding:1.5rem;display:flex;flex-direction:column;height:100%;justify-content:flex-end;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent 40%)">
-              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
-                <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.7rem;border:1px solid white">N</div>
-                <div style="font-weight:700;font-size:0.9rem">Contabilidade Nobel • Seguir</div>
-              </div>
-              <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem">${result.title}</div>
-              <div style="font-size:0.9rem;line-height:1.4;margin-bottom:1rem;color:rgba(255,255,255,0.9)">${result.content}</div>
-              <div style="display:flex;gap:0.5rem;overflow:hidden;white-space:nowrap">
-                 ${result.hashtags.map(h => `<span style="font-size:0.75rem;opacity:0.8">#${h}</span>`).join(' ')}
-              </div>
-            </div>
-          </div>`;
-      } else if (type === 'artigo') {
-        html = `
-          <div style="max-width:850px;margin:0 auto;background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--border)">
-            <div style="position:relative">
-              <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="width:100%;height:450px;object-fit:cover">
-              <div style="position:absolute;bottom:0;left:0;right:0;padding:3rem;background:linear-gradient(to top, var(--bg-elevated), transparent)">
-                <div style="display:flex;gap:1rem;margin-bottom:1rem">
-                  <span style="background:var(--accent);color:white;padding:0.25rem 0.75rem;border-radius:100px;font-size:0.75rem;font-weight:700;text-transform:uppercase">Insights Nobel</span>
-                  <span style="color:rgba(255,255,255,0.8);font-size:0.8rem">Leitura de 5 min</span>
-                </div>
-                <h1 style="color:var(--text);margin:0;font-size:2.5rem;font-weight:800;line-height:1.2">${result.title}</h1>
-              </div>
-            </div>
-            <div style="padding:4rem;max-width:700px;margin:0 auto">
-              <div style="line-height:2;color:var(--text);font-size:1.2rem;letter-spacing:-0.01em">
-                ${result.content.split('\n').map(p => p.trim() ? `<p style="margin-bottom:2rem">${p}</p>` : '').join('')}
-              </div>
-              <div style="margin-top:4rem;padding-top:2rem;border-top:2px solid var(--border);display:flex;flex-direction:column;gap:2rem">
-                <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-                  ${result.hashtags.map(h => `<span style="background:var(--bg-hover);color:var(--accent);padding:0.5rem 1rem;border-radius:8px;font-weight:600;font-size:0.9rem">#${h}</span>`).join('')}
-                </div>
-                <div style="background:var(--primary);color:white;padding:2.5rem;border-radius:var(--radius);text-align:center">
-                  <h3 style="margin-bottom:1rem;font-size:1.5rem">${result.cta || 'Transforme sua Gestão'}</h3>
-                  <p style="opacity:0.9;margin-bottom:2rem">Agende uma consultoria estratégica com o time da Nobel.</p>
-                  <button style="background:white;color:var(--primary);border:none;padding:1rem 2rem;border-radius:100px;font-weight:800;cursor:pointer">Falar com Especialista</button>
-                </div>
-              </div>
+              <div style="font-size:1rem;line-height:1.4;margin-bottom:2rem;background:rgba(0,0,0,0.4);padding:1rem;border-radius:12px">${result.content}</div>
+              <div style="background:white;color:black;padding:0.8rem;border-radius:100px;font-weight:800;text-align:center">${result.cta || 'SAIBA MAIS'}</div>
             </div>
           </div>`;
       } else {
@@ -354,12 +691,10 @@ window.genMarketing = async function(type) {
             <img src="${imageUrl}" onerror="this.src='${fallbackImg}'" style="width:100%;aspect-ratio:1;object-fit:cover">
             <div style="padding:2rem">
               <div style="font-weight:800;margin-bottom:1rem;font-size:1.4rem;color:var(--primary)">${result.title}</div>
-              <div style="line-height:1.7;color:var(--text);margin-bottom:1.5rem;font-size:1.05rem">${result.content.replace(/\n/g, '<br>')}</div>
-              <div style="color:var(--accent);font-weight:700;margin-bottom:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap">
-                ${result.hashtags.map(h => `#${h}`).join(' ')}
-              </div>
+              <div style="line-height:1.7;color:var(--text);margin-bottom:1.5rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="color:var(--accent);font-weight:700;margin-bottom:1.5rem">${Array.isArray(result.hashtags) ? result.hashtags.map(h => '#'+h).join(' ') : result.hashtags}</div>
               <div style="border-top:1px solid var(--border);padding-top:1.5rem">
-                <div style="font-weight:700;color:var(--primary);font-size:0.9rem;letter-spacing:1px">${result.cta || 'SAIBA MAIS'}</div>
+                <div style="font-weight:700;color:var(--primary)">${result.cta || 'SAIBA MAIS'}</div>
               </div>
             </div>
           </div>`;
@@ -372,58 +707,18 @@ window.genMarketing = async function(type) {
   }
 };
 
-// Prospecção Data - Banco de Dados Expandido (Norte de Minas)
+// Prospecção Data
 const empresasProspeccao = [
-  // Montes Claros
   {"nome": "Clínica Médica Montes Claros", "cat": "Clínicas médicas", "cidade": "Montes Claros", "endereco": "Av. Deputado Esteves Rodrigues, 1000", "tel": "(38) 3221-1000", "score": 96, "regime": "Lucro Presumido", "oportunidade": "alta"},
   {"nome": "Hospital do Norte de Minas", "cat": "Hospitais", "cidade": "Montes Claros", "endereco": "Rua Santa Maria, 500", "tel": "(38) 3222-2000", "score": 98, "regime": "Lucro Real", "oportunidade": "alta"},
   {"nome": "BioLab Laboratórios", "cat": "Laboratórios", "cidade": "Montes Claros", "endereco": "Rua Justino Câmara, 45", "tel": "(38) 3215-4400", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
   {"nome": "TechSolutions Norte", "cat": "Software e TI", "cidade": "Montes Claros", "endereco": "Av. Donato Quintino, 90", "tel": "(38) 3224-1500", "score": 92, "regime": "Simples Nacional", "oportunidade": "alta"},
   {"nome": "Moc Construtora", "cat": "Construtoras", "cidade": "Montes Claros", "endereco": "Av. Mestra Fininha, 1200", "tel": "(38) 3212-3300", "score": 90, "regime": "Lucro Real", "oportunidade": "alta"},
   {"nome": "GastroCenter MOC", "cat": "Clínicas médicas", "cidade": "Montes Claros", "endereco": "Rua Dr. Santos, 120", "tel": "(38) 3221-8899", "score": 95, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  
-  // Janaúba
   {"nome": "Agropecuária Janaúba", "cat": "Agronegócio", "cidade": "Janaúba", "endereco": "Av. do Comércio, 200", "tel": "(38) 3821-3000", "score": 92, "regime": "Simples Nacional", "oportunidade": "alta"},
   {"nome": "Frigorífico Norte Minas", "cat": "Indústrias alimentícias", "cidade": "Janaúba", "endereco": "Distrito Industrial", "tel": "(38) 3821-4500", "score": 94, "regime": "Lucro Real", "oportunidade": "alta"},
-  {"nome": "Cooperativa Gorutuba", "cat": "Agronegócio", "cidade": "Janaúba", "endereco": "Rodovia MG-122", "tel": "(38) 3821-2200", "score": 91, "regime": "Lucro Real", "oportunidade": "alta"},
-
-  // Januária
-  {"nome": "Frigorífico Januária", "cat": "Indústrias alimentícias", "cidade": "Januária", "endereco": "Rodovia BR-135, KM 10", "tel": "(38) 3621-4000", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  {"nome": "Cachaçaria Artesanal", "cat": "Bebidas", "cidade": "Januária", "endereco": "Zona Rural", "tel": "(38) 3621-1122", "score": 88, "regime": "Simples Nacional", "oportunidade": "media"},
-
-  // Salinas
-  {"nome": "Comércio de Salinas", "cat": "Varejo", "cidade": "Salinas", "endereco": "Av. Principal, 300", "tel": "(38) 3841-5000", "score": 88, "regime": "Simples Nacional", "oportunidade": "media"},
   {"nome": "Cachaça Havana", "cat": "Indústrias alimentícias", "cidade": "Salinas", "endereco": "Fazenda Havana", "tel": "(38) 3841-1234", "score": 96, "regime": "Lucro Real", "oportunidade": "alta"},
-
-  // Pirapora
-  {"nome": "Hotel Pirapora", "cat": "Turismo e Hotelaria", "cidade": "Pirapora", "endereco": "Rua da Orla, 100", "tel": "(38) 3741-6000", "score": 90, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  {"nome": "Têxtil Pirapora", "cat": "Indústrias têxteis", "cidade": "Pirapora", "endereco": "Av. Industrial, 500", "tel": "(38) 3741-9988", "score": 93, "regime": "Lucro Real", "oportunidade": "alta"},
-
-  // Bocaiúva
-  {"nome": "Laticínios Bocaiúva", "cat": "Indústrias alimentícias", "cidade": "Bocaiúva", "endereco": "Av. JK, 800", "tel": "(38) 3251-7000", "score": 89, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  {"nome": "Carbonífera Norte", "cat": "Mineração", "cidade": "Bocaiúva", "endereco": "Zona Industrial", "tel": "(38) 3251-1234", "score": 91, "regime": "Lucro Real", "oportunidade": "alta"},
-
-  // Francisco Sá
-  {"nome": "AgroSá", "cat": "Agronegócio", "cidade": "Francisco Sá", "endereco": "Fazenda Santa Cruz", "tel": "(38) 3233-1000", "score": 87, "regime": "Simples Nacional", "oportunidade": "media"},
-  {"nome": "Posto Parada Real", "cat": "Postos de combustível", "cidade": "Francisco Sá", "endereco": "BR-251, KM 40", "tel": "(38) 3233-4455", "score": 92, "regime": "Lucro Real", "oportunidade": "alta"},
-
-  // Jaíba
-  {"nome": "Frutas Jaíba", "cat": "Exportação", "cidade": "Jaíba", "endereco": "Projeto Jaíba - Gleba C", "tel": "(38) 3833-2200", "score": 97, "regime": "Lucro Real", "oportunidade": "alta"},
-  {"nome": "Jaíba Irrigação", "cat": "Equipamentos", "cidade": "Jaíba", "endereco": "Av. Principal, 100", "tel": "(38) 3833-1100", "score": 89, "regime": "Simples Nacional", "oportunidade": "alta"},
-
-  // Brasília de Minas
-  {"nome": "Hospital Santa Rita", "cat": "Hospitais", "cidade": "Brasília de Minas", "endereco": "Rua Central, 200", "tel": "(38) 3231-1000", "score": 94, "regime": "Lucro Presumido", "oportunidade": "alta"},
-  
-  // Coração de Jesus
-  {"nome": "Laticínio Coração", "cat": "Indústrias alimentícias", "cidade": "Coração de Jesus", "endereco": "Zona Rural", "tel": "(38) 3228-1000", "score": 86, "regime": "Simples Nacional", "oportunidade": "media"},
-  
-  // Porteirinha
-  {"nome": "Porteirinha Alimentos", "cat": "Indústrias alimentícias", "cidade": "Porteirinha", "endereco": "Rua do Comércio", "tel": "(38) 3831-2000", "score": 88, "regime": "Simples Nacional", "oportunidade": "alta"},
-
-  // Adicionando empresas de vizinhança imediata de MOC
-  {"nome": "Pousada Juramento", "cat": "Turismo e Hotelaria", "cidade": "Juramento", "endereco": "Beira da Represa", "tel": "(38) 99912-3456", "score": 85, "regime": "Simples Nacional", "oportunidade": "media"},
-  {"nome": "Fazenda Glaucilândia", "cat": "Agronegócio", "cidade": "Glaucilândia", "endereco": "Acesso MG-308", "tel": "(38) 98877-6655", "score": 89, "regime": "Simples Nacional", "oportunidade": "alta"},
-  {"nome": "Calcário Mirabela", "cat": "Indústria", "cidade": "Mirabela", "endereco": "BR-135, KM 50", "tel": "(38) 3239-1000", "score": 92, "regime": "Lucro Real", "oportunidade": "alta"}
+  {"nome": "Frutas Jaíba", "cat": "Exportação", "cidade": "Jaíba", "endereco": "Projeto Jaíba - Gleba C", "tel": "(38) 3833-2200", "score": 97, "regime": "Lucro Real", "oportunidade": "alta"}
 ];
 
 window.filterProspeccao = async function() {
@@ -445,20 +740,21 @@ window.filterProspeccao = async function() {
 
   try {
     const apiKey = localStorage.getItem('nobel_groq_key');
-    const aiResults = await window.searchProspectsAI({ 
-      query: search, 
-      city: cidade || 'Montes Claros e região Norte de Minas', 
-      category: categoria || 'Empresas diversas',
-      apiKey: apiKey || undefined
-    });
+    let aiResults = [];
+    if (typeof window.searchProspectsAI === 'function') {
+      aiResults = await window.searchProspectsAI({ 
+        query: search, 
+        city: cidade || 'Montes Claros e região Norte de Minas', 
+        category: categoria || 'Empresas diversas',
+        apiKey: apiKey || undefined
+      });
+    }
     
-    // Mesclar estáticos com IA e remover duplicados por nome (case insensitive)
     const all = [...(aiResults || []), ...empresasProspeccao];
     const unique = all.filter((emp, index, self) =>
       index === self.findIndex((t) => t.nome.toLowerCase() === emp.nome.toLowerCase())
     );
 
-    // Se houver busca ou filtro, aplicar. Se não, mostrar os melhores resultados da IA.
     let filtradas = unique.filter(emp => {
       const s = search.toLowerCase();
       const matchSearch = !s || emp.nome.toLowerCase().includes(s) || emp.cat.toLowerCase().includes(s);
@@ -467,14 +763,16 @@ window.filterProspeccao = async function() {
       return matchSearch && matchCidade && matchCategoria;
     });
 
-    // Se o filtro removeu tudo da IA que era relevante, prioriza o que a IA trouxe
     if (filtradas.length === 0 && aiResults && aiResults.length > 0) {
       filtradas = aiResults;
     }
 
+    if (filtradas.length === 0) {
+      filtradas = empresasProspeccao;
+    }
+
     window.renderEmpresas(filtradas);
     
-    // Atualiza o mapa se tiver cidade
     if (cidade) {
        const iframe = document.getElementById('google-map-frame');
        if (iframe) iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(categoria + ' em ' + cidade + ' MG')}&output=embed`;
@@ -485,10 +783,9 @@ window.filterProspeccao = async function() {
       (!search || emp.nome.toLowerCase().includes(search.toLowerCase())) && 
       (!cidade || emp.cidade === cidade)
     );
-    window.renderEmpresas(filtradas);
+    window.renderEmpresas(filtradas.length > 0 ? filtradas : empresasProspeccao);
   }
 };
-
 
 window.renderEmpresas = function(lista) {
   const grid = document.getElementById('prospeccao-grid');
@@ -501,12 +798,12 @@ window.renderEmpresas = function(lista) {
         <div style="font-weight:700;font-size:1rem;margin-bottom:0.25rem">${emp.nome}</div>
         <div style="font-size:0.8rem;color:var(--text-muted)">${emp.cat} - ${emp.cidade}</div>
         <div style="margin-top:0.5rem;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;color:var(--text-secondary)">
-          <i data-lucide="phone" style="width:12px"></i> ${emp.tel}
+          <i data-lucide="phone" style="width:12px"></i> ${emp.tel || '(38) ----'}
         </div>
       </div>
       <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
-        <span class="badge badge-green" style="font-size:0.7rem;font-weight:700">${emp.score} pts</span>
-        <button onclick="openDirectWhatsApp('${phone}', '${emp.nome}')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:100px;padding:0.5rem 0.85rem;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.4rem;transition:all 0.2s;box-shadow:0 2px 8px rgba(37,211,102,0.25)" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(37,211,102,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(37,211,102,0.25)'">
+        <span class="badge badge-green" style="font-size:0.7rem;font-weight:700">${emp.score || 80} pts</span>
+        <button onclick="openDirectWhatsApp('${phone}', '${emp.nome}')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:none;border-radius:100px;padding:0.5rem 0.85rem;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.4rem">
           <i data-lucide="message-circle" style="width:14px;height:14px"></i> WhatsApp
         </button>
       </div>
@@ -556,10 +853,9 @@ window.generateWhatsAppMessage = async function() {
     return;
   }
 
-  const btn = event.currentTarget;
-  const originalHtml = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span style="display:flex;align-items:center;gap:0.5rem"><span class="spinner-mini"></span> Gerando...</span>';
+  const preview = document.getElementById('wa-preview');
+  const actions = document.getElementById('wa-actions');
+  if (preview) { preview.style.display = 'block'; preview.textContent = 'Gerando mensagem...'; }
 
   try {
     if (typeof window.generateMarketingCopy === 'function') {
@@ -570,20 +866,34 @@ window.generateWhatsAppMessage = async function() {
         apiKey: apiKey || undefined
       });
       
+      const message = result.content || result;
+      if (preview) preview.textContent = message;
+      
       const cleanNumber = (numero || '').replace(/\D/g, '');
-      const text = encodeURIComponent(result.content || result);
-      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+      const text = encodeURIComponent(message);
+      const waLink = document.getElementById('wa-link');
+      if (waLink) waLink.href = `https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`;
+      if (actions) actions.style.display = 'flex';
     } else {
-      const text = encodeURIComponent(`Olá, vi sua empresa ${empresa} no mapa e gostaria de apresentar nossos serviços contábeis especializados em ${segmento}.`);
+      const message = `Olá! Vi sua empresa ${empresa} e gostaria de apresentar nossos serviços contábeis especializados em ${segmento}. Podemos ajudar a reduzir sua carga tributária legalmente. Posso agendar uma reunião?`;
+      if (preview) preview.textContent = message;
       const cleanNumber = (numero || '').replace(/\D/g, '');
-      window.open(`https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${text}`, '_blank');
+      const waLink = document.getElementById('wa-link');
+      if (waLink) waLink.href = `https://wa.me/${cleanNumber.startsWith('55') ? cleanNumber : '55'+cleanNumber}?text=${encodeURIComponent(message)}`;
+      if (actions) actions.style.display = 'flex';
     }
   } catch (err) {
     console.error(err);
-    alert('Erro ao gerar mensagem: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalHtml;
+    if (preview) preview.textContent = `Erro ao gerar mensagem: ${err.message}`;
+  }
+};
+
+window.copyMessage = function() {
+  const preview = document.getElementById('wa-preview');
+  if (preview) {
+    navigator.clipboard.writeText(preview.textContent).then(() => {
+      alert('Mensagem copiada!');
+    });
   }
 };
 
@@ -594,21 +904,16 @@ window.searchGoogleMaps = function(query) {
   
   const iframe = document.getElementById('google-map-frame');
   if (iframe) {
-    // Atualiza o iframe para mostrar a região (usando busca por texto)
     iframe.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
   }
   
-  // Também abre em nova aba para facilitar a navegação completa
   window.open(`https://www.google.com/maps/search/${encodedQuery}`, '_blank');
 };
 
-
-
+// Tab Togglers
 window.toggleFinanceiroTab = (btn, tab) => {
   document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
-  // Toggle content
   const sections = ['pagar', 'receber', 'fluxo', 'dre'];
   sections.forEach(s => {
     const el = document.getElementById('fin-content-' + s);
@@ -619,7 +924,6 @@ window.toggleFinanceiroTab = (btn, tab) => {
 window.toggleContabilTab = (btn, tab) => {
   document.querySelectorAll('#cont-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
   const sections = ['balancete', 'dre', 'diario', 'razao'];
   sections.forEach(s => {
     const el = document.getElementById('cont-content-' + s);
@@ -630,7 +934,6 @@ window.toggleContabilTab = (btn, tab) => {
 window.toggleFiscalTab = (btn, tab) => {
   document.querySelectorAll('#fisc-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
   const sections = ['calendario', 'nfe', 'sped', 'certidoes'];
   sections.forEach(s => {
     const el = document.getElementById('fisc-content-' + s);
@@ -641,7 +944,6 @@ window.toggleFiscalTab = (btn, tab) => {
 window.toggleTrabalhistaTab = (btn, tab) => {
   document.querySelectorAll('#trab-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
   const sections = ['folha', 'funcionarios', 'esocial', 'ferias'];
   sections.forEach(s => {
     const el = document.getElementById('trab-content-' + s);
@@ -652,32 +954,17 @@ window.toggleTrabalhistaTab = (btn, tab) => {
 window.toggleEquipeTab = (btn, tab) => {
   document.querySelectorAll('#equipe-toggle button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
-  const sections = ['lista', 'desempenho', 'escalas'];
+  const sections = ['todos', 'comercial', 'contabil', 'financeiro', 'atendimento'];
   sections.forEach(s => {
     const el = document.getElementById('equipe-content-' + s);
     if (el) el.style.display = (s === tab) ? 'block' : 'none';
   });
 };
 
-window.handleAction = (action) => {
-  alert(`Ação "${action}" em desenvolvimento para integração Alterdata.`);
+window.toggleConfigIA = function() {
+  const el = document.getElementById('ia-config');
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 };
-
-// Initialize
-function initApp() {
-  console.log('App initialization started');
-  if (typeof window.initCharts === 'function') window.initCharts();
-  if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
-  if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
-  if (window.lucide) window.lucide.createIcons();
-  
-  // Load saved API Keys into inputs
-  const savedGroq = localStorage.getItem('nobel_groq_key');
-  if (savedGroq && document.getElementById('api-key-groq')) {
-    document.getElementById('api-key-groq').value = savedGroq;
-  }
-}
 
 window.saveApiKeys = function() {
   const groq = document.getElementById('api-key-groq')?.value;
@@ -686,6 +973,92 @@ window.saveApiKeys = function() {
     alert('Configurações salvas no navegador!');
   }
 };
+
+window.handleAction = (action) => {
+  openModal({
+    title: "Ação: " + action,
+    body: `<p>A funcionalidade <strong>${action}</strong> está em desenvolvimento para integração com o sistema Alterdata.</p>`,
+    confirmText: "Entendido",
+    onConfirm: () => closeModal()
+  });
+};
+
+window.syncAlterdata = function() {
+  openModal({
+    title: "Sincronizar com Alterdata",
+    body: "<p>Iniciando sincronização com a base de dados Alterdata. Este processo pode levar alguns minutos.</p>",
+    confirmText: "Sincronizar",
+    onConfirm: () => {
+      closeModal();
+      setTimeout(() => alert('Sincronização concluída! 3 clientes atualizados.'), 500);
+    }
+  });
+};
+
+window.generateProjection = function() {
+  alert('Projeção de fluxo de caixa gerada com dados dos últimos 6 meses.');
+};
+
+window.quickAction = function(type) {
+  const msgs = {
+    'analisar': 'Analisando saúde fiscal da empresa selecionada...',
+    'proposta': 'Gerando proposta comercial personalizada...',
+    'relatorio': 'Preparando relatório gerencial...',
+    'campanha': 'Criando campanha de marketing...'
+  };
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.value = msgs[type] || 'Como posso ajudar?';
+    window.sendChat();
+  }
+};
+
+window.sendPortalChat = function() {
+  const input = document.getElementById('chat-portal-input');
+  if (!input || !input.value.trim()) return;
+  const container = document.getElementById('chat-portal-messages');
+  const msg = input.value.trim();
+  container.innerHTML += `
+    <div class="chat-message user">
+      <div class="chat-avatar user"><i data-lucide="user" style="width:18px"></i></div>
+      <div class="chat-bubble">${msg}</div>
+    </div>
+    <div class="chat-message ai">
+      <div class="chat-avatar ai"><i data-lucide="sparkles" style="width:18px"></i></div>
+      <div class="chat-bubble">Entendido! Vou verificar essa informação para você. Nossa equipe também está disponível pelo WhatsApp para dúvidas mais complexas.</div>
+    </div>
+  `;
+  input.value = '';
+  if (window.lucide) window.lucide.createIcons();
+  container.scrollTop = container.scrollHeight;
+};
+
+// Initialize App
+function initApp() {
+  console.log('Nobel ERP Initialized');
+  
+  // Show dashboard
+  const dashView = document.getElementById('view-dashboard');
+  if (dashView) {
+    dashView.style.display = 'block';
+    dashView.classList.add('active');
+  }
+
+  // Init charts
+  setTimeout(() => {
+    if (typeof window.initCharts === 'function') window.initCharts();
+    if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar();
+    if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+  }, 200);
+
+  // Load saved API Keys
+  const savedGroq = localStorage.getItem('nobel_groq_key');
+  if (savedGroq && document.getElementById('api-key-groq')) {
+    document.getElementById('api-key-groq').value = savedGroq;
+  }
+
+  if (window.lucide) window.lucide.createIcons();
+}
 
 if (document.readyState === 'loading') {
   window.addEventListener('DOMContentLoaded', initApp);

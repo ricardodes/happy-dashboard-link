@@ -259,20 +259,20 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão de Clientes (Base Nobel)</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo cliente manual...')">
+          <button class="nav-cta hover-scale" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="openNewClientModal()">
             <i data-lucide="user-plus" style="width:16px"></i> Novo Cliente
           </button>
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600;display:flex;align-items:center" onclick="alert('Integração API Alterdata aguardando chave...')">
+          <button class="header-btn hover-scale" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600;display:flex;align-items:center" onclick="syncAlterdata()">
             <i data-lucide="refresh-cw" style="width:16px"></i> Sincronizar Agora
           </button>
         </div>
       </div>
-      <div class="card">
+      <div class="card glass-morphism">
         <div class="card-header">
           <div class="card-title"><i data-lucide="users"></i> Carteira de Clientes</div>
           <div class="search-box" style="margin:0;max-width:300px">
             <i data-lucide="search"></i>
-            <input type="text" placeholder="Filtrar por nome ou CNPJ...">
+            <input type="text" placeholder="Filtrar por nome ou CNPJ..." onkeyup="filterClientes(this.value)">
           </div>
         </div>
         <table class="data-table">
@@ -286,31 +286,8 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight:600">Supermercado Central MOC</td>
-              <td>00.123.456/0001-99</td>
-              <td><span class="badge badge-blue">Lucro Real</span></td>
-              <td>Ana Paula (Fiscal)</td>
-              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:600">Clínica Vida Plena</td>
-              <td>11.222.333/0001-88</td>
-              <td><span class="badge badge-green">Simples Nacional</span></td>
-              <td>Carlos Mendes (Contábil)</td>
-              <td><span class="status status-warning"><span class="status-dot"></span> Pendência</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:600">Construtora Norte Minas</td>
-              <td>22.333.444/0001-77</td>
-              <td><span class="badge badge-blue">Lucro Presumido</span></td>
-              <td>Ana Paula (Fiscal)</td>
-              <td><span class="status status-success"><span class="status-dot"></span> Regular</span></td>
-              <td><button class="header-btn" style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center"><i data-lucide="eye" style="width:16px"></i></button></td>
-            </tr>
+          <tbody id="clientes-table-body">
+            <!-- Dinâmico via JS -->
           </tbody>
         </table>
       </div>
@@ -324,178 +301,16 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">CRM Comercial</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="header-btn" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
+          <button class="header-btn hover-scale" style="width:auto;padding:0 1rem;border-radius:100px;gap:0.5rem;font-size:0.85rem;font-weight:600">
             <i data-lucide="filter" style="width:16px"></i> Filtros
           </button>
-          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer">
+          <button class="nav-cta hover-scale" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="openNewLeadModal()">
             <i data-lucide="plus" style="width:16px"></i> Novo Lead
           </button>
         </div>
       </div>
-      <div class="kanban">
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);display:inline-block"></span> Lead Novo</div>
-            <span class="kanban-count">8</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">TechSolutions Brasil</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Tecnologia • São Paulo</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">RF</div>
-              <span>Carlos M.</span>
-              <span style="margin-left:auto">R$ 4.2K/mês</span>
-            </div>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Restaurante Sabor & Arte</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Alimentação • Campinas</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">JA</div>
-              <span>Julia A.</span>
-              <span style="margin-left:auto">R$ 1.8K/mês</span>
-            </div>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Clínica OdontoVida</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Saúde • Santos</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">LM</div>
-              <span>Luis M.</span>
-              <span style="margin-left:auto">R$ 3.5K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--info);display:inline-block"></span> Contato</div>
-            <span class="kanban-count">5</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Construtora Horizonte</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Construção • Rio de Janeiro</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">AN</div>
-              <span>Ana P.</span>
-              <span style="margin-left:auto">R$ 8.5K/mês</span>
-            </div>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Farmácia Bem Estar</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Saúde • Curitiba</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">TB</div>
-              <span>Thiago B.</span>
-              <span style="margin-left:auto">R$ 2.2K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block"></span> Qualificação</div>
-            <span class="kanban-count">4</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Advocacia Silva & Partners</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Serviços • Belo Horizonte</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">FS</div>
-              <span>Fernando S.</span>
-              <span style="margin-left:auto">R$ 6.0K/mês</span>
-            </div>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Academia PowerFit</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Esportes • Florianópolis</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">RK</div>
-              <span>Roberta K.</span>
-              <span style="margin-left:auto">R$ 2.8K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block"></span> Diagnóstico</div>
-            <span class="kanban-count">3</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Transportadora Rápida</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Logística • Porto Alegre</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">MC</div>
-              <span>Marcos C.</span>
-              <span style="margin-left:auto">R$ 12K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:#a855f7;display:inline-block"></span> Proposta</div>
-            <span class="kanban-count">6</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Hospital Santa Maria</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Saúde • São Paulo</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">DR</div>
-              <span>Dra. Rosa</span>
-              <span style="margin-left:auto">R$ 25K/mês</span>
-            </div>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Imobiliária Premium</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Imobiliário • Salvador</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">GL</div>
-              <span>Gustavo L.</span>
-              <span style="margin-left:auto">R$ 5.5K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:#f97316;display:inline-block"></span> Negociação</div>
-            <span class="kanban-count">2</span>
-          </div>
-          <div class="kanban-card">
-            <div class="kanban-card-title">Autopeças Turbo</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Comércio • Goiânia</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">PS</div>
-              <span>Paulo S.</span>
-              <span style="margin-left:auto">R$ 3.2K/mês</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary);display:inline-block"></span> Fechado</div>
-            <span class="kanban-count">12</span>
-          </div>
-          <div class="kanban-card" style="border-left:3px solid var(--accent)">
-            <div class="kanban-card-title">Mercado Central</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Varejo • Recife</div>
-            <div class="kanban-card-meta">
-              <div class="kanban-card-avatar">AL</div>
-              <span>Amanda L.</span>
-              <span style="margin-left:auto;color:var(--accent);font-weight:700">R$ 4.8K/mês ✓</span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-header">
-            <div class="kanban-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--danger);display:inline-block"></span> Perdido</div>
-            <span class="kanban-count">3</span>
-          </div>
-          <div class="kanban-card" style="opacity:0.6">
-            <div class="kanban-card-title">Escritório Contábil XYZ</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem">Serviços • Manaus</div>
-            <div class="kanban-card-meta">
-              <span style="color:var(--danger);font-size:0.75rem">Preço elevado</span>
-            </div>
-          </div>
-        </div>
+      <div class="kanban" id="crm-kanban">
+        <!-- Dinâmico via JS -->
       </div>
     </div>
 
@@ -1117,18 +932,19 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer" onclick="handleAction('Novo Recebimento')">
-            <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
-          </button>
+        <div class="card glass-morphism">
+          <div class="card-header">
+            <div class="card-title"><i data-lucide="list"></i> Contas a Receber - Junho/2024</div>
+            <button class="nav-cta hover-scale" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer" onclick="openNewFinancialModal('receber')">
+              <i data-lucide="plus" style="width:14px"></i> Novo Recebimento
+            </button>
           </div>
           <table class="data-table">
             <thead>
               <tr><th>Cliente</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
             </thead>
-            <tbody>
-              <tr><td style="font-weight:600">Hospital Santa Maria</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 25.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Clínica Vida Plena</td><td>Consultoria Especial</td><td>10/06/2024</td><td style="font-weight:700">R$ 5.500,00</td><td><span class="status status-warning"><span class="status-dot"></span> Pendente</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600">Construtora Horizonte</td><td>Honorários Maio</td><td>05/06/2024</td><td style="font-weight:700">R$ 12.000,00</td><td><span class="status status-success"><span class="status-dot"></span> Recebido</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            <tbody id="financeiro-receber-table-body">
+              <!-- Dinâmico -->
             </tbody>
           </table>
         </div>
@@ -1138,7 +954,7 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title"><i data-lucide="activity"></i> Fluxo de Caixa Projetado</div>
-            <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Gerar nova projeção de fluxo de caixa...')">
+            <button class="nav-cta hover-scale" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="generateProjection()">
               <i data-lucide="refresh-cw" style="width:14px"></i> Gerar Projeção
             </button>
           </div>
@@ -1268,7 +1084,7 @@
             <button onclick="toggleFiscalTab(this,'sped')">SPED</button>
             <button onclick="toggleFiscalTab(this,'certidoes')">Certidões</button>
           </div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar nova obrigação fiscal...')">
+          <button class="nav-cta hover-scale" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="openNewFiscalModal()">
             <i data-lucide="plus" style="width:14px"></i> Cadastrar
           </button>
         </div>
@@ -1386,7 +1202,7 @@
             <button onclick="toggleTrabalhistaTab(this,'esocial')">eSocial Equipe</button>
             <button onclick="toggleTrabalhistaTab(this,'ferias')">Escala Férias</button>
           </div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Cadastrar novo colaborador ou evento DP...')">
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="openNewEmployeeModal()">
             <i data-lucide="plus" style="width:14px"></i> Cadastrar
           </button>
         </div>
@@ -1794,7 +1610,7 @@
             <button onclick="toggleEquipeTab(this,'financeiro')">Financeiro</button>
             <button onclick="toggleEquipeTab(this,'atendimento')">Atendimento</button>
           </div>
-          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="alert('Adicionar novo membro à equipe...')">
+          <button class="nav-cta" style="padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:0.4rem" onclick="openNewTeamMemberModal()">
             <i data-lucide="plus" style="width:14px"></i> Novo Membro
           </button>
         </div>
@@ -1874,7 +1690,7 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Gestão Integrada de Prazos</h2>
         </div>
         <div style="display:flex;gap:0.75rem">
-          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="alert('Cadastrar novo evento na agenda...')">
+          <button class="nav-cta" style="padding:0.6rem 1.2rem;border-radius:100px;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;border:none;cursor:pointer" onclick="openNewEventModal()">
             <i data-lucide="calendar-plus" style="width:16px"></i> Novo Evento
           </button>
         </div>
@@ -1942,11 +1758,8 @@
           </div>
           <table class="data-table">
             <thead><tr><th>Usuário</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:600;display:flex;align-items:center;gap:0.75rem"><div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem">AN</div> Admin Nobel</td><td>admin@nobel.com</td><td><span class="badge badge-red">Super Admin</span></td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600;display:flex;align-items:center;gap:0.75rem"><div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem;background:var(--info)">CM</div> Carlos Mendes</td><td>carlos@nobel.com</td><td><span class="badge badge-blue">Comercial</span></td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600;display:flex;align-items:center;gap:0.75rem"><div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem;background:var(--warning)">AP</div> Ana Paula</td><td>ana@nobel.com</td><td><span class="badge badge-green">Contábil</span></td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
-              <tr><td style="font-weight:600;display:flex;align-items:center;gap:0.75rem"><div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem;background:var(--danger)">JR</div> Julia Rocha</td><td>julia@nobel.com</td><td><span class="badge badge-orange">Atendimento</span></td><td><span class="status status-success"><span class="status-dot"></span> Ativo</span></td><td><i data-lucide="more-horizontal" style="width:16px;color:var(--text-muted);cursor:pointer"></i></td></tr>
+            <tbody id="admin-users-table-body">
+              <!-- Dinâmico via JS -->
             </tbody>
           </table>
         </div>
@@ -2039,7 +1852,26 @@
       </div>
     </div>
 
-  </div> <!-- end content -->
+    </div> <!-- end content -->
+
+    <!-- Generic Modal Container -->
+    <div id="modal-overlay" class="modal-overlay" onclick="if(event.target === this) closeModal()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title" class="font-display">Título do Modal</h3>
+          <button class="modal-close" onclick="closeModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div id="modal-body" class="modal-body">
+          <!-- Conteúdo dinâmico aqui -->
+        </div>
+        <div id="modal-footer" class="modal-footer">
+          <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button id="modal-confirm-btn" class="btn-primary">Confirmar</button>
+        </div>
+      </div>
+    </div>
 </div> <!-- end main -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
