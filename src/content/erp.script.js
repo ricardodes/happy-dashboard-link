@@ -505,28 +505,39 @@ Gostaria de agendar um diagnóstico gratuito de 30 minutos? Sem compromisso.
 Aguardo seu retorno!`,
 
     'amigavel': `Oi! Tudo bem? 😊
+ 
+ Sou da Contabilidade Nobel e vi que a ${empresa} está crescendo muito! Parabéns!
+ 
+ Só queria te contar que muitas empresas do setor de ${segmento} acabam pagando mais impostos do que deveriam...
+ 
+ A gente pode fazer uma análise gratuita pra ver se isso tá acontecendo com vocês também. Topa?
+ 
+ Me avisa que eu agendo! 👍`,
+ 
+     'direto': `Olá, sou da Contabilidade Nobel.
+ 
+ Oferecemos redução de até 30% na carga tributária para empresas de ${segmento}.
+ 
+ Diagnóstico gratuito em 24h.
+ 
+ Interessado?`
+   };
+ 
+   const { generateMarketingCopy } = await import('@/lib/erp-ai.functions');
+   const preview = document.getElementById('wa-preview');
+   const actions = document.getElementById('wa-actions');
+   preview.style.display = 'block';
+   preview.innerHTML = '<div class="spinner" style="width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div>';
 
-Sou da Contabilidade Nobel e vi que a ${empresa} está crescendo muito! Parabéns!
-
-Só queria te contar que muitas empresas do setor de ${segmento} acabam pagando mais impostos do que deveriam...
-
-A gente pode fazer uma análise gratuita pra ver se isso tá acontecendo com vocês também. Topa?
-
-Me avisa que eu agendo! 👍`,
-
-    'direto': `Olá, sou da Contabilidade Nobel.
-
-Oferecemos redução de até 30% na carga tributária para empresas de ${segmento}.
-
-Diagnóstico gratuito em 24h.
-
-Interessado?`
-  };
-
-  const msg = templates[waTone] || templates['profissional'];
-  preview.textContent = msg;
-  preview.style.display = 'block';
-  actions.style.display = 'flex';
+   try {
+     const result = await generateMarketingCopy({
+       topic: `Prospecção para ${empresa} (${segmento})`,
+       channel: 'whatsapp',
+       tone: waTone
+     });
+     const msg = result ? result.content : (templates[waTone] || templates['profissional']);
+     preview.textContent = msg;
+     actions.style.display = 'flex';
 
   if (numero) {
     const clean = numero.replace(/\D/g, '').replace(/^0/, '');
