@@ -537,12 +537,18 @@ function ClientsTab() {
 
     <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
       <Card>
-        <CardHeader><CardTitle>Novo cliente</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Novo cliente Nobel</CardTitle></CardHeader>
         <CardContent className="space-y-3">
-          <div><Label>Nome / Razão social</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-          <div><Label>CNPJ/CPF</Label><Input value={form.document} onChange={(e) => setForm({ ...form, document: e.target.value })} /></div>
-          <div><Label>Segmento</Label><Input value={form.segment} onChange={(e) => setForm({ ...form, segment: e.target.value })} /></div>
+          <div className="grid grid-cols-2 gap-2">
+            <div><Label>Alterdata ID</Label><Input value={form.alterdata_id} placeholder="ID da API" onChange={(e) => setForm({ ...form, alterdata_id: e.target.value })} /></div>
+            <div><Label>Nome / Razão social</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div><Label>CNPJ/CPF</Label><Input value={form.document} onChange={(e) => setForm({ ...form, document: e.target.value })} /></div>
+            <div><Label>Segmento</Label><Input value={form.segment} onChange={(e) => setForm({ ...form, segment: e.target.value })} /></div>
+          </div>
           <div><Label>Honorário mensal (R$)</Label><Input type="number" step="0.01" value={form.monthly_fee} onChange={(e) => setForm({ ...form, monthly_fee: e.target.value })} /></div>
+
           <div className="grid grid-cols-2 gap-2">
             <div><Label>E-mail</Label><Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
             <div><Label>Telefone</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
