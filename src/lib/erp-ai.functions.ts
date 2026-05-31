@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-3-flash-preview";
+const MODEL = "google/gemini-2.5-pro";
 
 async function callAI(systemPrompt: string, userPrompt: string): Promise<string> {
   const key = process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
@@ -67,25 +67,27 @@ export const generateMarketingCopy = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const system =
-      "Você é um copywriter de marketing de elite para uma firma de contabilidade premium chamada 'Contabilidade Nobel'. " +
-      "Gere um conteúdo de altíssimo nível, persuasivo, educativo e sofisticado, em português brasileiro. " +
+      "Você é um copywriter de marketing de elite especializado em B2B para contabilidade premium. " +
+      "Gere um conteúdo de altíssimo nível, sofisticado, autoritário e educativo, focado em atrair clientes de alto ticket para a 'Contabilidade Nobel'. " +
       "Responda em JSON estrito com os campos: { \"title\": string, \"content\": string, \"hashtags\": string[], \"image_prompt\": string }. " +
-      "O 'image_prompt' deve ser em inglês, altamente detalhado, estilo fotografia corporativa cinematográfica ou arte 3D minimalista premium, sem texto na imagem, adequado para Pollinations.ai. " +
-      "Capriche na profundidade do conteúdo, use gatilhos mentais de autoridade e exclusividade. Nada além do JSON. Sem markdown, sem cercas de código.";
+      "O 'image_prompt' deve ser em inglês, altamente detalhado, descrevendo uma cena de fotografia corporativa cinematográfica, iluminação dramática, minimalista e luxuosa, sem texto na imagem. " +
+      "NÃO use markdown no conteúdo, use apenas quebras de linha normais. Responda apenas o JSON.";
     const tone = data.tone ?? "profissional, confiável e acessível";
     const user = `Canal: ${data.channel}\nTom: ${tone}\nTema: ${data.topic}`;
     const raw = await callAI(system, user);
-    // Tenta extrair JSON mesmo se vier com cercas
-    const cleaned = raw.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
+    // Robust JSON extraction
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    const cleaned = jsonMatch ? jsonMatch[0] : raw;
     let parsed: { title: string; content: string; hashtags: string[]; image_prompt: string };
     try {
       parsed = JSON.parse(cleaned);
-    } catch {
+    } catch (e) {
+      console.error("JSON Parse Error:", e, "Raw:", raw);
       parsed = {
-        title: "Post sugerido",
+        title: "Conteúdo Exclusivo Nobel",
         content: raw,
-        hashtags: [],
-        image_prompt: data.topic,
+        hashtags: ["ContabilidadeNobel", "InteligenciaFinanceira"],
+        image_prompt: data.topic + ", cinematic corporate photography, luxury minimalist office",
       };
     }
     return parsed;

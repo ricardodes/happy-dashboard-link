@@ -268,17 +268,52 @@ window.genMarketing = async function(type) {
     });
 
     if (result) {
-      const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(result.image_prompt)}?width=800&height=800&seed=${Math.floor(Math.random()*1000)}`;
-      content.innerHTML = `
-        <div style="background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
-          <img src="${imageUrl}" style="width:100%;height:300px;object-fit:cover">
-          <div style="padding:2rem">
-            <h3 style="margin-bottom:1rem">${result.title}</h3>
-            <p style="line-height:1.6">${result.content.replace(/\n/g, '<br>')}</p>
-            <div style="margin-top:1.5rem;color:var(--accent)">${result.hashtags.map(h => `#${h}`).join(' ')}</div>
-          </div>
-        </div>
-      `;
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(result.image_prompt)}?width=1080&height=1080&nologo=true&model=flux&seed=${Math.floor(Math.random()*1000)}`;
+      
+      let html = '';
+      if (type === 'story' || type === 'reels') {
+        html = `
+          <div style="max-width:350px;margin:0 auto;background:linear-gradient(135deg,#0f5e3e,#00d084);border-radius:var(--radius);overflow:hidden;position:relative;aspect-ratio:9/16;color:white;box-shadow:var(--shadow-lg)">
+            <img src="${imageUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.6">
+            <div style="position:relative;z-index:1;padding:2rem;display:flex;flex-direction:column;height:100%;justify-content:center;text-align:center">
+              <div style="font-weight:900;font-size:1.5rem;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,0.3)">${result.title}</div>
+              <div style="font-size:1.1rem;line-height:1.4;margin-bottom:2rem">${result.content.substring(0, 150)}...</div>
+              <div style="background:white;color:#0f5e3e;padding:0.75rem 1.5rem;border-radius:100px;font-weight:800;align-self:center;box-shadow:0 4px 12px rgba(0,0,0,0.2)">SAIBA MAIS</div>
+            </div>
+          </div>`;
+      } else if (type === 'artigo') {
+        html = `
+          <div style="max-width:800px;margin:0 auto;background:var(--bg-elevated);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+            <img src="${imageUrl}" style="width:100%;height:350px;object-fit:cover">
+            <div style="padding:2.5rem">
+              <h2 style="color:var(--primary);margin-bottom:1.5rem;font-size:1.75rem">${result.title}</h2>
+              <div style="line-height:1.8;color:var(--text);font-size:1.1rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap">
+                ${result.hashtags.map(h => `<span style="color:var(--accent);font-weight:600">#${h}</span>`).join(' ')}
+              </div>
+            </div>
+          </div>`;
+      } else {
+        html = `
+          <div style="max-width:500px;margin:0 auto;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+            <div style="padding:1rem;display:flex;align-items:center;gap:0.75rem">
+              <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:900">N</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem">Contabilidade Nobel</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">Inteligência Contábil</div>
+              </div>
+            </div>
+            <img src="${imageUrl}" style="width:100%;aspect-ratio:1;object-fit:cover">
+            <div style="padding:1.5rem">
+              <div style="font-weight:700;margin-bottom:0.75rem;font-size:1.1rem">${result.title}</div>
+              <div style="line-height:1.6;color:var(--text);margin-bottom:1rem">${result.content.replace(/\n/g, '<br>')}</div>
+              <div style="color:var(--accent);font-weight:600">
+                ${result.hashtags.map(h => `#${h}`).join(' ')}
+              </div>
+            </div>
+          </div>`;
+      }
+      content.innerHTML = html;
     }
   } catch (err) {
     content.innerHTML = `<div style="color:var(--danger)">Erro: ${err.message}</div>`;
