@@ -52,11 +52,11 @@ window.showView = function(viewId, target = null) {
   if (viewId === 'dashboard') {
     setTimeout(() => { if (typeof window.initCharts === 'function') window.initCharts(); }, 100);
   }
-  if (viewId === 'fiscal') {
-    setTimeout(() => { if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar(); }, 100);
-  }
-  if (viewId === 'agenda') {
-    setTimeout(() => { if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar(); }, 100);
+  if (viewId === 'fiscal' || viewId === 'agenda') {
+    setTimeout(() => { 
+      if (typeof window.initFiscalCalendar === 'function') window.initFiscalCalendar(); 
+      if (typeof window.initAgendaCalendar === 'function') window.initAgendaCalendar();
+    }, 100);
   }
   if (viewId === 'prospeccao') {
     setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
