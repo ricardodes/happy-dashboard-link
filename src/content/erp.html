@@ -1158,10 +1158,12 @@
               <i data-lucide="upload" style="width:14px"></i> Importar
             </button>
           </div>
-          <div style="padding:2rem;text-align:center;color:var(--text-muted)">
-             <i data-lucide="folder-open" style="width:48px;margin-bottom:1rem;opacity:0.3"></i>
-             <p>Selecione um cliente para visualizar os arquivos SPED gerados.</p>
-          </div>
+          <table class="data-table">
+            <thead><tr><th>Cliente</th><th>Tipo</th><th>Período</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="fiscal-sped-table-body">
+              <!-- Dinâmico -->
+            </tbody>
+          </table>
         </div>
       </div>
 
