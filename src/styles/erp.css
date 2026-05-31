@@ -1,7 +1,9 @@
 .erp-root {
+  /* Harmony Color Palette */
   --primary: #0f5e3e;
   --primary-light: #1a8a5c;
   --accent: #00d084;
+  --accent-vibrant: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
   --info: #3b82f6;
@@ -17,8 +19,10 @@
   --shadow: 0 4px 24px rgba(0,0,0,0.08);
   --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
   --glass: rgba(255,255,255,0.85);
+  --glass-dark: rgba(15,23,42,0.8);
   --radius: 16px;
   --radius-sm: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 [data-theme="light"] {
   --bg: #f8faf9;
