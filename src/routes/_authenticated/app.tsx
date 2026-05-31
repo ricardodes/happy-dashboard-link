@@ -38,6 +38,12 @@ const BRL = (n: number) =>
 function ErpPage() {
   const navigate = useNavigate();
 
+  // Expose marketing functions globally
+  useEffect(() => {
+    (window as any).generateMarketingCopy = generateMarketingCopy;
+    (window as any).generateBusinessInsights = generateBusinessInsights;
+  }, []);
+
   return (
     <div className="erp-root" style={{ background: '#f8fafc', minHeight: '100vh', width: '100%' }}>
       <InjectHtml
