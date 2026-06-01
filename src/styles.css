@@ -13,3 +13,57 @@ html, body {
   width: 100%;
   height: 100%;
 }
+
+/* PROFESSIONAL BUTTONS REFINEMENT */
+.btn, .nav-cta, .btn-primary, button:not(.cal-day):not(.wa-tone) {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-primary, .nav-cta {
+  background: linear-gradient(135deg, #0f5e3e 0%, #16a34a 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(15, 94, 62, 0.3) !important;
+}
+
+.btn-primary:hover, .nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(15, 94, 62, 0.4) !important;
+  filter: brightness(1.05);
+}
+
+.btn-primary:active, .nav-cta:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* THEME DARK REFINEMENT */
+[data-theme="dark"], :root:not([data-theme="light"]) {
+  --bg: #0f172a;
+  --bg-elevated: #1e293b;
+  --bg-card: #1e293b;
+  --bg-hover: #334155;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* SECTION SPACING FIX */
+.section {
+  padding: 5rem 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* REMOVE DEAD SPACES */
+.content-area, .view {
+  padding: 2.5rem !important;
+}
