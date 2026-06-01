@@ -77,30 +77,26 @@
 
 <!-- MAIN -->
 <div class="main">
-  <header class="header">
+  <header class="header" style="background:var(--bg-card);border-bottom:1px solid var(--border);padding:0 2rem;height:70px">
     <div class="header-left">
-      <button class="menu-toggle" onclick="toggleSidebar()">
+      <button class="menu-toggle" onclick="toggleSidebar()" style="background:var(--bg-hover);border-radius:10px;border:none;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--text)">
         <i data-lucide="menu" style="width:20px;height:20px"></i>
       </button>
-      <h1 class="header-title font-display" id="page-title">Dashboard Executivo</h1>
+      <h1 class="header-title font-display" id="page-title" style="font-size:1.25rem;font-weight:700">Dashboard Executivo</h1>
     </div>
-    <div class="search-box">
-      <i data-lucide="search"></i>
-      <input type="text" placeholder="Buscar em toda a plataforma...">
+    <div class="search-box" style="background:var(--bg-hover);border-radius:12px;padding:0 1rem;height:44px;flex:1;max-width:400px;display:flex;align-items:center;gap:0.75rem;border:1px solid var(--border)">
+      <i data-lucide="search" style="width:18px;color:var(--text-muted)"></i>
+      <input type="text" placeholder="Buscar em toda a plataforma..." style="background:transparent;border:none;color:var(--text);font-size:0.9rem;width:100%">
     </div>
-    <div class="header-actions">
-      <button class="header-btn" onclick="toggleAppTheme()" title="Tema" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
+    <div class="header-actions" style="display:flex;gap:0.75rem;align-items:center">
+      <button class="header-btn" onclick="toggleAppTheme()" title="Alternar Tema" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(245,158,11,0.2)">
         <i data-lucide="sun" id="app-theme-icon" style="width:20px;height:20px"></i>
       </button>
-      <button class="header-btn" title="Notificações" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border); position: relative">
+      <button class="header-btn" title="Notificações" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;border:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(15,94,62,0.2);position:relative">
         <i data-lucide="bell" style="width:20px;height:20px"></i>
-        <span class="dot" style="position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-hover)"></span>
+        <span class="dot" style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #fff; border-radius: 50%; border: 2px solid var(--primary)"></span>
       </button>
-      <button class="header-btn" title="Mensagens" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
-        <i data-lucide="message-square" style="width:20px;height:20px"></i>
-      </button>
-      <div class="user-avatar" style="width:40px;height:40px;cursor:pointer; border-radius: 12px; background: var(--primary); color: white; display: flex; align-items: center; justify-content:center; font-weight: 800; font-size: 0.9rem">AN</div>
-
+      <div class="user-avatar" style="width:40px;height:40px;cursor:pointer; border-radius: 12px; background: var(--accent); color: white; display: flex; align-items: center; justify-content:center; font-weight: 800; font-size: 0.9rem; box-shadow:0 4px 10px rgba(0,208,132,0.2)">AN</div>
     </div>
   </header>
 
