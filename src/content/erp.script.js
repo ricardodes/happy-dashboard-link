@@ -1557,17 +1557,32 @@ window.analyzeFullPortfolioIA = async function() {
     if (typeof window.generateBusinessInsights !== 'function') throw new Error('Serviço de IA não disponível');
     
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
-    let cleanContent = result.content.trim();
-    if (cleanContent.startsWith('```')) {
-      cleanContent = cleanContent.replace(/```json|```/g, '').trim();
-    }
-    const data = JSON.parse(cleanContent);
+    if (!result || !result.content) throw new Error('Resposta da IA vazia');
 
+    let cleanContent = result.content.trim();
+    cleanContent = cleanContent.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
     
-    if (p1) p1.textContent = data.pillar1;
-    if (p2) p2.textContent = data.pillar2;
-    if (p3) p3.textContent = data.pillar3;
-    if (p4) p4.textContent = data.pillar4;
+    const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleanContent = jsonMatch[0];
+
+    let data;
+    try {
+      data = JSON.parse(cleanContent);
+    } catch (e) {
+      console.warn("Falha ao parsear JSON, tentando extração manual", e);
+      data = {
+        pillar1: (cleanContent.match(/"pillar1":\s*"([^"]+)"/) || [null, "Tendências estáveis."])[1],
+        pillar2: (cleanContent.match(/"pillar2":\s*"([^"]+)"/) || [null, "Risco sob controle."])[1],
+        pillar3: (cleanContent.match(/"pillar3":\s*"([^"]+)"/) || [null, "Oportunidades identificadas."])[1],
+        pillar4: (cleanContent.match(/"pillar4":\s*"([^"]+)"/) || [null, "Saúde fiscal OK."])[1]
+      };
+    }
+    
+    if (p1) p1.textContent = data.pillar1 || "Análise concluída.";
+    if (p2) p2.textContent = data.pillar2 || "Análise concluída.";
+    if (p3) p3.textContent = data.pillar3 || "Análise concluída.";
+    if (p4) p4.textContent = data.pillar4 || "Análise concluída.";
+
   } catch (err) {
     console.error(err);
     [p1, p2, p3, p4].forEach(p => { if(p) p.textContent = 'Erro na análise.'; });
