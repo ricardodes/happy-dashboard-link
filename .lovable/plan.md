@@ -1,48 +1,27 @@
-# Unificação Landing + ERP Nobel
+## Plano de Refatoração e Otimização - Nobel ERP Premium
 
-## Estrutura de rotas
+Este plano visa transformar a estrutura atual (HTML/JS monolítico) em uma arquitetura moderna, escalável e de alta performance, focando na modularização e na robustez das integrações de IA.
 
-```
-/              → Landing pública (do index.html)
-/login         → Tela de login (email/senha)
-/app           → Dashboard ERP (do app.html) — protegido
-```
+### Etapa 1: Modularização e Estrutura de Código
+*   **Divisão de Scripts:** Quebrar o `erp.script.js` (atualmente com +1500 linhas) em módulos específicos (ex: `ai-engine.js`, `ui-manager.js`, `data-service.js`).
+*   **Componentização de UI:** Extrair elementos repetitivos do HTML (cards, botões, modais) para templates reutilizáveis ou componentes React para reduzir a duplicidade de código CSS/HTML.
+*   **Gestão de Estado:** Implementar um padrão de observabilidade para que mudanças nos dados (ex: novos clientes) atualizem a interface automaticamente sem chamadas manuais a funções de renderização.
 
-CTA "Acessar Plataforma" da landing → `/login` → `/app`.
+### Etapa 2: Otimização da Camada de Inteligência Artificial
+*   **Padronização de Prompts:** Centralizar todos os prompts de IA em um arquivo de configuração, permitindo ajustes finos de "System Prompt" sem alterar a lógica de execução.
+*   **Tratamento de Erros Multinível:** Refinar os fallbacks de processamento JSON para garantir que, mesmo em falhas parciais da API, o usuário receba insights úteis.
+*   **Cache de Insights:** Implementar armazenamento local (SessionStorage) para resultados de análises de IA, evitando chamadas repetitivas e desnecessárias para o mesmo contexto.
 
-## Estratégia de portagem (pragmática)
+### Etapa 3: Performance e UX (Interface do Usuário)
+*   **Arquitetura CSS:** Migrar estilos inline e blocos de `<style>` dispersos para uma estrutura de variáveis CSS centralizada (Design Tokens), facilitando a manutenção do tema claro/escuro.
+*   **Lazy Loading:** Implementar carregamento progressivo para as visões do sistema (views), carregando dados pesados (gráficos e tabelas longas) apenas quando a aba for ativada.
+*   **Otimização de Assets:** Comprimir ícones e bibliotecas externas, garantindo que o tempo de carregamento inicial seja inferior a 1.5 segundos.
 
-Converter 4600 linhas de HTML/CSS/JS artesanal para JSX puro consumiria muito sem ganho visual. Em vez disso:
+### Etapa 4: Integração e Segurança
+*   **Sincronização com Alterdata:** Fortalecer a camada de integração com a API do Alterdata, incluindo logs de sincronização e tratamento de conflitos de dados.
+*   **Validação de Dados:** Adicionar camadas de validação (Sanitization) em todos os inputs do sistema para prevenir falhas de segurança e garantir a integridade da base de dados.
 
-1. **CSS** dos dois arquivos → movido para `src/styles/landing.css` e `src/styles/erp.css` (importados só nas respectivas rotas). Variáveis verde Nobel (`#0a5c3a`, `#00b86b`) também viram tokens em `src/styles.css`.
-2. **Markup** (`<body>`) → inserido via `dangerouslySetInnerHTML` num container React por rota. Mantém fidelidade 1:1 com o HTML original.
-3. **Scripts** (GSAP, Chart.js, Lucide) → carregados via `<script>` tags no `head()` da rota + inicialização em `useEffect`.
-4. **Imagens/logos** referenciadas no HTML → copiadas pra `public/`.
-
-Isso entrega o design exato dos dois HTMLs, com roteamento React real e auth de verdade.
-
-## Autenticação (Lovable Cloud)
-
-- Email/senha (sem perfil extra — só `auth.users`).
-- Rota `/login` pública com signup + signin.
-- Layout `_authenticated` protege `/app` via `beforeLoad` + redirect pra `/login`.
-- Listener `onAuthStateChange` no root.
-- Botão "Sair" no header do ERP.
-
-## Arquivos a criar/editar
-
-- `src/routes/index.tsx` — landing (substitui placeholder)
-- `src/routes/login.tsx` — form de login/cadastro
-- `src/routes/_authenticated.tsx` — guard
-- `src/routes/_authenticated/app.tsx` — ERP
-- `src/styles/landing.css`, `src/styles/erp.css`
-- `src/routes/__root.tsx` — adicionar listener de auth
-- Habilitar Lovable Cloud
-
-## O que NÃO vai ser feito agora
-
-- Conectar os dados do ERP a tabelas reais (continuam mockados como no HTML original).
-- Refatorar componentes do ERP em React idiomático (fica como melhoria futura).
-- Múltiplas seções da landing como rotas separadas (é uma single-page com âncoras, como o original).
-
-Confirma que posso seguir assim?
+### Detalhes Técnicos para Implementação
+*   Uso de **ES Modules** para organização de arquivos.
+*   Migração gradual para **Tailwind CSS** ou similar para padronização visual.
+*   Implementação de **Unidade de Testes** para as funções críticas de cálculo tributário e parse de IA.

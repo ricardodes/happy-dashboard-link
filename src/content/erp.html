@@ -309,8 +309,9 @@
             </tr>
           </thead>
           <tbody id="clientes-table-body">
-            <!-- Dinâmico via JS -->
+            <tr><td colspan="6" style="text-align:center;padding:2rem"><div class="spinner-mini" style="margin:0 auto"></div> Carregando clientes...</td></tr>
           </tbody>
+
         </table>
       </div>
     </div>
@@ -894,8 +895,9 @@
           <table class="data-table">
             <thead><tr><th>Emissor</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
             <tbody id="fiscal-nfe-table-body">
-              <!-- Dinâmico -->
+              <tr><td colspan="4" style="text-align:center;padding:1rem">Carregando notas...</td></tr>
             </tbody>
+
           </table>
         </div>
       </div>
@@ -911,8 +913,9 @@
           <table class="data-table">
             <thead><tr><th>Cliente</th><th>Tipo</th><th>Período</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="fiscal-sped-table-body">
-              <!-- Dinâmico -->
+              <tr><td colspan="5" style="text-align:center;padding:1rem">Carregando arquivos...</td></tr>
             </tbody>
+
           </table>
         </div>
       </div>
@@ -986,8 +989,9 @@
           <table class="data-table">
             <thead><tr><th>Nome</th><th>Cargo</th><th>Departamento</th><th>Admissão</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="equipe-trabalhista-table-body">
-              <!-- Dinâmico -->
+              <tr><td colspan="6" style="text-align:center;padding:1rem">Carregando equipe...</td></tr>
             </tbody>
+
           </table>
         </div>
       </div>
@@ -1503,8 +1507,9 @@
           <table class="data-table">
             <thead><tr><th>Usuário</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="admin-users-table-body">
-              <!-- Dinâmico via JS -->
+              <tr><td colspan="5" style="text-align:center;padding:1rem">Carregando usuários...</td></tr>
             </tbody>
+
           </table>
         </div>
         <div class="card">
@@ -1651,31 +1656,6 @@
   }
 
 
-  /* Theme refinements */
-  :root {
-    --bg: #f8fafc;
-    --bg-card: #ffffff;
-    --border: #e2e8f0;
-    --text-muted: #64748b;
-  }
-
-  [data-theme="dark"] {
-    --bg: #0f172a;
-    --bg-card: #1e293b;
-    --border: rgba(255, 255, 255, 0.08);
-    --text-muted: #94a3b8;
-  }
-
-  /* Card refinement */
-  .card {
-    border: 1px solid var(--border) !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-  }
 
   /* Responsive fixes */
   @media (max-width: 768px) {
@@ -1688,6 +1668,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Scripts Modularizados -->
+<script src="/src/content/modules/state.js"></script>
+<script src="/src/content/modules/ui-manager.js"></script>
+<script src="/src/content/modules/ai-engine.js"></script>
+<script src="/src/content/modules/data-service.js"></script>
+<script src="/src/content/erp.script.js"></script>
+
 
 
 
