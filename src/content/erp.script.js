@@ -251,8 +251,9 @@ window.openClientDetails = function(id) {
         <!-- Tabs for Modal -->
         <div class="view-toggle" style="justify-content:flex-start;margin-bottom:0">
           <button class="active" onclick="toggleClientModalTab(this, 'info')">Informações Cadastrais</button>
-          <button class="tab-ia-btn" onclick="toggleClientModalTab(this, 'ia-profile')">Central de IA Nobel</button>
+          <button class="tab-ia-btn" onclick="toggleClientModalTab(this, 'ia-profile')">IA: 4 Pilares de Análise</button>
         </div>
+
 
         <div id="client-modal-info">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
@@ -275,19 +276,38 @@ window.openClientDetails = function(id) {
         </div>
 
         <div id="client-modal-ia-profile" style="display:none">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem">
+            <div class="card glass-morphism" style="padding:1rem; border:1px solid rgba(0,208,132,0.1)">
+              <div style="font-weight:700; font-size:0.85rem; color:var(--primary); margin-bottom:0.5rem">1. Tendências & Crescimento</div>
+              <div id="ai-pillar-1" style="font-size:0.8rem; color:var(--text-secondary)">Aguardando análise...</div>
+            </div>
+            <div class="card glass-morphism" style="padding:1rem; border:1px solid rgba(239,68,68,0.1)">
+              <div style="font-weight:700; font-size:0.85rem; color:var(--danger); margin-bottom:0.5rem">2. Risco de Churn</div>
+              <div id="ai-pillar-2" style="font-size:0.8rem; color:var(--text-secondary)">Aguardando análise...</div>
+            </div>
+            <div class="card glass-morphism" style="padding:1rem; border:1px solid rgba(245,158,11,0.1)">
+              <div style="font-weight:700; font-size:0.85rem; color:var(--warning); margin-bottom:0.5rem">3. Cross-Sell / Upsell</div>
+              <div id="ai-pillar-3" style="font-size:0.8rem; color:var(--text-secondary)">Aguardando análise...</div>
+            </div>
+            <div class="card glass-morphism" style="padding:1rem; border:1px solid rgba(59,130,246,0.1)">
+              <div style="font-weight:700; font-size:0.85rem; color:var(--info); margin-bottom:0.5rem">4. Saúde Fiscal</div>
+              <div id="ai-pillar-4" style="font-size:0.8rem; color:var(--text-secondary)">Aguardando análise...</div>
+            </div>
+          </div>
           <div class="card glass-morphism" style="border:1px solid rgba(0,208,132,0.2);background:rgba(0,208,132,0.02)">
             <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
               <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center"><i data-lucide="sparkles" style="width:18px"></i></div>
-              <div style="font-weight:700">Central de Inteligência de Perfil</div>
+              <div style="font-weight:700">Relatório Consolidado de IA</div>
             </div>
             <div id="ai-client-insight-content" style="font-size:0.9rem;line-height:1.6;color:var(--text-secondary)">
-              <p>O Nobel IA analisa os dados fiscais e contábeis deste cliente vindos do Alterdata para identificar riscos, oportunidades de elisão fiscal e tendências de faturamento.</p>
+              <p>O Nobel IA processará os 4 pilares estratégicos baseando-se nos dados do Alterdata.</p>
             </div>
             <button class="nav-cta" id="btn-generate-ai-insight" style="width:100%;margin-top:1rem;gap:0.5rem;background:linear-gradient(135deg, var(--primary), var(--accent))" onclick="generateClientProfileAI(${c.id})">
-              <i data-lucide="brain-circuit" style="width:16px"></i> Executar Análise Preditiva
+              <i data-lucide="brain-circuit" style="width:16px"></i> Executar Diagnóstico 4 Pilares
             </button>
           </div>
         </div>
+
       </div>
     `,
     confirmText: "Fechar Dossiê",
@@ -310,29 +330,43 @@ window.generateClientProfileAI = async function(id) {
   
   const contentEl = document.getElementById('ai-client-insight-content');
   const btn = document.getElementById('btn-generate-ai-insight');
+  const p1 = document.getElementById('ai-pillar-1');
+  const p2 = document.getElementById('ai-pillar-2');
+  const p3 = document.getElementById('ai-pillar-3');
+  const p4 = document.getElementById('ai-pillar-4');
   
-  if (contentEl) contentEl.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;color:var(--primary)"><i data-lucide="refresh-cw" class="spin" style="width:16px"></i> Analisando dados do Alterdata...</div>';
+  if (contentEl) contentEl.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;color:var(--primary)"><i data-lucide="refresh-cw" class="spin" style="width:16px"></i> Analisando pilares estratégicos no Alterdata...</div>';
+  [p1, p2, p3, p4].forEach(p => { if(p) p.innerHTML = '<span class="spinner-mini" style="display:inline-block; width:10px; height:10px; border:1px solid #ccc; border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite"></span>'; });
+  
   if (btn) btn.disabled = true;
   if (window.lucide) window.lucide.createIcons();
 
   try {
     const snapshot = `
-      Cliente: ${c.nome}
-      CNPJ: ${c.cnpj}
-      Regime: ${c.regime}
-      Responsável: ${c.responsavel}
-      Status: ${c.status}
-      Histórico: Cliente fiel, setor ${c.regime.includes('Lucro Real') ? 'indústria/grande porte' : 'serviços/comércio'}.
-      Objetivo: Entender perfil de risco, oportunidades de elisão fiscal e engajamento.
+      Analise o cliente ${c.nome} (${c.cnpj}) sob o regime ${c.regime}.
+      Divida a análise estritamente em 4 pilares:
+      1. Tendências & Crescimento (Faturamento e mercado)
+      2. Risco de Churn (Sinais de saída ou insatisfação)
+      3. Cross-Sell / Upsell (Oportunidade de novos serviços contábeis/consultoria)
+      4. Saúde Fiscal (Conformidade e elisão fiscal)
+      
+      Retorne um JSON com os campos: pillar1, pillar2, pillar3, pillar4 e summary.
     `;
     
-    const result = await window.generateBusinessInsights({ snapshot });
-    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap">${result.content}</div>`;
+    const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
+    const data = JSON.parse(result.content);
+    
+    if (p1) p1.textContent = data.pillar1;
+    if (p2) p2.textContent = data.pillar2;
+    if (p3) p3.textContent = data.pillar3;
+    if (p4) p4.textContent = data.pillar4;
+    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap"><strong>Diagnóstico Consolidado:</strong>\n${data.summary}</div>`;
   } catch (err) {
-    if (contentEl) contentEl.innerHTML = `<span style="color:var(--danger)">Erro ao gerar insights: ${err.message}</span>`;
+    if (contentEl) contentEl.innerHTML = `<span style="color:var(--danger)">Erro ao processar pilares: ${err.message}. Certifique-se de retornar JSON.</span>`;
   } finally {
     if (btn) btn.disabled = false;
   }
+
 };
 
 window.deleteCliente = function(id) {
