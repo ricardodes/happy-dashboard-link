@@ -90,7 +90,7 @@ window.showView = function(viewId, target = null) {
     'contabil': 'Setor Contábil',
     'fiscal': 'Setor Fiscal',
     'trabalhista': 'Setor de RH/DP',
-    'informativos': 'Quem Somos & Informativos',
+    'informativos': 'Central de Informativos',
     'equipe': 'Gestão de Equipe',
     'agenda': 'Agenda Nobel & Fiscal',
     'admin': 'Painel Administrativo'
