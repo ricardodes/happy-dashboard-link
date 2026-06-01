@@ -1,101 +1,66 @@
-// Nobel ERP - UI Manager Module
+// Nobel ERP - UI Manager Module with Error Safety
 window.showView = function(viewId, target = null) {
-  if (event) event.preventDefault();
-  
-  document.querySelectorAll('.view').forEach(v => {
-    v.classList.remove('active');
-    v.style.display = 'none';
-  });
+  try {
+    if (event) event.preventDefault();
+    
+    const views = document.querySelectorAll('.view');
+    if (views.length === 0) console.warn("Nenhuma view (.view) encontrada no DOM.");
 
-  const targetView = document.getElementById('view-' + viewId);
-  if (targetView) {
+    views.forEach(v => {
+      v.classList.remove('active');
+      v.style.display = 'none';
+    });
+
+    const targetView = document.getElementById('view-' + viewId);
+    if (!targetView) {
+      throw new Error(`View 'view-${viewId}' não existe no documento.`);
+    }
+
     targetView.classList.add('active');
     targetView.style.display = 'block';
+
+    // Update Nav
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (target) {
+      target.classList.add('active');
+    }
+
+    const titleEl = document.getElementById('page-title');
+    if (titleEl) {
+      const titles = { 'dashboard': 'Dashboard', 'clientes': 'Clientes' }; // Fallback titles
+      titleEl.textContent = titles[viewId] || 'Nobel ERP';
+    }
+
+    // Safely trigger initializers
+    const safeInit = (fn) => {
+      if (typeof fn === 'function') {
+        try { fn(); } catch (e) { console.error(`Erro ao inicializar componente da view ${viewId}:`, e); }
+      }
+    };
+
+    if (viewId === 'dashboard') setTimeout(() => safeInit(window.initCharts), 10);
+    if (viewId === 'clientes') safeInit(window.renderClientes);
+
+  } catch (error) {
+    console.error("Erro ao trocar de aba:", error);
+    alert("Ocorreu um erro ao carregar esta seção. Por favor, tente novamente.");
   }
+};
 
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (target) {
-    target.classList.add('active');
-  } else {
-    const selector = `.sidebar-nav a.nav-item[onclick*="'${viewId}'"]`;
-    const navItem = document.querySelector(selector);
-    if (navItem) navItem.classList.add('active');
+window.safeToggle = function(btnSelector, contentPrefix, tab) {
+  try {
+    const container = document.querySelector(btnSelector);
+    if (!container) return;
+    
+    container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    const activeBtn = Array.from(container.querySelectorAll('button')).find(b => b.textContent.toLowerCase().includes(tab));
+    if (activeBtn) activeBtn.classList.add('active');
+
+    const sections = document.querySelectorAll(`[id^="${contentPrefix}"]`);
+    sections.forEach(s => {
+      s.style.display = s.id.endsWith(tab) ? 'block' : 'none';
+    });
+  } catch (e) {
+    console.error("Erro no toggle de sub-abas:", e);
   }
-
-  const titles = {
-    'dashboard': 'Painel de Controle Nobel',
-    'clientes': 'Gestão de Clientes (Alterdata)',
-    'crm': 'Pipeline de Vendas',
-    'prospeccao': 'Mapa de Inteligência',
-    'marketing': 'Gerador de Marketing',
-    'financeiro': 'Financeiro Interno',
-    'contabil': 'Setor Contábil',
-    'fiscal': 'Setor Fiscal',
-    'trabalhista': 'Setor de RH/DP',
-    'informativos': 'Central de Informativos',
-    'equipe': 'Gestão de Equipe',
-    'agenda': 'Agenda Nobel & Fiscal',
-    'admin': 'Painel Administrativo'
-  };
-  const titleEl = document.getElementById('page-title');
-  if (titleEl) titleEl.textContent = titles[viewId] || 'Plataforma Nobel';
-
-  // Initializers
-  if (viewId === 'dashboard') setTimeout(window.initCharts, 100);
-  if (viewId === 'fiscal' || viewId === 'agenda') {
-    setTimeout(() => {
-      window.initFiscalCalendar();
-      window.initAgendaCalendar();
-      if (viewId === 'fiscal') window.renderFiscal();
-    }, 100);
-  }
-  if (viewId === 'clientes') window.renderClientes();
-  if (viewId === 'crm') window.renderLeads();
-  if (viewId === 'financeiro') window.renderFinanceiro();
-  if (viewId === 'contabil') window.renderContabil();
-  if (viewId === 'admin') window.renderAdminUsers();
-  if (viewId === 'trabalhista' || viewId === 'equipe') window.renderEquipe();
-  if (viewId === 'prospeccao') setTimeout(() => { if (typeof window.filterProspeccao === 'function') window.filterProspeccao(); }, 100);
-
-  if (window.lucide) window.lucide.createIcons();
-};
-
-window.toggleFinanceiroTab = (btn, tab) => {
-  document.querySelectorAll('#fin-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const sections = ['pagar', 'receber', 'fluxo', 'dre'];
-  sections.forEach(s => {
-    const el = document.getElementById('fin-content-' + s);
-    if (el) el.style.display = (s === tab) ? 'block' : 'none';
-  });
-};
-
-window.toggleContabilTab = (btn, tab) => {
-  document.querySelectorAll('#cont-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const sections = ['balancete', 'dre', 'diario', 'razao'];
-  sections.forEach(s => {
-    const el = document.getElementById('cont-content-' + s);
-    if (el) el.style.display = (s === tab) ? 'block' : 'none';
-  });
-};
-
-window.toggleFiscalTab = (btn, tab) => {
-  document.querySelectorAll('#fisc-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const sections = ['calendario', 'nfe', 'sped', 'certidoes'];
-  sections.forEach(s => {
-    const el = document.getElementById('fisc-content-' + s);
-    if (el) el.style.display = (s === tab) ? 'block' : 'none';
-  });
-};
-
-window.toggleTrabalhistaTab = (btn, tab) => {
-  document.querySelectorAll('#trab-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const sections = ['folha', 'funcionarios', 'esocial', 'ferias'];
-  sections.forEach(s => {
-    const el = document.getElementById('trab-content-' + s);
-    if (el) el.style.display = (s === tab) ? 'block' : 'none';
-  });
 };
