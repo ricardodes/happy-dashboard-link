@@ -1,5 +1,7 @@
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
@@ -87,17 +89,18 @@
       <input type="text" placeholder="Buscar em toda a plataforma...">
     </div>
     <div class="header-actions">
-      <button class="header-btn" onclick="toggleAppTheme()" title="Tema">
-        <i data-lucide="sun" id="app-theme-icon" style="width:18px;height:18px"></i>
+      <button class="header-btn" onclick="toggleAppTheme()" title="Tema" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
+        <i data-lucide="sun" id="app-theme-icon" style="width:20px;height:20px"></i>
       </button>
-      <button class="header-btn" title="Notificações">
-        <i data-lucide="bell" style="width:18px;height:18px"></i>
-        <span class="dot"></span>
+      <button class="header-btn" title="Notificações" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border); position: relative">
+        <i data-lucide="bell" style="width:20px;height:20px"></i>
+        <span class="dot" style="position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-hover)"></span>
       </button>
-      <button class="header-btn" title="Mensagens">
-        <i data-lucide="message-square" style="width:18px;height:18px"></i>
+      <button class="header-btn" title="Mensagens" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
+        <i data-lucide="message-square" style="width:20px;height:20px"></i>
       </button>
-      <div class="user-avatar" style="width:36px;height:36px;cursor:pointer">AN</div>
+      <div class="user-avatar" style="width:40px;height:40px;cursor:pointer; border-radius: 12px; background: var(--primary); color: white; display: flex; align-items: center; justify-content:center; font-weight: 800; font-size: 0.9rem">AN</div>
+
     </div>
   </header>
 
@@ -1143,41 +1146,9 @@
 
     <!-- INFORMATIVOS VIEW -->
     <div class="view" id="view-informativos">
-      <!-- QUEM SOMOS - ERIKA BLANK -->
-      <div class="card" style="margin-bottom:2rem;padding:3rem">
-        <div style="display:grid;grid-template-columns:300px 1fr;gap:3rem;align-items:start">
-          <div style="text-align:center">
-            <div style="width:280px;height:380px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);margin-bottom:1.5rem">
-               <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover" alt="Erika Blank">
-            </div>
-            <h2 class="font-display" style="font-size:2rem;font-weight:900;color:var(--primary);margin-bottom:0.5rem">Erika Blank</h2>
-            <div style="font-weight:700;color:var(--accent);margin-bottom:1rem">Contadora Responsável Nobel</div>
-            <span class="badge badge-green">CRC MG-067896/0-0</span>
-          </div>
-          <div>
-            <h2 class="font-display" style="font-size:2.5rem;font-weight:900;margin-bottom:1.5rem">Quem Somos</h2>
-            <div style="line-height:1.8;color:var(--text-secondary);font-size:1.05rem;display:flex;flex-direction:column;gap:1rem">
-               <p>Com mais de 20 anos de experiência em contabilidade hospitalar, eu, <strong>Erika Blank</strong>, devidamente inscrita no Conselho Regional de Contabilidade sob o número MG-067896/0-0, como contadora responsável pela <strong>CONTABILIDADE NOBEL</strong>, proponho ao leitor um breve histórico da minha carreira.</p>
-               <p>Comecei a trabalhar na área de contabilidade em 1993. Em 2001 concluí o curso de Graduação em Ciências Contábeis e posteriormente o de Pós Graduação em Controladoria pela Universidade Estadual de Montes Claros - Unimontes. No mesmo ano, assumi a contabilidade do 2º maior hospital do norte de Minas Gerais, o Hospital Aroldo Tourinho, atuação que me rendeu em 2008 o Prêmio Conexão Regional e Valores de Minas como destaque na categoria de <strong>CONTABILIDADE NA ÁREA HOSPITALAR</strong>.</p>
-               <p>A CONTABILIDADE NOBEL possui uma filosofia de trabalho inovadora: o comprometimento total com o sucesso do cliente. Na figura de parceira das empresas, nosso objetivo é agregar valor para a administração e o crescimento sustentável. Diante de muitos fatos empresariais e governamentais, trabalhamos de forma preventiva e visionária, proporcionando segurança aos nossos clientes e parceiros.</p>
-               
-               <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1.5rem;margin-top:2rem">
-                 <div style="background:var(--bg-hover);padding:1.5rem;border-radius:16px;border-left:4px solid var(--primary)">
-                   <div style="font-weight:900;color:var(--primary);margin-bottom:0.5rem">MISSÃO</div>
-                   <div style="font-size:0.9rem">Estar comprometida com o sucesso do cliente, atuando na área de contabilidade e consultoria com eficiência e lucratividade.</div>
-                 </div>
-                 <div style="background:var(--bg-hover);padding:1.5rem;border-radius:16px;border-left:4px solid var(--accent)">
-                   <div style="font-weight:900;color:var(--accent);margin-bottom:0.5rem">VISÃO</div>
-                   <div style="font-size:0.9rem">Ser referência no estado de Minas Gerais na terceirização de serviços contábeis para as empresas.</div>
-                 </div>
-                 <div style="background:var(--bg-hover);padding:1.5rem;border-radius:16px;border-left:4px solid var(--info)">
-                   <div style="font-weight:900;color:var(--info);margin-bottom:0.5rem">VALORES</div>
-                   <div style="font-size:0.9rem">Ambiente saudável, comprometimento, credibilidade, eficiência, iniciativa, qualidade e trabalho em equipe.</div>
-                 </div>
-               </div>
-            </div>
-          </div>
-        </div>
+      <div style="margin-bottom: 2rem">
+        <h1 class="font-display" style="font-size: 2.2rem; font-weight: 900; margin-bottom: 0.5rem">Central de Informativos</h1>
+        <p style="color: var(--text-secondary)">Acompanhe as principais mudanças na legislação e notícias do setor.</p>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
@@ -1186,6 +1157,7 @@
           <h2 class="font-display" style="font-size:1.5rem;font-weight:700">Informativos & Notícias</h2>
         </div>
       </div>
+
       <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
         <span class="badge badge-green" style="cursor:pointer">Tributário</span>
         <span class="badge badge-blue" style="cursor:pointer">Trabalhista</span>
@@ -1678,12 +1650,69 @@
           <!-- Conteúdo dinâmico aqui -->
         </div>
         <div id="modal-footer" class="modal-footer">
-          <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-          <button id="modal-confirm-btn" class="btn-primary">Confirmar</button>
+          <button class="btn-secondary" onclick="closeModal()" style="padding: 0.8rem 1.5rem; border-radius: 100px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--bg-hover); color: var(--text)">Cancelar</button>
+          <button id="modal-confirm-btn" class="btn-primary" style="padding: 0.8rem 1.5rem; border-radius: 100px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; box-shadow: 0 4px 15px rgba(15, 94, 62, 0.3)">Confirmar</button>
         </div>
       </div>
     </div>
-</div> <!-- end main -->
+  </div> <!-- end main -->
+</div> <!-- end layout wrapper (if any) -->
+
+<style>
+  /* Global Layout Improvements */
+  .view { 
+    padding: 2.5rem; 
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .content { padding: 0 !important; }
+  .main { 
+    background: var(--bg); 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Remove empty spaces from grid containers */
+  .grid-4, .grid-3, .grid-2 {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Professional Dark Theme refinements */
+  [data-theme="dark"], :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --border: rgba(255, 255, 255, 0.06);
+    --text-muted: #64748b;
+  }
+
+  /* Professional Light Theme refinements */
+  [data-theme="light"] {
+    --bg: #f1f5f9;
+    --bg-card: #ffffff;
+    --border: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Professional Button refinement */
+  .nav-cta, .btn-primary {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .nav-cta:active, .btn-primary:active {
+    transform: translateY(1px) scale(0.98) !important;
+  }
+
+  /* Responsive fixes */
+  @media (max-width: 768px) {
+    .view { padding: 1rem; }
+    .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
