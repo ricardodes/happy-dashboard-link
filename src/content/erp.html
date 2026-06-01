@@ -269,25 +269,69 @@
         </div>
       </div>
 
-      <!-- IA INTEGRADA NA CARTEIRA -->
-      <div class="card glass-morphism" style="margin-bottom:1.5rem; border:1px solid rgba(0,208,132,0.2); background:rgba(0,208,132,0.02)">
-        <div style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap">
-          <div style="width:64px; height:64px; border-radius:16px; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0">
-            <i data-lucide="brain-circuit" style="width:32px; height:32px"></i>
+      <!-- IA INTEGRADA NA CARTEIRA - 4 PILARES DE ANÁLISE -->
+      <div class="grid-4" style="margin-bottom:1.5rem">
+        <div class="card glass-morphism" style="border:1px solid rgba(0,208,132,0.2); background:rgba(0,208,132,0.02); padding:1.25rem; cursor:pointer" onclick="showView('ia')">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem">
+            <div style="width:36px; height:36px; border-radius:10px; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center">
+              <i data-lucide="trending-up" style="width:18px"></i>
+            </div>
+            <div style="font-weight:700; font-size:0.9rem">Tendências de Crescimento</div>
           </div>
-          <div style="flex:1; min-width:300px">
-            <h3 class="font-display" style="font-weight:700; font-size:1.1rem; margin-bottom:0.25rem">Central de IA Nobel: Inteligência de Carteira</h3>
-            <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5">
-              Analise tendências, riscos de churn e oportunidades de serviços para toda a sua carteira sincronizada do Alterdata em tempo real.
-            </p>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4">
+            IA analisa faturamento e sazonalidade para prever expansão de carteira.
           </div>
-          <div style="display:flex; gap:0.75rem">
-            <button class="nav-cta" style="padding:0.6rem 1.2rem; gap:0.5rem; background:linear-gradient(135deg, var(--primary), var(--accent))" onclick="showView('ia')">
-              <i data-lucide="sparkles" style="width:16px"></i> Abrir Central Completa
-            </button>
+          <div style="margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--accent)">
+            Ver Insights <i data-lucide="chevron-right" style="width:12px; display:inline"></i>
+          </div>
+        </div>
+
+        <div class="card glass-morphism" style="border:1px solid rgba(59,130,246,0.2); background:rgba(59,130,246,0.02); padding:1.25rem; cursor:pointer" onclick="showView('ia')">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem">
+            <div style="width:36px; height:36px; border-radius:10px; background:var(--info); color:white; display:flex; align-items:center; justify-content:center">
+              <i data-lucide="shield-alert" style="width:18px"></i>
+            </div>
+            <div style="font-weight:700; font-size:0.9rem">Risco de Churn</div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4">
+            Monitoramento preditivo de insatisfação e possível saída de clientes.
+          </div>
+          <div style="margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--info)">
+            Analisar Riscos <i data-lucide="chevron-right" style="width:12px; display:inline"></i>
+          </div>
+        </div>
+
+        <div class="card glass-morphism" style="border:1px solid rgba(245,158,11,0.2); background:rgba(245,158,11,0.02); padding:1.25rem; cursor:pointer" onclick="showView('ia')">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem">
+            <div style="width:36px; height:36px; border-radius:10px; background:var(--warning); color:white; display:flex; align-items:center; justify-content:center">
+              <i data-lucide="zap" style="width:18px"></i>
+            </div>
+            <div style="font-weight:700; font-size:0.9rem">Cross-Sell & Upsell</div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4">
+            Identifica oportunidades para novos serviços e consultoria estratégica.
+          </div>
+          <div style="margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--warning)">
+            Oportunidades <i data-lucide="chevron-right" style="width:12px; display:inline"></i>
+          </div>
+        </div>
+
+        <div class="card glass-morphism" style="border:1px solid rgba(168,85,247,0.2); background:rgba(168,85,247,0.02); padding:1.25rem; cursor:pointer" onclick="showView('ia')">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem">
+            <div style="width:36px; height:36px; border-radius:10px; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center">
+              <i data-lucide="brain-circuit" style="width:18px"></i>
+            </div>
+            <div style="font-weight:700; font-size:0.9rem">Saúde Fiscal Total</div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4">
+            Análise holística da conformidade tributária de toda a carteira Nobel.
+          </div>
+          <div style="margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--primary)">
+            Relatório IA <i data-lucide="chevron-right" style="width:12px; display:inline"></i>
           </div>
         </div>
       </div>
+
 
       <div class="card glass-morphism">
         <div class="card-header">
