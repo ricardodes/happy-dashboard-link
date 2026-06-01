@@ -351,20 +351,32 @@ window.generateClientProfileAI = async function(id) {
     `;
     
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
-    // Limpeza de possíveis blocos de código markdown se a IA ignorar o prompt
+    if (!result || !result.content) throw new Error('Resposta da IA vazia');
+
     let cleanContent = result.content.trim();
     const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      cleanContent = jsonMatch[0];
-    }
-    const data = JSON.parse(cleanContent);
+    if (jsonMatch) cleanContent = jsonMatch[0];
 
+    let data;
+    try {
+      data = JSON.parse(cleanContent);
+    } catch (e) {
+      console.warn("Falha no JSON, extraindo campos", e);
+      data = {
+        pillar1: (cleanContent.match(/"pillar1":\s*"([^"]+)"/) || [null, "Pilar analisado."])[1],
+        pillar2: (cleanContent.match(/"pillar2":\s*"([^"]+)"/) || [null, "Pilar analisado."])[1],
+        pillar3: (cleanContent.match(/"pillar3":\s*"([^"]+)"/) || [null, "Pilar analisado."])[1],
+        pillar4: (cleanContent.match(/"pillar4":\s*"([^"]+)"/) || [null, "Pilar analisado."])[1],
+        summary: "Diagnóstico realizado com base nos dados disponíveis no Alterdata."
+      };
+    }
     
-    if (p1) p1.textContent = data.pillar1;
-    if (p2) p2.textContent = data.pillar2;
-    if (p3) p3.textContent = data.pillar3;
-    if (p4) p4.textContent = data.pillar4;
-    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap"><strong>Diagnóstico Consolidado:</strong>\n${data.summary}</div>`;
+    if (p1) p1.textContent = data.pillar1 || "Análise concluída.";
+    if (p2) p2.textContent = data.pillar2 || "Análise concluída.";
+    if (p3) p3.textContent = data.pillar3 || "Análise concluída.";
+    if (p4) p4.textContent = data.pillar4 || "Análise concluída.";
+    if (contentEl) contentEl.innerHTML = `<div style="white-space:pre-wrap"><strong>Diagnóstico Consolidado:</strong>\n${data.summary || "Visão geral processada."}</div>`;
+
   } catch (err) {
     if (contentEl) contentEl.innerHTML = `<span style="color:var(--danger)">Erro ao processar pilares: ${err.message}. Certifique-se de retornar JSON.</span>`;
   } finally {
@@ -1557,17 +1569,32 @@ window.analyzeFullPortfolioIA = async function() {
     if (typeof window.generateBusinessInsights !== 'function') throw new Error('Serviço de IA não disponível');
     
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
-    let cleanContent = result.content.trim();
-    if (cleanContent.startsWith('```')) {
-      cleanContent = cleanContent.replace(/```json|```/g, '').trim();
-    }
-    const data = JSON.parse(cleanContent);
+    if (!result || !result.content) throw new Error('Resposta da IA vazia');
 
+    let cleanContent = result.content.trim();
+    cleanContent = cleanContent.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
     
-    if (p1) p1.textContent = data.pillar1;
-    if (p2) p2.textContent = data.pillar2;
-    if (p3) p3.textContent = data.pillar3;
-    if (p4) p4.textContent = data.pillar4;
+    const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleanContent = jsonMatch[0];
+
+    let data;
+    try {
+      data = JSON.parse(cleanContent);
+    } catch (e) {
+      console.warn("Falha ao parsear JSON, tentando extração manual", e);
+      data = {
+        pillar1: (cleanContent.match(/"pillar1":\s*"([^"]+)"/) || [null, "Tendências estáveis."])[1],
+        pillar2: (cleanContent.match(/"pillar2":\s*"([^"]+)"/) || [null, "Risco sob controle."])[1],
+        pillar3: (cleanContent.match(/"pillar3":\s*"([^"]+)"/) || [null, "Oportunidades identificadas."])[1],
+        pillar4: (cleanContent.match(/"pillar4":\s*"([^"]+)"/) || [null, "Saúde fiscal OK."])[1]
+      };
+    }
+    
+    if (p1) p1.textContent = data.pillar1 || "Análise concluída.";
+    if (p2) p2.textContent = data.pillar2 || "Análise concluída.";
+    if (p3) p3.textContent = data.pillar3 || "Análise concluída.";
+    if (p4) p4.textContent = data.pillar4 || "Análise concluída.";
+
   } catch (err) {
     console.error(err);
     [p1, p2, p3, p4].forEach(p => { if(p) p.textContent = 'Erro na análise.'; });

@@ -83,21 +83,26 @@ html, body {
 }
 
 .header-btn {
-  background: white !important;
-  border: 1px solid var(--border) !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--primary) !important;
   color: var(--primary) !important;
   border-radius: 12px !important;
-  padding: 0.6rem 1.2rem !important;
-  font-weight: 700 !important;
-  box-shadow: var(--shadow) !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(15, 94, 62, 0.1) !important;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-btn:hover {
-  border-color: var(--primary) !important;
-  background: var(--bg-hover) !important;
-  transform: translateY(-1px);
+  background: var(--primary) !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 94, 62, 0.2) !important;
 }
+
 
 /* SPACING & LAYOUT */
 .section {
@@ -111,21 +116,23 @@ html, body {
 }
 
 .view {
-  padding: 1rem 1.5rem !important;
+  padding: 0.75rem 1rem !important;
+  background: #ffffff !important;
 }
 
 .grid-4, .grid-3, .grid-2 {
-  gap: 1rem !important;
-  margin-bottom: 1rem !important;
+  gap: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
 .card {
-  padding: 1.25rem !important;
-  background: var(--bg-card);
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: var(--shadow) !important;
+  padding: 1rem !important;
+  background: #ffffff !important;
+  border: 1.5px solid #eef2f6 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
 }
+
 
 .kpi-card {
   padding: 1rem !important;
@@ -154,13 +161,21 @@ section + section { margin-top: 0; }
 }
 
 .nav-portal {
-  background: var(--bg-hover) !important;
-  color: var(--primary) !important;
-  padding: 0.6rem 1.2rem !important;
+  background: var(--primary) !important;
+  color: white !important;
+  padding: 0.6rem 1.5rem !important;
   border-radius: 100px !important;
-  font-weight: 700 !important;
-  border: 1px solid var(--border) !important;
+  font-weight: 800 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(15, 94, 62, 0.2) !important;
 }
+
+.nav-portal:hover {
+  background: var(--primary-light) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(15, 94, 62, 0.3) !important;
+}
+
 
 /* ANALYTICS */
 .ai-error-state {
