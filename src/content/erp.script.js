@@ -1523,3 +1523,46 @@ window.handleSocialPost = (platform, type, imgUrl) => {
     });
   }
 };
+
+window.analyzeFullPortfolioIA = async function() {
+  const p1 = document.getElementById('portfolio-pillar-1');
+  const p2 = document.getElementById('portfolio-pillar-2');
+  const p3 = document.getElementById('portfolio-pillar-3');
+  const p4 = document.getElementById('portfolio-pillar-4');
+  const btn = document.getElementById('btn-analyze-full-portfolio');
+
+  if (btn) btn.disabled = true;
+  [p1, p2, p3, p4].forEach(p => { if(p) p.innerHTML = '<span class="spinner-mini" style="display:inline-block; width:10px; height:10px; border:1px solid #ccc; border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite"></span> Processando...'; });
+
+  try {
+    const clientsCount = window.appState.clientes.length;
+    const regimes = [...new Set(window.appState.clientes.map(c => c.regime))].join(', ');
+    
+    const snapshot = `
+      Analise a CARTEIRA TOTAL da Contabilidade Nobel contendo ${clientsCount} clientes sincronizados.
+      Regimes presentes: ${regimes}.
+      Forneça um diagnóstico MACRO da carteira dividido nos 4 pilares:
+      1. Tendências & Crescimento (Visão geral de expansão)
+      2. Risco de Churn (Alerta de possíveis saídas na base)
+      3. Cross-Sell / Upsell (Serviços mais demandados)
+      4. Saúde Fiscal (Média de conformidade da base)
+      
+      Retorne estritamente um JSON com os campos: pillar1, pillar2, pillar3, pillar4.
+    `;
+    
+    if (typeof window.generateBusinessInsights !== 'function') throw new Error('Serviço de IA não disponível');
+    
+    const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
+    const data = JSON.parse(result.content);
+    
+    if (p1) p1.textContent = data.pillar1;
+    if (p2) p2.textContent = data.pillar2;
+    if (p3) p3.textContent = data.pillar3;
+    if (p4) p4.textContent = data.pillar4;
+  } catch (err) {
+    console.error(err);
+    [p1, p2, p3, p4].forEach(p => { if(p) p.textContent = 'Erro na análise.'; });
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+};
