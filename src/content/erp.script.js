@@ -84,7 +84,7 @@ window.showView = function(viewId, target = null) {
     'clientes': 'Gestão de Clientes (Alterdata)',
     'crm': 'Pipeline de Vendas',
     'prospeccao': 'Mapa de Inteligência',
-    'ia': 'Inteligência Artificial Nobel',
+
     'marketing': 'Gerador de Marketing',
     'financeiro': 'Financeiro Interno',
     'contabil': 'Setor Contábil',
