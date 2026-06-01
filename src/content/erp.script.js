@@ -90,7 +90,7 @@ window.showView = function(viewId, target = null) {
     'contabil': 'Setor Contábil',
     'fiscal': 'Setor Fiscal',
     'trabalhista': 'Setor de RH/DP',
-    'informativos': 'Quem Somos & Informativos',
+    'informativos': 'Central de Informativos',
     'equipe': 'Gestão de Equipe',
     'agenda': 'Agenda Nobel & Fiscal',
     'admin': 'Painel Administrativo'
@@ -353,8 +353,9 @@ window.generateClientProfileAI = async function(id) {
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
     // Limpeza de possíveis blocos de código markdown se a IA ignorar o prompt
     let cleanContent = result.content.trim();
-    if (cleanContent.startsWith('```')) {
-      cleanContent = cleanContent.replace(/```json|```/g, '').trim();
+    const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanContent = jsonMatch[0];
     }
     const data = JSON.parse(cleanContent);
 
