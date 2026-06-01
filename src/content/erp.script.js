@@ -344,17 +344,20 @@ window.generateClientProfileAI = async function(id) {
   try {
     const snapshot = `
       Analise o cliente ${c.nome} (${c.cnpj}) sob o regime ${c.regime}.
-      Divida a análise estritamente em 4 pilares:
-      1. Tendências & Crescimento (Faturamento e mercado)
-      2. Risco de Churn (Sinais de saída ou insatisfação)
-      3. Cross-Sell / Upsell (Oportunidade de novos serviços contábeis/consultoria)
-      4. Saúde Fiscal (Conformidade e elisão fiscal)
+      Divida a análise estritamente em 4 pilares estratégicos da Contabilidade Nobel.
       
-      Retorne um JSON com os campos: pillar1, pillar2, pillar3, pillar4 e summary.
+      IMPORTANTE: Retorne estritamente um objeto JSON puro, sem blocos de código Markdown (sem \`\`\`json).
+      O JSON deve conter: "pillar1", "pillar2", "pillar3", "pillar4" e "summary".
     `;
     
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
-    const data = JSON.parse(result.content);
+    // Limpeza de possíveis blocos de código markdown se a IA ignorar o prompt
+    let cleanContent = result.content.trim();
+    if (cleanContent.startsWith('```')) {
+      cleanContent = cleanContent.replace(/```json|```/g, '').trim();
+    }
+    const data = JSON.parse(cleanContent);
+
     
     if (p1) p1.textContent = data.pillar1;
     if (p2) p2.textContent = data.pillar2;
@@ -1547,13 +1550,18 @@ window.analyzeFullPortfolioIA = async function() {
       3. Cross-Sell / Upsell (Serviços mais demandados)
       4. Saúde Fiscal (Média de conformidade da base)
       
-      Retorne estritamente um JSON com os campos: pillar1, pillar2, pillar3, pillar4.
+      Retorne estritamente um JSON puro (sem markdown) com os campos: pillar1, pillar2, pillar3, pillar4.
     `;
     
     if (typeof window.generateBusinessInsights !== 'function') throw new Error('Serviço de IA não disponível');
     
     const result = await window.generateBusinessInsights({ snapshot, forceJson: true });
-    const data = JSON.parse(result.content);
+    let cleanContent = result.content.trim();
+    if (cleanContent.startsWith('```')) {
+      cleanContent = cleanContent.replace(/```json|```/g, '').trim();
+    }
+    const data = JSON.parse(cleanContent);
+
     
     if (p1) p1.textContent = data.pillar1;
     if (p2) p2.textContent = data.pillar2;
