@@ -1642,12 +1642,24 @@
           <!-- Conteúdo dinâmico aqui -->
         </div>
         <div id="modal-footer" class="modal-footer">
-          <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-          <button id="modal-confirm-btn" class="btn-primary">Confirmar</button>
+          <button class="btn-secondary" onclick="closeModal()" style="padding: 0.8rem 1.5rem; border-radius: 100px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--bg-hover); color: var(--text)">Cancelar</button>
+          <button id="modal-confirm-btn" class="btn-primary" style="padding: 0.8rem 1.5rem; border-radius: 100px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; box-shadow: 0 4px 15px rgba(15, 94, 62, 0.3)">Confirmar</button>
         </div>
       </div>
     </div>
-</div> <!-- end main -->
+  </div> <!-- end main -->
+</div> <!-- end layout wrapper (if any) -->
+
+<style>
+  /* Extra spacings fix */
+  .view { padding: 2rem; }
+  .content { padding: 0 !important; }
+  .main { background: var(--bg); min-height: 100vh; }
+  
+  /* Modal buttons refinement */
+  #modal-confirm-btn:active { transform: scale(0.98); }
+</style>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
