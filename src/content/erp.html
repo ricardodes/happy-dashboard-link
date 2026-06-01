@@ -89,17 +89,18 @@
       <input type="text" placeholder="Buscar em toda a plataforma...">
     </div>
     <div class="header-actions">
-      <button class="header-btn" onclick="toggleAppTheme()" title="Tema">
-        <i data-lucide="sun" id="app-theme-icon" style="width:18px;height:18px"></i>
+      <button class="header-btn" onclick="toggleAppTheme()" title="Tema" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
+        <i data-lucide="sun" id="app-theme-icon" style="width:20px;height:20px"></i>
       </button>
-      <button class="header-btn" title="Notificações">
-        <i data-lucide="bell" style="width:18px;height:18px"></i>
-        <span class="dot"></span>
+      <button class="header-btn" title="Notificações" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border); position: relative">
+        <i data-lucide="bell" style="width:20px;height:20px"></i>
+        <span class="dot" style="position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-hover)"></span>
       </button>
-      <button class="header-btn" title="Mensagens">
-        <i data-lucide="message-square" style="width:18px;height:18px"></i>
+      <button class="header-btn" title="Mensagens" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-hover); border: 1px solid var(--border)">
+        <i data-lucide="message-square" style="width:20px;height:20px"></i>
       </button>
-      <div class="user-avatar" style="width:36px;height:36px;cursor:pointer">AN</div>
+      <div class="user-avatar" style="width:40px;height:40px;cursor:pointer; border-radius: 12px; background: var(--primary); color: white; display: flex; align-items: center; justify-content:center; font-weight: 800; font-size: 0.9rem">AN</div>
+
     </div>
   </header>
 

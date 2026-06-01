@@ -4,8 +4,8 @@ lucide.createIcons();
 // Navbar scroll
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('navbar');
-  if(window.scrollY>50){nav.style.boxShadow='0 4px 20px rgba(10,92,58,0.08)';}
-  else{nav.style.boxShadow='none';}
+  if(window.scrollY>50){nav.style.boxShadow='0 10px 30px rgba(15,94,62,0.1)'; nav.style.padding='0.8rem 0';}
+  else{nav.style.boxShadow='none'; nav.style.padding='1.2rem 0';}
 });
 
 // Scroll reveal
