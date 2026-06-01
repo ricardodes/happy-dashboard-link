@@ -1653,14 +1653,59 @@
 </div> <!-- end layout wrapper (if any) -->
 
 <style>
-  /* Extra spacings fix */
-  .view { padding: 2rem; }
+  /* Global Layout Improvements */
+  .view { 
+    padding: 2.5rem; 
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
   .content { padding: 0 !important; }
-  .main { background: var(--bg); min-height: 100vh; }
+  .main { 
+    background: var(--bg); 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
   
-  /* Modal buttons refinement */
-  #modal-confirm-btn:active { transform: scale(0.98); }
+  /* Remove empty spaces from grid containers */
+  .grid-4, .grid-3, .grid-2 {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Professional Dark Theme refinements */
+  [data-theme="dark"], :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --border: rgba(255, 255, 255, 0.06);
+    --text-muted: #64748b;
+  }
+
+  /* Professional Light Theme refinements */
+  [data-theme="light"] {
+    --bg: #f1f5f9;
+    --bg-card: #ffffff;
+    --border: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Professional Button refinement */
+  .nav-cta, .btn-primary {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .nav-cta:active, .btn-primary:active {
+    transform: translateY(1px) scale(0.98) !important;
+  }
+
+  /* Responsive fixes */
+  @media (max-width: 768px) {
+    .view { padding: 1rem; }
+    .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  }
 </style>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
